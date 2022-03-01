@@ -2784,7 +2784,7 @@ ul.breadcrumb li:last-child {
   }
 }
 body {
-  background: url("/images/background.jpg");
+  background: url("https://s3.bmp.ovh/imgs/2022/01/f249687f93db8d51.jpeg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: 50% 50%;
