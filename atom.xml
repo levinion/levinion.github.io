@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>maruka&#39;s blog maruka的个人博客</title>
+  <title>maruka&#39;s blog</title>
   
-  
+  <subtitle>live and be</subtitle>
   <link href="https://levinion.github.io/atom.xml" rel="self"/>
   
   <link href="https://levinion.github.io/"/>
