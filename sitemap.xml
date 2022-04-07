@@ -201,6 +201,13 @@
   </url>
   
   <url>
+    <loc>https://levinion.github.io/tags/%E6%97%A5%E8%AF%AD/</loc>
+    <lastmod>2022-04-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://levinion.github.io/tags/%E6%96%87%E5%AD%A6%E7%90%86%E8%AE%BA/</loc>
     <lastmod>2022-04-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -216,13 +223,6 @@
   
   <url>
     <loc>https://levinion.github.io/tags/%E8%AF%97%E6%AD%8C/</loc>
-    <lastmod>2022-04-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://levinion.github.io/tags/%E6%97%A5%E8%AF%AD/</loc>
     <lastmod>2022-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -252,6 +252,13 @@
   </url>
   
   <url>
+    <loc>https://levinion.github.io/categories/%E7%BF%BB%E8%AF%91/</loc>
+    <lastmod>2022-04-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://levinion.github.io/categories/%E7%A2%8E%E7%89%87/</loc>
     <lastmod>2022-04-07</lastmod>
     <changefreq>weekly</changefreq>
@@ -260,13 +267,6 @@
   
   <url>
     <loc>https://levinion.github.io/categories/%E8%AF%97%E6%AD%8C/</loc>
-    <lastmod>2022-04-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://levinion.github.io/categories/%E7%BF%BB%E8%AF%91/</loc>
     <lastmod>2022-04-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
