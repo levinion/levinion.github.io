@@ -2,18 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://levinion.github.io/2022/03/28/%E3%83%8E%E3%82%B2%E3%83%8E%E3%83%A9%EF%BC%91%EF%BC%91/</loc>
+    <loc>https://levinion.github.io/about/index.html</loc>
     
-    <lastmod>2022-04-30</lastmod>
+    <lastmod>2022-05-01</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://levinion.github.io/about/index.html</loc>
+    <loc>https://levinion.github.io/2022/03/28/%E3%83%8E%E3%82%B2%E3%83%8E%E3%83%A9%EF%BC%91%EF%BC%91/</loc>
     
-    <lastmod>2022-04-19</lastmod>
+    <lastmod>2022-04-30</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -155,13 +155,6 @@
 
   
   <url>
-    <loc>https://levinion.github.io/tags/%E6%97%A5%E8%AF%AD/</loc>
-    <lastmod>2022-05-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://levinion.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/</loc>
     <lastmod>2022-05-01</lastmod>
     <changefreq>weekly</changefreq>
@@ -177,6 +170,13 @@
   
   <url>
     <loc>https://levinion.github.io/tags/%E4%B9%A6%E8%AF%84/</loc>
+    <lastmod>2022-05-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://levinion.github.io/tags/%E6%97%A5%E8%AF%AD/</loc>
     <lastmod>2022-05-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -213,13 +213,6 @@
 
   
   <url>
-    <loc>https://levinion.github.io/categories/%E7%BF%BB%E8%AF%91/</loc>
-    <lastmod>2022-05-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://levinion.github.io/categories/CS/</loc>
     <lastmod>2022-05-01</lastmod>
     <changefreq>weekly</changefreq>
@@ -228,6 +221,13 @@
   
   <url>
     <loc>https://levinion.github.io/categories/%E6%96%87%E5%AD%A6/</loc>
+    <lastmod>2022-05-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://levinion.github.io/categories/%E7%BF%BB%E8%AF%91/</loc>
     <lastmod>2022-05-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
