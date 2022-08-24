@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>CS on Maruka&#39;s Blog</title>
+    <link>https://levinion.github.io/categories/cs/</link>
+    <description>Recent content in CS on Maruka&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Thu, 17 Mar 2022 19:15:57 +0000</lastBuildDate><atom:link href="https://levinion.github.io/categories/cs/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>二叉链表</title>
+      <link>https://levinion.github.io/posts/%E4%BA%8C%E5%8F%89%E9%93%BE%E8%A1%A8/</link>
+      <pubDate>Thu, 17 Mar 2022 19:15:57 +0000</pubDate>
+      
+      <guid>https://levinion.github.io/posts/%E4%BA%8C%E5%8F%89%E9%93%BE%E8%A1%A8/</guid>
+      <description>事实上，我考虑了一段时间，在这样一个以文哲为主要内容的网站里插入一些代码是不是一件好事。在某种程度上，它破坏了一种单一的结构，使它在多元化的同时也更加杂乱无章；而这种去系统性是与我个人的喜好所不符的。我喜欢那些内容单纯的博客，它使得我们检索信息的成本大大降低；而这一点是极为重要的，因为我们检索信息从来是带有某种目的性，达成目的所需要的时间的倒数即为效率。现代人，正如我们所知，是追求效率的；这种追求似乎和尼采所追求的强力意志似乎并没有什么两样（笑）。但是人同样有表达的意愿，他们不想也不能拘束在一个狭小的领域。我写这篇文章的目的似乎是明晰的，至少是较其他随意拼凑或胡思乱想所写成的文章更为明晰；它不过是记录下一些错误，给自己和别人一些可复现的廉价材料罢了。
+二叉链表的实现在数据结构里不可谓不是一个难点；它对递归方法的依赖程度比较高。递归，至少是对我来说，并不是那么直观的东西；几行的代码往往需要一个初学者在他的头脑中追踪几十行才能发现它到底是怎样运作的。
+我在下面给出了一种实现方式：
+//bitree.cpp #include &amp;lt;initializer_list&amp;gt; #include &amp;lt;iostream&amp;gt; using namespace std; //二叉链表结点类 class Node { public: string data; Node *leftChild,*rightChild; }; //二叉链表类 class Bitree { public: //初始化函数 Bitree(); //析构函数 ~Bitree(); //先序遍历 void pre_show(Node*); //中序遍历 void in_show(Node*); //后序遍历 void post_show(Node*); //根结点 Node *root; private: //初始化和新建结点使用 void create(Node*); //析构和删除结点使用 void del(Node*); }; //初始化 inline Bitree::Bitree() { create(root); } inline void Bitree::create(Node *tree) { string data; cin&amp;gt;&amp;gt;data; if(data==&amp;#34;#&amp;#34;) tree=nullptr; else { tree=new Node; tree-&amp;gt;data=data; create(tree-&amp;gt;leftChild); create(tree-&amp;gt;rightChild); } } //先序、中序、后序遍历 inline void Bitree::pre_show(Node *tree) { if(tree) { cout&amp;lt;&amp;lt;tree-&amp;gt;data&amp;lt;&amp;lt;&amp;#34; &amp;#34;; pre_show(tree-&amp;gt;leftChild); pre_show(tree-&amp;gt;rightChild); } } inline void Bitree::in_show(Node *tree) { if(tree) { pre_show(tree-&amp;gt;leftChild); cout&amp;lt;&amp;lt;tree-&amp;gt;data&amp;lt;&amp;lt;&amp;#34; &amp;#34;; pre_show(tree-&amp;gt;rightChild); } } inline void Bitree::post_show(Node *tree) { if(tree) { pre_show(tree-&amp;gt;leftChild); pre_show(tree-&amp;gt;rightChild); cout&amp;lt;&amp;lt;tree-&amp;gt;data&amp;lt;&amp;lt;&amp;#34; &amp;#34;; } } //析构 inline void Bitree::del(Node *tree) { if(tree) { if(tree-&amp;gt;leftChild) del(tree-&amp;gt;leftChild); if(tree-&amp;gt;rightChild) del(tree-&amp;gt;rightChild); delete tree; } } inline Bitree::~Bitree() { del(root); } //主程序 int main() { Bitree bitree; Node *root = bitree.</description>
+    </item>
+    
+  </channel>
+</rss>
