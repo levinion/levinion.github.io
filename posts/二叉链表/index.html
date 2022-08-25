@@ -96,8 +96,8 @@
   "keywords": [
     "数据结构", "C++"
   ],
-  "articleBody": " 事实上，我考虑了一段时间，在这样一个以文哲为主要内容的网站里插入一些代码是不是一件好事。在某种程度上，它破坏了一种单一的结构，使它在多元化的同时也更加杂乱无章；而这种去系统性是与我个人的喜好所不符的。我喜欢那些内容单纯的博客，它使得我们检索信息的成本大大降低；而这一点是极为重要的，因为我们检索信息从来是带有某种目的性，达成目的所需要的时间的倒数即为效率。现代人，正如我们所知，是追求效率的；这种追求似乎和尼采所追求的强力意志似乎并没有什么两样（笑）。但是人同样有表达的意愿，他们不想也不能拘束在一个狭小的领域。我写这篇文章的目的似乎是明晰的，至少是较其他随意拼凑或胡思乱想所写成的文章更为明晰；它不过是记录下一些错误，给自己和别人一些可复现的廉价材料罢了。\n二叉链表的实现在数据结构里不可谓不是一个难点；它对递归方法的依赖程度比较高。递归，至少是对我来说，并不是那么直观的东西；几行的代码往往需要一个初学者在他的头脑中追踪几十行才能发现它到底是怎样运作的。\n我在下面给出了一种实现方式：\n//bitree.cpp #include #include using namespace std; //二叉链表结点类 class Node { public: string data; Node *leftChild,*rightChild; }; //二叉链表类 class Bitree { public: //初始化函数 Bitree(); //析构函数 ~Bitree(); //先序遍历 void pre_show(Node*); //中序遍历 void in_show(Node*); //后序遍历 void post_show(Node*); //根结点 Node *root; private: //初始化和新建结点使用 void create(Node*); //析构和删除结点使用 void del(Node*); }; //初始化 inline Bitree::Bitree() { create(root); } inline void Bitree::create(Node *tree) { string data; cin\u003e\u003edata; if(data==\"#\") tree=nullptr; else { tree=new Node; tree-\u003edata=data; create(tree-\u003eleftChild); create(tree-\u003erightChild); } } //先序、中序、后序遍历 inline void Bitree::pre_show(Node *tree) { if(tree) { cout\u003c\u003ctree-\u003edata\u003c\u003c\" \"; pre_show(tree-\u003eleftChild); pre_show(tree-\u003erightChild); } } inline void Bitree::in_show(Node *tree) { if(tree) { pre_show(tree-\u003eleftChild); cout\u003c\u003ctree-\u003edata\u003c\u003c\" \"; pre_show(tree-\u003erightChild); } } inline void Bitree::post_show(Node *tree) { if(tree) { pre_show(tree-\u003eleftChild); pre_show(tree-\u003erightChild); cout\u003c\u003ctree-\u003edata\u003c\u003c\" \"; } } //析构 inline void Bitree::del(Node *tree) { if(tree) { if(tree-\u003eleftChild) del(tree-\u003eleftChild); if(tree-\u003erightChild) del(tree-\u003erightChild); delete tree; } } inline Bitree::~Bitree() { del(root); } //主程序 int main() { Bitree bitree; Node *root = bitree.root; cout\u003c\u003c\"先序遍历:\\t\"; bitree.pre_show(root); cout\u003c\u003cendl\u003c\u003c\"中序遍历:\\t\"; bitree.in_show(root); cout\u003c\u003cendl\u003c\u003c\"后序遍历:\\t\"; bitree.post_show(root); cout\u003c\u003cendl; } //进行输入： A B C # # D E # G # # F # # # //结果如下： //先序遍历: A B C D E G F //中序遍历: B C D E G F A //后序遍历: B C D E G F A 这里有一个小陷阱。如果你照搬了这段程序并且运行了它，你会发现发生了这样的错误：\n[1] 95096 segmentation fault ./bitree\n这是因为这段程序的初始化部分存在问题。问题代码如下：\ninline void Bitree::create(Node *tree)\n当你传入 Node * 时，你所传入的其实只是该指针的一个拷贝；你在这个拷贝下创建了二叉链表的所有结点，但是对关键的根结点没有进行任何操作。明白问题所在，办法就显而易见了：一种办法是使 create(Note *) 函数返回一个指向 Node 的指针；而我选择改动少的方法，即将 Node * 改为 Node *\u0026 ，即指针的一个引用。相应的，函数的声明部分也需要进行修改。\n",
-  "wordCount" : "1085",
+  "articleBody": " 事实上，我考虑了一段时间，在这样一个以文哲为主要内容的网站里插入一些代码是不是一件好事。在某种程度上，它破坏了一种单一的结构，使它在多元化的同时也更加杂乱无章；而这种去系统性是与我个人的喜好所不符的。我喜欢那些内容单纯的博客，它使得我们检索信息的成本大大降低；而这一点是极为重要的，因为我们检索信息从来是带有某种目的性，达成目的所需要的时间的倒数即为效率。现代人，正如我们所知，是追求效率的；这种追求似乎和尼采所追求的强力意志似乎并没有什么两样（笑）。但是人同样有表达的意愿，他们不想也不能拘束在一个狭小的领域。我写这篇文章的目的似乎是明晰的，至少是较其他随意拼凑或胡思乱想所写成的文章更为明晰；它不过是记录下一些错误，给自己和别人一些可复现的廉价材料罢了。\n二叉链表的实现在数据结构里不可谓不是一个难点；它对递归方法的依赖程度比较高。递归，至少是对我来说，并不是那么直观的东西；几行的代码往往需要一个初学者在他的头脑中追踪几十行才能发现它到底是怎样运作的。\n我在下面给出了一种实现方式：\n1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119 120 //bitree.cpp #include #include using namespace std; //二叉链表结点类 class Node { public: string data; Node *leftChild,*rightChild; }; //二叉链表类 class Bitree { public: //初始化函数 Bitree(); //析构函数 ~Bitree(); //先序遍历 void pre_show(Node*); //中序遍历 void in_show(Node*); //后序遍历 void post_show(Node*); //根结点 Node *root; private: //初始化和新建结点使用 void create(Node*); //析构和删除结点使用 void del(Node*); }; //初始化 inline Bitree::Bitree() { create(root); } inline void Bitree::create(Node *tree) { string data; cin\u003e\u003edata; if(data==\"#\") tree=nullptr; else { tree=new Node; tree-\u003edata=data; create(tree-\u003eleftChild); create(tree-\u003erightChild); } } //先序、中序、后序遍历 inline void Bitree::pre_show(Node *tree) { if(tree) { cout\u003c\u003ctree-\u003edata\u003c\u003c\" \"; pre_show(tree-\u003eleftChild); pre_show(tree-\u003erightChild); } } inline void Bitree::in_show(Node *tree) { if(tree) { pre_show(tree-\u003eleftChild); cout\u003c\u003ctree-\u003edata\u003c\u003c\" \"; pre_show(tree-\u003erightChild); } } inline void Bitree::post_show(Node *tree) { if(tree) { pre_show(tree-\u003eleftChild); pre_show(tree-\u003erightChild); cout\u003c\u003ctree-\u003edata\u003c\u003c\" \"; } } //析构 inline void Bitree::del(Node *tree) { if(tree) { if(tree-\u003eleftChild) del(tree-\u003eleftChild); if(tree-\u003erightChild) del(tree-\u003erightChild); delete tree; } } inline Bitree::~Bitree() { del(root); } //主程序 int main() { Bitree bitree; Node *root = bitree.root; cout\u003c\u003c\"先序遍历:\\t\"; bitree.pre_show(root); cout\u003c\u003cendl\u003c\u003c\"中序遍历:\\t\"; bitree.in_show(root); cout\u003c\u003cendl\u003c\u003c\"后序遍历:\\t\"; bitree.post_show(root); cout\u003c\u003cendl; } //进行输入： A B C # # D E # G # # F # # # //结果如下： //先序遍历: A B C D E G F //中序遍历: B C D E G F A //后序遍历: B C D E G F A 这里有一个小陷阱。如果你照搬了这段程序并且运行了它，你会发现发生了这样的错误：\n[1] 95096 segmentation fault ./bitree\n这是因为这段程序的初始化部分存在问题。问题代码如下：\ninline void Bitree::create(Node *tree)\n当你传入 Node * 时，你所传入的其实只是该指针的一个拷贝；你在这个拷贝下创建了二叉链表的所有结点，但是对关键的根结点没有进行任何操作。明白问题所在，办法就显而易见了：一种办法是使 create(Note *) 函数返回一个指向 Node 的指针；而我选择改动少的方法，即将 Node * 改为 Node *\u0026 ，即指针的一个引用。相应的，函数的声明部分也需要进行修改。\n",
+  "wordCount" : "1205",
   "inLanguage": "zh",
   "datePublished": "2022-03-17T19:15:57Z",
   "dateModified": "2022-03-17T19:15:57Z",
@@ -197,7 +197,7 @@
     <h1 class="post-title">
       二叉链表
     </h1>
-    <div class="post-meta"><span title='2022-03-17 19:15:57 +0000 UTC'>三月 17, 2022</span>&nbsp;·&nbsp;3 分钟&nbsp;·&nbsp;Maruka&nbsp;|&nbsp;<a href="https://github.com/levinion/levinion.github.io/tree/master/posts/%e4%ba%8c%e5%8f%89%e9%93%be%e8%a1%a8.md" rel="noopener noreferrer" target="_blank">Suggest Changes</a>
+    <div class="post-meta"><span title='2022-03-17 19:15:57 +0000 UTC'>三月 17, 2022</span>&nbsp;·&nbsp;3 分钟&nbsp;·&nbsp;Maruka
 
 </div>
   </header> 
@@ -207,7 +207,131 @@
 </blockquote>
 <p>二叉链表的实现在数据结构里不可谓不是一个难点；它对递归方法的依赖程度比较高。递归，至少是对我来说，并不是那么直观的东西；几行的代码往往需要一个初学者在他的头脑中追踪几十行才能发现它到底是怎样运作的。</p>
 <p>我在下面给出了一种实现方式：</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="c1">//bitree.cpp
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre tabindex="0" class="chroma"><code><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span></code></pre></td>
+<td class="lntd">
+<pre tabindex="0" class="chroma"><code class="language-C++" data-lang="C++"><span class="line"><span class="cl"><span class="c1">//bitree.cpp
 </span></span></span><span class="line"><span class="cl"><span class="c1"></span>
 </span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;initializer_list&gt;</span><span class="cp">
 </span></span></span><span class="line"><span class="cl"><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
@@ -327,7 +451,9 @@
 </span></span></span><span class="line"><span class="cl"><span class="c1">//先序遍历:       A B C D E G F 
 </span></span></span><span class="line"><span class="cl"><span class="c1">//中序遍历:       B C D E G F A 
 </span></span></span><span class="line"><span class="cl"><span class="c1">//后序遍历:       B C D E G F A
-</span></span></span></code></pre></div><p>这里有一个小陷阱。如果你照搬了这段程序并且运行了它，你会发现发生了这样的错误：</p>
+</span></span></span></code></pre></td></tr></table>
+</div>
+</div><p>这里有一个小陷阱。如果你照搬了这段程序并且运行了它，你会发现发生了这样的错误：</p>
 <p><code>[1]    95096 segmentation fault  ./bitree</code></p>
 <p>这是因为这段程序的初始化部分存在问题。问题代码如下：</p>
 <p><code>inline void Bitree::create(Node *tree)</code></p>
