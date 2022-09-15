@@ -5,7 +5,16 @@
     <link>https://levinion.github.io/posts/</link>
     <description>Recent content in Posts on Maruka&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 25 Aug 2022 13:54:39 +0800</lastBuildDate><atom:link href="https://levinion.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 15 Sep 2022 13:53:18 +0800</lastBuildDate><atom:link href="https://levinion.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>以腾讯会议为例谈Arch下的软件降级</title>
+      <link>https://levinion.github.io/posts/%E4%BB%A5%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE%E4%B8%BA%E4%BE%8B%E8%B0%88arch%E4%B8%8B%E7%9A%84%E8%BD%AF%E4%BB%B6%E9%99%8D%E7%BA%A7/</link>
+      <pubDate>Thu, 15 Sep 2022 13:53:18 +0800</pubDate>
+      
+      <guid>https://levinion.github.io/posts/%E4%BB%A5%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE%E4%B8%BA%E4%BE%8B%E8%B0%88arch%E4%B8%8B%E7%9A%84%E8%BD%AF%E4%BB%B6%E9%99%8D%E7%BA%A7/</guid>
+      <description>引入 首先我想谈一谈为什么会有这篇文章。如果所有的软件都能在最新版本平稳运行，那么软件降级就绝非必要之举了。无论是 Bug 或是其他的一些兼容问题，更</description>
+    </item>
+    
     <item>
       <title>Arch小记</title>
       <link>https://levinion.github.io/posts/arch%E5%B0%8F%E8%AE%B0/</link>
