@@ -2,20 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://levinion.github.io/categories/arch/</loc>
+    <lastmod>2022-09-17T13:26:26+08:00</lastmod>
+  </url><url>
+    <loc>https://levinion.github.io/categories/</loc>
+    <lastmod>2022-09-17T13:26:26+08:00</lastmod>
+  </url><url>
+    <loc>https://levinion.github.io/posts/grub%E5%BC%95%E5%AF%BC%E6%81%A2%E5%A4%8D%E5%8E%86%E9%99%A9/</loc>
+    <lastmod>2022-09-17T13:26:26+08:00</lastmod>
+  </url><url>
     <loc>https://levinion.github.io/</loc>
-    <lastmod>2022-09-15T13:53:18+08:00</lastmod>
+    <lastmod>2022-09-17T13:26:26+08:00</lastmod>
   </url><url>
     <loc>https://levinion.github.io/posts/</loc>
-    <lastmod>2022-09-15T13:53:18+08:00</lastmod>
+    <lastmod>2022-09-17T13:26:26+08:00</lastmod>
   </url><url>
     <loc>https://levinion.github.io/posts/%E4%BB%A5%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE%E4%B8%BA%E4%BE%8B%E8%B0%88arch%E4%B8%8B%E7%9A%84%E8%BD%AF%E4%BB%B6%E9%99%8D%E7%BA%A7/</loc>
     <lastmod>2022-09-15T13:53:18+08:00</lastmod>
   </url><url>
     <loc>https://levinion.github.io/posts/arch%E5%B0%8F%E8%AE%B0/</loc>
     <lastmod>2022-08-25T13:54:39+08:00</lastmod>
-  </url><url>
-    <loc>https://levinion.github.io/categories/</loc>
-    <lastmod>2022-05-09T01:09:47+00:00</lastmod>
   </url><url>
     <loc>https://levinion.github.io/posts/parts/</loc>
     <lastmod>2022-05-09T01:09:47+00:00</lastmod>

@@ -5,7 +5,16 @@
     <link>https://levinion.github.io/posts/</link>
     <description>Recent content in Posts on Maruka&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 15 Sep 2022 13:53:18 +0800</lastBuildDate><atom:link href="https://levinion.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 17 Sep 2022 13:26:26 +0800</lastBuildDate><atom:link href="https://levinion.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Grub引导恢复历险</title>
+      <link>https://levinion.github.io/posts/grub%E5%BC%95%E5%AF%BC%E6%81%A2%E5%A4%8D%E5%8E%86%E9%99%A9/</link>
+      <pubDate>Sat, 17 Sep 2022 13:26:26 +0800</pubDate>
+      
+      <guid>https://levinion.github.io/posts/grub%E5%BC%95%E5%AF%BC%E6%81%A2%E5%A4%8D%E5%8E%86%E9%99%A9/</guid>
+      <description>事件爆发 由于 Windows10 的一次更新，成功失去了 grub 引导。这是一次历史性的事件——因为我再次回到了原本单 Windows 系统的畅快感之中：我再也不需要进行选择以进入 Windows 了</description>
+    </item>
+    
     <item>
       <title>以腾讯会议为例谈Arch下的软件降级</title>
       <link>https://levinion.github.io/posts/%E4%BB%A5%E8%85%BE%E8%AE%AF%E4%BC%9A%E8%AE%AE%E4%B8%BA%E4%BE%8B%E8%B0%88arch%E4%B8%8B%E7%9A%84%E8%BD%AF%E4%BB%B6%E9%99%8D%E7%BA%A7/</link>
