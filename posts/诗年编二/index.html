@@ -20,7 +20,7 @@
 <meta name="description" content="神谕 他说： “朋友啊 烧掉那些花与树 那样你将见到太阳” 太阳 面对太阳，我们能说些什么呢？ 它向天地，向宇宙，向每一份空气 说着“你无能” 我们也到底无可">
 <meta name="author" content="Maruka">
 <link rel="canonical" href="https://levinion.github.io/posts/%E8%AF%97%E5%B9%B4%E7%BC%96%E4%BA%8C/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.47e43db3e847328556e72b8727275cdcbe4684b87f6413fe8178df012ed0590e.css" integrity="sha256-R&#43;Q9s&#43;hHMoVW5yuHJydc3L5GhLh/ZBP&#43;gXjfAS7QWQ4=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.757d1a97e1f4f91158d2550c3b4f97677d99c03ce0054185ddf481dbf8d537f4.css" integrity="sha256-dX0al&#43;H0&#43;RFY0lUMO0&#43;XZ32ZwDzgBUGF3fSB2/jVN/Q=" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.f413e19d0714851f6474e7ee9632408e58ac146fbdbe62747134bea2fa3415e0.js" integrity="sha256-9BPhnQcUhR9kdOfuljJAjlisFG&#43;9vmJ0cTS&#43;ovo0FeA="
     onload="hljs.initHighlightingOnLoad();"></script>
 <link rel="icon" href="https://levinion.github.io/favicon.ico">
@@ -35,34 +35,6 @@
         #theme-toggle,
         .top-link {
             display: none;
-        }
-
-    </style>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --theme: rgb(29, 30, 32);
-                --entry: rgb(46, 46, 51);
-                --primary: rgb(218, 218, 219);
-                --secondary: rgb(155, 156, 157);
-                --tertiary: rgb(65, 66, 68);
-                --content: rgb(196, 196, 197);
-                --hljs-bg: rgb(46, 46, 51);
-                --code-bg: rgb(55, 56, 62);
-                --border: rgb(51, 51, 51);
-            }
-
-            .list {
-                background: var(--theme);
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-track {
-                background: 0 0;
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-thumb {
-                border-color: var(--theme);
-            }
         }
 
     </style>
@@ -144,43 +116,13 @@ if (!doNotTrack) {
 </script>
 </head>
 
-<body class="" id="top">
-<script>
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.body.classList.add('dark');
-    } else if (localStorage.getItem("pref-theme") === "light") {
-        document.body.classList.remove('dark')
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
-    }
-
-</script>
+<body class=" dark" id="top">
 
 <header class="header">
     <nav class="nav">
         <div class="logo">
             <a href="https://levinion.github.io" accesskey="h" title="Maruka&#39;s Blog (Alt + H)">Maruka&#39;s Blog</a>
             <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
-                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                </button>
             </div>
         </div>
         <ul id="menu">
@@ -466,18 +408,6 @@ _ _以恶意下了一场雨<br></p>
             mybutton.style.opacity = "0";
         }
     };
-
-</script>
-<script>
-    document.getElementById("theme-toggle").addEventListener("click", () => {
-        if (document.body.className.includes("dark")) {
-            document.body.classList.remove('dark');
-            localStorage.setItem("pref-theme", 'light');
-        } else {
-            document.body.classList.add('dark');
-            localStorage.setItem("pref-theme", 'dark');
-        }
-    })
 
 </script>
 <script>

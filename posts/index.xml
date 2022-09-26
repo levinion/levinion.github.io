@@ -5,7 +5,16 @@
     <link>https://levinion.github.io/posts/</link>
     <description>Recent content in Posts on Maruka&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 17 Sep 2022 13:26:26 +0800</lastBuildDate><atom:link href="https://levinion.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 26 Sep 2022 19:29:10 +0800</lastBuildDate><atom:link href="https://levinion.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Wine 与 ATRI 与 .desktop</title>
+      <link>https://levinion.github.io/posts/wine-%E4%B8%8E-atri-%E4%B8%8E-.desktop/</link>
+      <pubDate>Mon, 26 Sep 2022 19:29:10 +0800</pubDate>
+      
+      <guid>https://levinion.github.io/posts/wine-%E4%B8%8E-atri-%E4%B8%8E-.desktop/</guid>
+      <description>引言 一定是闲得没事的人才会去把 ATRI 放在 Arch 上跑吧（^_^)。平时在 Arch 上面跑 Osu！，而游玩其他游戏只能切换到 Win——这一整套流程想想就头疼。因</description>
+    </item>
+    
     <item>
       <title>Grub引导恢复历险</title>
       <link>https://levinion.github.io/posts/grub%E5%BC%95%E5%AF%BC%E6%81%A2%E5%A4%8D%E5%8E%86%E9%99%A9/</link>
