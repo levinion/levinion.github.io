@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Linux on Maruka&#39;s Blog</title>
+    <link>https://levinion.github.io/tags/linux/</link>
+    <description>Recent content in Linux on Maruka&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Sun, 27 Nov 2022 23:21:39 +0800</lastBuildDate><atom:link href="https://levinion.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux的51单片机开发环境搭建</title>
+      <link>https://levinion.github.io/posts/linux%E7%9A%8451%E5%8D%95%E7%89%87%E6%9C%BA%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</link>
+      <pubDate>Sun, 27 Nov 2022 23:21:39 +0800</pubDate>
+      
+      <guid>https://levinion.github.io/posts/linux%E7%9A%8451%E5%8D%95%E7%89%87%E6%9C%BA%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</guid>
+      <description>因为最近新开了一门 51 单片机课程，所以搞了台单片机开发板来玩。传统的单片机开发环境基本上都是 Windows+Keil，而 Keil 的编辑器又显得落后。</description>
+    </item>
+    
+  </channel>
+</rss>

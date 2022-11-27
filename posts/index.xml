@@ -5,7 +5,16 @@
     <link>https://levinion.github.io/posts/</link>
     <description>Recent content in Posts on Maruka&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Thu, 20 Oct 2022 23:36:42 +0800</lastBuildDate><atom:link href="https://levinion.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 27 Nov 2022 23:21:39 +0800</lastBuildDate><atom:link href="https://levinion.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Linux的51单片机开发环境搭建</title>
+      <link>https://levinion.github.io/posts/linux%E7%9A%8451%E5%8D%95%E7%89%87%E6%9C%BA%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</link>
+      <pubDate>Sun, 27 Nov 2022 23:21:39 +0800</pubDate>
+      
+      <guid>https://levinion.github.io/posts/linux%E7%9A%8451%E5%8D%95%E7%89%87%E6%9C%BA%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</guid>
+      <description>因为最近新开了一门 51 单片机课程，所以搞了台单片机开发板来玩。传统的单片机开发环境基本上都是 Windows+Keil，而 Keil 的编辑器又显得落后。</description>
+    </item>
+    
     <item>
       <title>双系统的全盘迁移与btrfs的那些事</title>
       <link>https://levinion.github.io/posts/%E5%8F%8C%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%85%A8%E7%9B%98%E8%BF%81%E7%A7%BB%E4%B8%8Ebtrfs%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B/</link>
