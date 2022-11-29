@@ -5,7 +5,16 @@
     <link>https://levinion.github.io/posts/</link>
     <description>Recent content in Posts on Maruka&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sun, 27 Nov 2022 23:21:39 +0800</lastBuildDate><atom:link href="https://levinion.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 29 Nov 2022 13:37:42 +0800</lastBuildDate><atom:link href="https://levinion.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Nonebot2-插件编写入门指北</title>
+      <link>https://levinion.github.io/posts/nonebot2-%E6%8F%92%E4%BB%B6%E7%BC%96%E5%86%99%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97/</link>
+      <pubDate>Tue, 29 Nov 2022 13:37:42 +0800</pubDate>
+      
+      <guid>https://levinion.github.io/posts/nonebot2-%E6%8F%92%E4%BB%B6%E7%BC%96%E5%86%99%E5%85%A5%E9%97%A8%E6%8C%87%E5%8C%97/</guid>
+      <description>指北请注意 nonebot2 是一个由 python 编写的跨平台异步机器人框架，对那些想拥有一个自己的机器人的人来说，nonebot2 是一个理想的选择。nonebot2 学</description>
+    </item>
+    
     <item>
       <title>Linux的51单片机开发环境搭建</title>
       <link>https://levinion.github.io/posts/linux%E7%9A%8451%E5%8D%95%E7%89%87%E6%9C%BA%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</link>
