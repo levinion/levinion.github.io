@@ -2,28 +2,7 @@
 <html data-theme="light">
   <head>
     {{template "header"}}
-    <title>Maruka's Blog</title>
-  </head>
-  <body>
-    {{template "nav"}}
-    <main>
-      <h1>Welcome to Maruka's Blog!</h1>
-      <div>
-        <div class="buttons">
-          <button class="contrast" onclick="location.href='/posts';">
-            文章
-          </button>
-          <button class="contrast" onclick="location.href='/category';">
-            分类
-          </button>
-          <button class="contrast" onclick="location.href='/about';">
-            关于
-          </button>
-        </div>
-      </div>
-    </main>
-  </body>
-  <style>
+    <style>
     html,
     body {
       height: 100%;
@@ -59,4 +38,25 @@
       display: flex;
     }
   </style>
+    <title>Maruka's Blog</title>
+  </head>
+  <body>
+    {{template "nav"}}
+    <main>
+      <h1>Welcome to Maruka's Blog!</h1>
+      <div>
+        <div class="buttons">
+          <button class="contrast" onclick="location.href='/posts';">
+            文章
+          </button>
+          <button class="contrast" onclick="location.href='/category';">
+            分类
+          </button>
+          <button class="contrast" onclick="location.href='/about';">
+            关于
+          </button>
+        </div>
+      </div>
+    </main>
+  </body>
 </html>

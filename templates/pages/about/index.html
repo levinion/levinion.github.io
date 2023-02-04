@@ -2,15 +2,7 @@
 <html data-theme="dark">
   <head>
     {{template "header"}}
-    <title>关于</title>
-  </head>
-  <body>
-    {{template "nav"}}
-    <main>
-      <article>{{.Content}}</article>
-    </main>
-  </body>
-  <style>
+    <style>
     article {
       background: rgb(28, 29, 33);
       max-width: 70%;
@@ -33,4 +25,12 @@
       text-align: center;
     }
   </style>
+    <title>{{.Filename}}</title>
+  </head>
+  <body>
+    {{template "nav"}}
+    <main>
+      <article>{{.Content}}</article>
+    </main>
+  </body>
 </html>

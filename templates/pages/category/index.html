@@ -2,19 +2,7 @@
 <html data-theme="dark">
   <head>
     {{template "header"}}
-    <title>分类</title>
-  </head>
-  <body>
-    {{template "nav"}}
-    <div class="main">
-      {{range $category,$posts:= .}}
-      <article>
-        <a href="/posts/{{$category}}/">{{$category}}</a>
-      </article>
-      {{end}}
-    </div>
-  </body>
-  <style>
+    <style>
     html {
       height: 100%;
     }
@@ -52,4 +40,16 @@
       margin-bottom: 0px;
     }
   </style>
+    <title>Category</title>
+  </head>
+  <body>
+    {{template "nav"}}
+    <div class="main">
+      {{range .}}
+      <article>
+        <a href="/posts/{{.}}">{{.}}</a>
+      </article>
+      {{end}}
+    </div>
+  </body>
 </html>

@@ -2,19 +2,7 @@
 <html data-theme="dark">
   <head>
     {{template "header"}}
-    <title>{{.MetaData.Title}}</title>
-  </head>
-  <body>
-    {{template "nav"}}
-    <div>
-      <div class="meta">
-        <h1>{{.MetaData.Title}}</h1>
-        <p>{{.MetaData.Created}}</p>
-      </div>
-      <article>{{.Content}}</article>
-    </div>
-  </body>
-  <style>
+    <style>
     article {
       background: rgb(28, 29, 33);
       max-width: 70%;
@@ -49,4 +37,16 @@
       text-align: center;
     }
   </style>
+    <title>{{.MetaData.Title}}</title>
+  </head>
+  <body>
+    {{template "nav"}}
+    <div>
+      <div class="meta">
+        <h1>{{.MetaData.Title}}</h1>
+        <p>{{.MetaData.Created}}</p>
+      </div>
+      <article>{{.Content}}</article>
+    </div>
+  </body>
 </html>
