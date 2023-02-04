@@ -1,0 +1,5 @@
+[pages]
+contentOnlyPages=["about"]
+
+[server]
+addr="localhost:9090"

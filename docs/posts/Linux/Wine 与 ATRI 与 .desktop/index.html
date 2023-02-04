@@ -64,7 +64,8 @@ wine ATRI.My.Dear.Moments/ATRI-MyDearMoments-.exe
 </ol>
 <h2>🔗 创建一个快捷方式吧！</h2>
 <ol>
-<li>反正都在终端输入命令运行了，第一发想一定是创建一个 alias。
+<li>
+<p>反正都在终端输入命令运行了，第一发想一定是创建一个 alias。</p>
 <pre><code class="language-sh"># .config/fish/config.fish 或 .zshrc 或 .bashrc
 alias atri=&quot;cd /run/media/maruka/data/games/ATRI.My.Dear.Moments/ATRI.My.Dear.Moments;wine ATRI.My.Dear.Moments/ATRI-MyDearMoments-.exe&quot;
 </code></pre>
@@ -72,7 +73,8 @@ alias atri=&quot;cd /run/media/maruka/data/games/ATRI.My.Dear.Moments/ATRI.My.De
 <p>之所以没有采用 <code>wine /run/media/maruka/data/games/ATRI.My.Dear.Moments/ATRI.My.Dear.MomentsATRI.My.Dear.Moments/ATRI-MyDearMoments-.exe</code> 的方式运行，是因为本机报了错，大概是无法直接在另一系统硬盘上运行程序吧。所以先 cd 过去再运行。如果你运行出了问题，请尝试这样做。</p>
 </blockquote>
 </li>
-<li>创建一个 Desktop Entry
+<li>
+<p>创建一个 Desktop Entry</p>
 <blockquote>
 <p>.desktop 是实现应用程序菜单的文件，通过创建该文件，可以在应用条目中查看到应用，方便使用 krunner 等程序快速唤起。该配置文件分为系统条目和用户条目。系统条目一般包括存于系统中、可供所有用户使用的应用程序，位于 <code>/usr/share/applications/</code> 或 <code>/usr/local/share/applications/</code> 文件夹中；用户条目优先级高于系统条目，一般位于 <code>~/.local/share/applications/</code> 文件夹中。</p>
 </blockquote>
@@ -118,7 +120,6 @@ Name= ATRI-MyDear-Moments
 Path= /run/media/maruka/data/games/ATRI.My.Dear.Moments/ATRI. My.Dear.Moments  
 
 Exec= wine ATRI-MyDearMoments-.exe  
-
 </code></pre>
 <blockquote>
 <p>Type 选择 Application，Name 自定，Exec 指打开快捷方式时运行的命令，Path 表示命令执行的位置（使用Path 的目的与 alias 中给出的理由相同），没什么好解释的，简单易懂。最后，如果你定义的. desktop 文件属于用户条目，即位于 <code>~/.local/share/applications/</code> ，执行以下命令以更新桌面条目；否则就不用管。</p>
@@ -132,7 +133,6 @@ Exec= wine ATRI-MyDearMoments-.exe
 <p>回归正题。要以以上方式运行程序的前提是解锁 Windows 系统硬盘的读写，否则将无法找到应用的路径。每次开机解锁输入密码一整套流程，虽然简单，但我不喜欢。查找了一些资料，对硬盘的认证由 <code>polkit</code> 完成。通过修改对应的操作（actions）即可解除用户的认证，省去了输入密码的程序。</p>
 <pre><code class="language-sh"># 修改 .policy 文件
 sudo vim /usr/share/polkit-1/actions/org.freedesktop.UDisks2.policy
-
 </code></pre>
 <p>找到 <code>org.freedesktop.udisk2.filesystem-mount-system</code> 条目，修改 <code>allow_active</code> 字段值 <code>auth_admin_keep</code> 为 <code>yes</code></p>
 <pre><code class="language-sh"># 修改前

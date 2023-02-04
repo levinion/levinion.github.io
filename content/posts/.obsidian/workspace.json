@@ -13,31 +13,11 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "grub引导恢复历险.md",
+                "file": "哲学/时间记忆.md",
                 "mode": "source",
                 "source": true
               }
-            },
-            "group": "a6c8f1a0ada5e2b5"
-          }
-        ]
-      },
-      {
-        "id": "61ca35df3b5de2bc",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "256919843f608650",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "grub引导恢复历险.md",
-                "mode": "preview",
-                "source": true
-              }
-            },
-            "group": "a6c8f1a0ada5e2b5"
+            }
           }
         ]
       }
@@ -97,7 +77,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "grub引导恢复历险.md",
+                "file": "哲学/时间记忆.md",
                 "collapseAll": true,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -114,7 +94,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "grub引导恢复历险.md"
+                "file": "哲学/时间记忆.md"
               }
             }
           },
@@ -164,15 +144,15 @@
   },
   "active": "eb55e3128ea5cc49",
   "lastOpenFiles": [
-    "arch小记.md",
-    "Wine 与 ATRI 与 .desktop.md",
-    "nonebot2-插件编写入门指北.md",
-    "mysql笔记.md",
-    "grub引导恢复历险.md",
-    "parts.md",
-    "以腾讯会议为例谈Arch下的软件降级.md",
-    "双系统的全盘迁移与btrfs的那些事.md",
-    "Linux的51单片机开发环境搭建.md",
-    "Pasted image 20221127234938.png"
+    "翻译/游戏人生11.md",
+    "文学/诗年编（二）.md",
+    "文学/诗年编（一）.md",
+    "文学/猴子.md",
+    "文学/文学构想.md",
+    "文学/克乃西特的奴仆本义及定语.md",
+    "文学/parts.md",
+    "数据结构与算法/二叉链表.md",
+    "哲学/认知主义.md",
+    "哲学/相对真实.md"
   ]
 }
