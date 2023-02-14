@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script> 
+
+
+    <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+    p {
+      font-size: 18px;
+      line-height: 32px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .meta p {
+      text-align: center;
+    }
+    .logo {
+      margin-top: 10px;
+      margin-left: 30px;
+      color: white;
+      font-size: x-large;
+    }
+    .breadcrumb {
+      margin-right: 50px;
+    }
+    .breadcrumb a {
+      color: white;
+    }
+    .date {
+      text-align: center;
+    }
+  </style>
+    <title>一次力扣爬虫的尝试</title>
+  </head>
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>一次力扣爬虫的尝试</h1>
+        <p>2023-02-14 21:02:57</p>
+      </div>
+      <article><h2>1 🤔欲做其事，必先利其器</h2>
+<p>最近开始刷力扣，奈何力扣的那个编辑器（monaco editor）实在不好用，还是用起了常用的 vscode。每次开始一道题目之前不可避免地需要将题目要求和代码复制到本地，而这样的重复劳动十分令人生厌，于是开个项目，把之前写的统计文件数的命令行程序扩展成一个爬虫工具。</p>
+<h2>2 🧰工具和基础代码</h2>
+<p>由于个人主要使用 go 语言，因此爬虫也选择使用 go 来实现；如果你使用其他语言，也可以参考该实现的主要思路。该命令行工具使用 cobra 框架完成，但那并非要讨论的内容。让我们看看爬虫部分。</p>
+<h3>2.1 req</h3>
+<p>req 是 go 语言爬虫的最佳实践之一，其操作十分简单。在爬虫部分中，核心环节即是由 req 实现的 query 请求函数。让我们看看代码：</p>
+<pre><code class="language-go">func query(bodyJsonString string) *req.Response {
+	res, err := req.C().R().
+		//csrf标头设置
+		SetHeader(&quot;x-csrftoken&quot;,
+			&quot;**********************************************************&quot;).
+		SetHeader(&quot;referer&quot;, &quot;https://leetcode.cn/problems&quot;).
+		SetBodyJsonString(bodyJsonString).
+		Post(&quot;https://leetcode.cn/graphql/&quot;)
+	checkErr(err)
+	return res
+}
+</code></pre>
+<p>在该段代码中，使用 <code>.C()</code> 获取一个爬虫客户端，使用 <code>.R()</code> 获取请求，然后设置必要的 <code>Header</code> 和请求体，最后使用 <code>Post</code> 方法发起请求，得到一个可进行后续处理的 <code>Response</code> 结构体指针。详细内容下面会讲。</p>
+<h3>2.2 json 格式数据处理</h3>
+<p>当我们得到了请求到的数据，你会发现它是一个 json 格式的字符串。我们需要从该 json 格式数据中得到我们需要的信息，如题号、题目要求、题目代码等。在 go 中，一个很方便的实践是 gjson。而当我们想要修改 json 字符串时（你会发现我们确实需要），sjson 则是一个好的选择。在获取特定题目标题时，我使用了 gjson 以获取标题和难度等级。</p>
+<pre><code class="language-go">func GetSlug(index int) (slug, diff string) {
+	res := query(slugPayload)
+	jsonString := res.String()
+	baseFindPath := fmt.Sprintf(&quot;data.allQuestionsBeta.#(questionId=%d)&quot;, index)
+	slugFindPath := baseFindPath + &quot;.titleSlug&quot;
+	diffFindPath := baseFindPath + &quot;.difficulty&quot;
+	slug = gjson.Get(jsonString, slugFindPath).String()
+	diff = gjson.Get(jsonString, diffFindPath).String()
+	return
+}
+</code></pre>
+<h2>3 🐛开始爬取数据</h2>
+<p>OK，到这里你已经知道了该使用什么工具，而我们的爬虫教程也终于可以正式开始了！</p>
+<h3>3.1 爬取特定题目信息</h3>
+<p>首先让我们先爬取特定题目的有用信息。这些信息可能包括题目的题号、难度、代码、需求和标题，为了方便起见，将它们加入一个结构体。</p>
+<pre><code class="language-go">type Data struct {
+	Index  int
+	Diff   string
+	CodeR  string
+	NeedR  string
+	TitleR string
+}
+</code></pre>
+<p>当你进入力扣并且打开一个具体的题目（这里以大家熟知的“<a href="https://leetcode.cn/problems/two-sum/">两数之和</a>”为例），按 <code>F12</code> 打开浏览器控制台，依次点击网络和 <code>XHR</code>，你会发现很多 <code>graphql/</code>，这些即是力扣的 <code>api</code> 请求信息。在仔细检查每项的数据内容后就能够发现记录着全部我们所需要信息的数据：</p>
+<pre><code class="language-json">data: {,…}
+    question: {questionId: &quot;1&quot;, questionFrontendId: &quot;1&quot;, categoryTitle: &quot;Algorithms&quot;, boundTopicId: 2,…}
+</code></pre>
+<p>接着我们就可以查看标头，记录请求地址（此处为 <code>https://leetcode.cn/graphql/</code>）、<code>crsftoken</code> 和 <code>referer</code>，并且设置爬虫的 <code>Header</code>，并复制请求载荷信息作为请求体，以上面的地址发送 <code>POST</code> 请求：</p>
+<pre><code class="language-go">func query(bodyJsonString string) *req.Response {
+	res, err := req.C().R().
+		//csrf标头设置
+		SetHeader(&quot;x-csrftoken&quot;,
+			&quot;**********************************************************&quot;).
+		SetHeader(&quot;referer&quot;, &quot;https://leetcode.cn/problems&quot;).
+		SetBodyJsonString(bodyJsonString).
+		Post(&quot;https://leetcode.cn/graphql/&quot;)
+	checkErr(err)
+	return res
+}
+</code></pre>
+<p>其中请求体可以自定义请求项，只获取我们可能用得上的关键数据：</p>
+<pre><code class="language-json">//请求体
+{
+  &quot;operationName&quot;: &quot;questionData&quot;,
+  &quot;variables&quot;: {
+    &quot;titleSlug&quot;: &quot;two-sum&quot;
+  },
+  &quot;query&quot;: &quot;query questionData($titleSlug: String!) {         question(titleSlug: $titleSlug) {\n             questionId\n             categoryTitle\n             title\n             titleSlug\n             translatedTitle\n             translatedContent\n             isPaidOnly\n             difficulty\n                codeSnippets\n {                 lang\n                 langSlug\n                 code\n             }         }     }&quot;
+}
+</code></pre>
+<p>这样我们就在 <code>res</code> 中获得了在浏览器中抓包得到的同样的 json 数据，你可以使用 <code>res.String()</code> 将它打印出来以进行验证；我们这里就不这样做了。然后使用 <code>gjson</code> 提取我们需要的数据：</p>
+<pre><code class="language-go">func GetInter(slug, codeType string) (string, string, string) {
+	interPayload, err := sjson.Set(interPayload, &quot;variables.titleSlug&quot;, slug)
+	checkErr(err)
+	res := query(interPayload)
+
+	jsonString := res.String()
+	codeTypeCode := model.CodeTypeMap[codeType]
+	code := fmt.Sprintf(&quot;data.question.codeSnippets.%v.code&quot;, codeTypeCode)
+	need := &quot;data.question.translatedContent&quot;
+	title := &quot;data.question.translatedTitle&quot;
+	codeR := gjson.Get(jsonString, code).String()
+	needR := gjson.Get(jsonString, need).String() //html
+	titleR := gjson.Get(jsonString, title).String()
+	return codeR, needR, titleR
+}
+</code></pre>
+<p><code>gjson</code> 的使用方法很简单：它的基本使用方式是 <code>gjson.Get(json字符串，查找字符串)</code>，它能够通过 <code>父元素名.子元素名</code> 以获取子元素的值。至于如 <code>#(questionId=1)</code> 则是获取数组内属性 <code>questionId</code> 为 1 的元素。最后使用 <code>.String()</code> 方法将其转化为字符串。</p>
+<p>由上面的代码，我们就获取了特定题目的代码，需求和标题。</p>
+<p>但是我们如何爬取其他题目呢？我们发现涉及题目标题的请求信息只有 <code>referer</code> 和请求体的 <code>titleSlug</code>，而修改 <code>referer</code> 似乎是不起作用的，那么真正区分不同题目的就只有 <code>titleSlug</code> 的值。只要利用 <code>sjson</code> 将其修改为其他题目的标题，我们确实拉取到了其他题目的信息。</p>
+<h3>爬取全部题目列表</h3>
+<p>至此我们已经能够根据标题取得我们需要的数据了，但每次传入标题的形式并不高效，更何况还是 slug 格式的标题。我们所需要的是根据题号爬取题目信息。</p>
+<p>还是回到<a href="https://leetcode.cn/problems/two-sum/">两数之和</a>这个页面，如果你足够仔细的话，你可能早就发现了以下的 json 信息：</p>
+<pre><code class="language-json">{data: {allQuestionsBeta: [{questionId: &quot;1&quot;, __typename: &quot;QuestionNode&quot;, status: &quot;ac&quot;},…]}}
+</code></pre>
+<p>该信息中维护了全部的题目信息，适当修改其请求体以获取 <code>slug</code> 格式标题，当然这也可包括其他数据：</p>
+<pre><code class="language-json">{&quot;operationName&quot;: &quot;allQuestions&quot;, &quot;query&quot;: &quot;query allQuestions {  allQuestionsBeta {    ...questionSummaryFields    __typename  }}fragment questionSummaryFields on QuestionNode {  title  titleSlug  translatedTitle  questionId  difficulty  __typename}&quot;}
+</code></pre>
+<blockquote>
+<p>细心的同学可能注意到，为何我们不在这里取得题目具体的信息，如code和need之类的呢？为何我们还需要维护一个请求专门爬取上面两个数据呢？这是因为我在修改上面请求体的过程中发现只要请求了以上任何一个数据就会报错，因此不得不这样做，虽然可能因此拖慢了程序的速度（毕竟要爬两次呢）。</p>
+</blockquote>
+<p>于是我们就可以利用它取得题号对应的标题：</p>
+<pre><code class="language-go">func GetSlug(index int) (slug, diff string) {
+	res := query(slugPayload)
+	jsonString := res.String()
+	baseFindPath := fmt.Sprintf(&quot;data.allQuestionsBeta.#(questionId=%d)&quot;, index)
+	slugFindPath := baseFindPath + &quot;.titleSlug&quot;
+	diffFindPath := baseFindPath + &quot;.difficulty&quot;
+	slug = gjson.Get(jsonString, slugFindPath).String()
+	diff = gjson.Get(jsonString, diffFindPath).String()
+	return
+}
+</code></pre>
+<p>除开以上关键环节就只剩下一些文件操作（以及一些简单的ui），最后爬虫部分最终代码如下：</p>
+<pre><code class="language-go">func Get(index int) {
+	t := timer.NewTimer()
+	t.Start()
+	config.ReadConfig()
+	codeType := viper.GetString(&quot;codeType&quot;)
+	slug, diff := query.GetSlug(index)
+	codeR, needR, titleR := query.GetInter(slug, codeType)
+	data := &amp;model.Data{Index: index, Diff: diff, CodeR: codeR, NeedR: needR, TitleR: titleR}
+	codeDir := viper.GetString(&quot;codeDir&quot;)
+
+	var dir string
+	if viper.GetBool(&quot;moduled&quot;) {
+		diff := strings.ToLower(data.Diff)
+		dir = filepath.Join(codeDir, diff, strconv.Itoa(data.Index)+&quot;.&quot;+data.TitleR)
+	} else {
+		dir = filepath.Join(codeDir, strconv.Itoa(data.Index)+&quot;.&quot;+data.TitleR)
+	}
+	os.MkdirAll(dir, os.ModePerm)
+	codeFilename := &quot;main.&quot; + codeType
+	codeFilePath := filepath.Join(dir, codeFilename)
+	needFilePath := filepath.Join(dir, &quot;need.md&quot;)
+	if !isExist(codeFilePath) {
+		color.Cyan(&quot;请勿重复拉取文件&quot;)
+		return
+	} else {
+		cfile, err := os.Create(codeFilePath)
+		checkErr(err)
+		defer cfile.Close()
+		info := viper.GetString(&quot;append.prefix&quot;) + data.CodeR
+		cfile.WriteString(info)
+	}
+	if viper.GetBool(&quot;function.useNeed&quot;) {
+		if !isExist(needFilePath) {
+			color.Cyan(&quot;请勿重复拉取文件&quot;)
+			return
+		} else {
+			nfile, err := os.Create(needFilePath)
+			checkErr(err)
+			defer nfile.Close()
+			nfile.WriteString(needR)
+		}
+	}
+	t.Stop()
+}
+</code></pre>
+</article>
+    </div>
+  </body>
+</html>
