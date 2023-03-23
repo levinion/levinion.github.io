@@ -1,7 +1,19 @@
 <!DOCTYPE html>
 <html data-theme="dark">
   <head>
-    {{template "header"}}
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script> 
+
     <style>
     body {
       background-color: #ff9d00;
@@ -28,13 +40,30 @@
     <title>posts of Category</title>
   </head>
   <body>
-    {{template "nav"}}
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
     <div class="main">
-      {{range .}}
+      
       <article>
-        <a href="{{.Filename}}">{{.Filename}}</a>
+        <a href="MIT6.824-%e5%88%86%e5%b8%83%e5%bc%8f%e7%b3%bb%e7%bb%9f-%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0">MIT6.824-分布式系统-学习笔记</a>
       </article>
-      {{end}}
+      
     </div>
   </body>
 </html>

@@ -16,43 +16,55 @@
 
 
     <style>
-    article {
-      background: rgb(28, 29, 33);
-      max-width: 70%;
-      text-align: left;
-      margin: 0 auto;
-      border-radius: 30px;
-    }
-    p {
-      font-size: 18px;
-      line-height: 32px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    .meta p {
-      text-align: center;
-    }
-    .logo {
-      margin-top: 10px;
-      margin-left: 30px;
-      color: white;
-      font-size: x-large;
-    }
-    .breadcrumb {
-      margin-right: 50px;
-    }
-    .breadcrumb a {
-      color: white;
-    }
-    .date {
-      text-align: center;
-    }
-  </style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .meta p {
+        text-align: center;
+      }
+      .date {
+        text-align: center;
+      }
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
     <title>Wine 与 ATRI 与 .desktop</title>
   </head>
-  <body>
+  <body onselectstart="return false">
     
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
@@ -76,13 +88,13 @@
         <h1>Wine 与 ATRI 与 .desktop</h1>
         <p>2022-09-26T19:29:10&#43;08:00</p>
       </div>
-      <article><h2>引言</h2>
+      <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 引言</h2>
 <p>一定是闲得没事的人才会去把 ATRI 放在 Arch 上跑吧😂。平时在 Arch 上面跑 Osu！，而游玩其他游戏只能切换到 Win——这一整套流程想想就头疼。因此试着用 <code>Wine</code> 直接跑 ATRI，不想直接跑通，于是有了这篇文章。</p>
 <p><img src="https://ghproxy.com/github.com/levinion/blog-pic/blob/main/img/ss_47e1f809fa56ab6d48de3c66e3147585b4ee30a2.600x338.jpg" alt="atri"></p>
 <blockquote>
 <p>ATRI 是一个很好的游戏，不过作为一个不怎么推 Gal 的人，对其也并没有多少发言权。本来是可以在 Steam 上购买的，无奈有些小贵，只得自寻旁门外道（笑），等日后补票。虽然我很喜欢开源社区的理念，认为其贯彻了互联网的共享精神，也并不反感所谓盗版；但我也不反对为开发者和游戏创作者的劳动付费。在付费和开源之间寻求平衡，也是互联网发展所必然面对的课题之一——然而今天要谈的不是这些。</p>
 </blockquote>
-<h2>🍷 喂《萝卜子》喝“红酒”</h2>
+<h2 id="-"><a class="anchor" href="#-">#</a> 🍷 喂《萝卜子》喝“红酒”</h2>
 <p>说到 Linux 上的“红酒”，指的当然是大名鼎鼎的“Wine”。Wine 是类 Unix 操作系统上一个功能强大的软件，其提供了一个兼容层用以转译 Windows 系统命令。Wine 名称来自于“Wine Is Not an Emulator”，表明其不是一个模拟器，而其性能损失也确实微乎其微。对游戏改良的 Wine，也就是 Steam Deck 所使用的 proton 配合 Linux 甚至能够达到较 Windows 更低的延迟和更高的帧率。</p>
 <p>我的游戏文件夹（除 osu 外）都位于 Windows 分区下的 D 盘，而 Arch 因为采用了 Btrfs 文件系统，能够直接对其进行读写，因此可以直接在该文件夹内运行。</p>
 <ol>
@@ -104,7 +116,7 @@ wine ATRI.My.Dear.Moments/ATRI-MyDearMoments-.exe
 </blockquote>
 </li>
 </ol>
-<h2>🔗 创建一个快捷方式吧！</h2>
+<h2 id="--1"><a class="anchor" href="#--1">#</a> 🔗 创建一个快捷方式吧！</h2>
 <ol>
 <li>
 <p>反正都在终端输入命令运行了，第一发想一定是创建一个 alias。</p>
@@ -170,7 +182,7 @@ Exec= wine ATRI-MyDearMoments-.exe
 </code></pre>
 </li>
 </ol>
-<h2>😫 偷懒是最大生产力</h2>
+<h2 id="--2"><a class="anchor" href="#--2">#</a> 😫 偷懒是最大生产力</h2>
 <p>邓先生所言：“科技是第一生产力。”我对此不以为然。人类从来都是因偷懒而进步着的。将两人份的劳动缩减为一人份，从每个人中间抠出半个人来，让他们可以懒散度日。就连我们的某某主义也是同样，所谓的“人的自由发展”不正是“不干正事”的别名？</p>
 <p>回归正题。要以以上方式运行程序的前提是解锁 Windows 系统硬盘的读写，否则将无法找到应用的路径。每次开机解锁输入密码一整套流程，虽然简单，但我不喜欢。查找了一些资料，对硬盘的认证由 <code>polkit</code> 完成。通过修改对应的操作（actions）即可解除用户的认证，省去了输入密码的程序。</p>
 <pre><code class="language-sh"># 修改 .policy 文件
@@ -193,7 +205,7 @@ sudo vim /usr/share/polkit-1/actions/org.freedesktop.UDisks2.policy
 </code></pre>
 <p>重启验证，认证不再需要输入密码。本来想实现开机自动挂载，但是似乎失败了</p>
 <blockquote>
-<p>通过改写 fstab 文件可以轻易做到，看来当初还是走了不少弯路😢 --2023-01-20</p>
+<p>通过改写 fstab 文件可以轻易做到，看来当初还是走了不少弯路😢 &ndash;2023-01-20</p>
 </blockquote>
 <p>算了，继续推阿托莉去。对游戏的感想就留待以后再写。</p>
 </article>

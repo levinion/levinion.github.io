@@ -3,8 +3,6 @@
   "obsidian-pandoc",
   "cm-chs-patch",
   "obsidian-quiet-outline",
-  "easy-typing-obsidian",
-  "obsidian-auto-pair-chinese-symbol",
   "calendar",
   "table-editor-obsidian",
   "obsidian-kanban",
@@ -17,5 +15,7 @@
   "open-vscode",
   "obsidian-image-auto-upload-plugin",
   "obsidian-vimrc-support",
-  "emoji-shortcodes"
+  "emoji-shortcodes",
+  "obsidian-auto-pair-chinese-symbol",
+  "easy-typing-obsidian"
 ]

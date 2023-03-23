@@ -16,43 +16,55 @@
 
 
     <style>
-    article {
-      background: rgb(28, 29, 33);
-      max-width: 70%;
-      text-align: left;
-      margin: 0 auto;
-      border-radius: 30px;
-    }
-    p {
-      font-size: 18px;
-      line-height: 32px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    .meta p {
-      text-align: center;
-    }
-    .logo {
-      margin-top: 10px;
-      margin-left: 30px;
-      color: white;
-      font-size: x-large;
-    }
-    .breadcrumb {
-      margin-right: 50px;
-    }
-    .breadcrumb a {
-      color: white;
-    }
-    .date {
-      text-align: center;
-    }
-  </style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .meta p {
+        text-align: center;
+      }
+      .date {
+        text-align: center;
+      }
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
     <title>Nonebot2-插件编写入门指北</title>
   </head>
-  <body>
+  <body onselectstart="return false">
     
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
@@ -76,7 +88,7 @@
         <h1>Nonebot2-插件编写入门指北</h1>
         <p>2022-11-29 13:37:42</p>
       </div>
-      <article><h2>😇指北请注意</h2>
+      <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 😇指北请注意</h2>
 <p>nonebot2 是一个由 python 编写的跨平台异步机器人框架，对那些想拥有一个自己的机器人的人来说，nonebot2 是一个理想的选择。nonebot2 学习门槛不高——你所需要的只是一些 python 基础。如果你没有学过 python，但有其他编程语言基础，那也没有关系；因为我也将近一年多没有接触过 python 编程，和初学者没有什么两样，因此<!-- raw HTML omitted -->如果代码稀烂的话还请多多谅解<!-- raw HTML omitted -->。</p>
 <p>写这篇文章的部分原因是因为官网的教程过于简约（？）或零碎，而且少有代码范例，对想要深入实践编写插件的人造成了一定困难；另一部分也是作为这几天编写插件经验的总结。本文风格偏重实践，并不打算事无巨细地讲清楚内在原理；这其实是我知识不足的原因。因此如果想要同时搞清楚理论的话，我会尽量给出参考的链接。如果正在阅读这篇文章的你能够知道“我写这篇文章的同时也是在和你一同学习”的话，那可就太好了。</p>
 <p><!-- raw HTML omitted -->&gt; 在正文开始前，你应当已经做到了以下几点：<!-- raw HTML omitted --></p>
@@ -99,9 +111,9 @@
 <li>发送和下载图片到本地（没错，就是偷图功能哒！）</li>
 </ul>
 <p>行了，废话不多说，让我们开始吧。</p>
-<h2>1 🍊Hello World</h2>
-<p>正如每种语言都从输出 &quot;hello world&quot; 开始那样，我们的第一个插件尝试让 bot 发送一条 &quot;hello world&quot; 信息给用户。</p>
-<h3>1.1 准备 - 项目文件结构</h3>
+<h2 id="1-hello-world"><a class="anchor" href="#1-hello-world">#</a> 1 🍊Hello World</h2>
+<p>正如每种语言都从输出 &ldquo;hello world&rdquo; 开始那样，我们的第一个插件尝试让 bot 发送一条 &ldquo;hello world&rdquo; 信息给用户。</p>
+<h3 id="11----"><a class="anchor" href="#11----">#</a> 1.1 准备 - 项目文件结构</h3>
 <p>在开始正式编写插件之前，我们先了解一下插件编写的文件结构。</p>
 <pre><code>.  
 ├── bot.py  
@@ -122,7 +134,7 @@
 <blockquote>
 <p>如果你想要将插件发布到商店，按照规范，插件名称应当以 <code>nonebot-plugin-</code> 或 <code>nonebot_plugin_</code> 开头，本文为练习方便起见，不遵循此规定。</p>
 </blockquote>
-<h3>1.2 始动 - hello world 程序</h3>
+<h3 id="12----hello-world-"><a class="anchor" href="#12----hello-world-">#</a> 1.2 始动 - hello world 程序</h3>
 <pre><code class="language-python">from nonebot import on_command
 
 hello_world = on_command(&quot;hi&quot;)
@@ -137,7 +149,7 @@ async def _():
 <li>然后异步函数向用户发送信息。</li>
 </ol>
 <p>具体的响应器类型请参考官网内容—— <a href="https://nb2.baka.icu/docs/tutorial/plugin/create-matcher">定义事件响应器</a>。</p>
-<h3>1.3 进阶 - 由 hello world 过渡到实用插件</h3>
+<h3 id="13-----hello-world-"><a class="anchor" href="#13-----hello-world-">#</a> 1.3 进阶 - 由 hello world 过渡到实用插件</h3>
 <p>通过以上代码，我们已经实现 bot 向用户发送信息。如果加上事件处理，就能够实现更多实用功能。</p>
 <pre><code class="language-python">import ...
 
@@ -154,8 +166,8 @@ async def _():
     message=...
     await hello_world.send(message)
 </code></pre>
-<h2>2 🦴正式开始？——其实已经结束了</h2>
-<h3>2.1 第一步 - poke 行为触发</h3>
+<h2 id="2-"><a class="anchor" href="#2-">#</a> 2 🦴正式开始？——其实已经结束了</h2>
+<h3 id="21----poke-"><a class="anchor" href="#21----poke-">#</a> 2.1 第一步 - poke 行为触发</h3>
 <pre><code class="language-python">from nonebot.adapters.onebot.v11 import MessageSegment，PokeNotifyEvent
 from nonebot import on_notice
 
@@ -174,7 +186,7 @@ async def _(event:PokeNotifyEvent):
 <p><code>MessageSegment</code> 是一个非常好用的工具。在 nonebot 中，我们想要发送图片，或@某人等特殊信息，通常使用 CQ 码。<code>MessageSegment</code> 对 CQ 码进行包装，使其更加容易编写。此处我们使用 <code>MessageSegment.at()</code> 函数，实现了@某人的效果。</p>
 <p>当我们要实现一个动作时，往往需要提前告知动作作用的对象。<code>event.get_user_id()</code> 返回 string 格式的用户 qq 号。</p>
 <p><code>MessageSegment</code>返回一个<code>Message</code>对象，能够和其他<code>Message</code>对象相加，合并成一个消息列表。因此最后发送给用户的信息应当是：“@用户名hi”。</p>
-<h3>2.2 第二步 - 叫我主人大人！</h3>
+<h3 id="22----"><a class="anchor" href="#22----">#</a> 2.2 第二步 - 叫我主人大人！</h3>
 <p>有时我们需要从用户发送的消息中抽取有用的信息，并对其进行处理或存储。这通常使用 <code>CommandArg</code> 来实现。</p>
 <pre><code class="language-python">call_me=on_command(&quot;叫我&quot;,rule=to_me()&amp; Rule(is_super_user),priority=8)
 @call_me.handle()
@@ -200,7 +212,7 @@ async def _(event:Event,args:Message=CommandArg()):
 <p>CommandArg 获取的消息是一个 Message 对象，需要使用 extract. <code>plain_text()</code> 函数返回一个消息字符串。当然你也可以使用 split 方法对这个字符串进行切割，从而返回一个 string 列表。我在上面的示例中就是这样做的。我通过 <code>if else</code> 语句强制规定该响应器只能接受一个参数。</p>
 <p><code>oyobi</code> 变量成功保存了接受到的命令参数，接着就是 python 中基本的文件操作。这里你需要掌握的是 json 文件的操作。json 格式文件常用于 nonebot 中的数据保存。由于不需要建立数据库，只需要操作文件，所以方便快捷。对 json 的操作一般包括增删改查，流程大都是通过调用 <code>json.load()</code> 和 <code>json.dump()</code> 两个函数。<code>json.load()</code> 函数用以读取 json 格式信息并转化为字典或列表格式的变量。<code>json.dump()</code> 函数将 python 中的数据格式，如字典或列表转化为 json 格式数据并写入文件中。在要保存的数据中包括 cjk 字符（中文或日文等）的情况下，建议将 <code>json.dump()</code> 函数中的 <code>ensure_ascii</code> 参数置为 <code>False</code>，否则 cjk 字符将被保存为 ascii 码导致阅读困难。</p>
 <p>学会json的操作，你就可以写下一个响应器，让机器人叫你你喜欢的名字了（<del>比如ご主人様之类</del>）。</p>
-<h3>2.3 第三步 - 你到底是不是我的主人？</h3>
+<h3 id="23----"><a class="anchor" href="#23----">#</a> 2.3 第三步 - 你到底是不是我的主人？</h3>
 <p>说是例子，其实更恰当地来讲不过是工具函数罢了。判断是否超管在实现某些功能时很有必要，比如对你示爱，对其他人冷眼以对的<!-- raw HTML omitted -->超级棒的<!-- raw HTML omitted -->机器人。自定义规则适用于响应器中事件的判断，如果你想要对响应器是否执行进行判断（如果不符合，不进入响应器），可以使用 <code>nonebot.rule</code> 中封装好的规则，如<code>to_me</code>等，或 <code>nonebot.permission</code> 中的封装好的权限，如<code>SUPERUSER</code>。</p>
 <pre><code class="language-python">import nonebot
 
@@ -231,7 +243,7 @@ async def _(event:PokeNotifyEvent):
         await poke.finish(MessageSegment.at(user_id)+Message(&quot;滚&quot;))
 </code></pre>
 <p><del>稍稍修改第一个程序即可收获秀恩爱机器人一名，以及所有尝试戳机器人的人的无情谩骂（别问我怎么知道的）</del></p>
-<h3>2.4 第四步 - 好图，我的了！</h3>
+<h3 id="24----"><a class="anchor" href="#24----">#</a> 2.4 第四步 - 好图，我的了！</h3>
 <pre><code class="language-python"># 图片收集
 def _img_check(event: Event):
     if is_super_user(event):
@@ -258,7 +270,7 @@ async def _collect(event: Event):
 <p>机器人的自主学习使我们梦寐以求的。偷图虽然离自主学习还很遥远（<del>其实根本八竿子打不着</del>），但偷图依然是一项实用的功能。</p>
 <p>现在你已经掌握了编写插件所具有的基本知识，因此我想到了这步，只是提示一下思路就已经足够了。</p>
 <p>正如我们前面所说，cq-http 中一些复杂消息类型，如@或图片等均是通过 CQ 码实现的。因此我们接收到的图片应当是类似 <code>[CQ:image,...,url=http://xxx.com/xxx.jpg]</code> 的格式，因此我们可以使用一些方式，如正则或 json 的方式获取消息中的 url，并且利用 request 或着 httpx 将 url 的图片下载到本地。</p>
-<h3>2.5 第五步 - 随机回复</h3>
+<h3 id="25----"><a class="anchor" href="#25----">#</a> 2.5 第五步 - 随机回复</h3>
 <pre><code class="language-python"># 随机回复
 def _reply_check():
     return prepare(10)

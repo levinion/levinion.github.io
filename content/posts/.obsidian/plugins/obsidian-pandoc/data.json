@@ -9,7 +9,7 @@
   "highDPIDiagrams": true,
   "pandoc": "",
   "pdflatex": null,
-  "outputFolder": "D:\\Documents\\pandoc\\",
+  "outputFolder": "/home/maruka/Downloads/",
   "extraArguments": "",
   "exportFrom": "html"
 }
