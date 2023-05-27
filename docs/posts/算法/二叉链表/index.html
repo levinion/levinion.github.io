@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html data-theme="dark">
-  <head>
-    
+
+<head>
+  
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,57 +16,86 @@
 </script> 
 
 
-    <style>
+  <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
       article {
-        background: rgb(28, 29, 33);
-        max-width: 70%;
-        text-align: left;
-        margin: 0 auto;
-        border-radius: 30px;
+        max-width: 90%;
       }
+
+      h1 {
+        font-size: large;
+      }
+
+      .date {
+        font-size: small;
+      }
+
       p,
       li {
-        font-size: 16.5px;
-        line-height: 32px;
+        font-size: 15px;
       }
-      h1 {
-        text-align: center;
-        margin-bottom: 10px;
-      }
-      .meta p {
-        text-align: center;
-      }
-      .date {
-        text-align: center;
-      }
-      .toc {
-        position: fixed;
-        float: left;
-        max-width: 50px;
-        max-height: 50px;
-        margin-top: 200px;
-        text-align: center;
-      }
-      h2 {
-        font-size: x-large;
-        color: peru;
-      }
-      h3 {
-        font-size: large;
-        color: rgb(205, 158, 112);
-      }
-      h4 {
-        font-size: medium;
-        color: pink;
-      }
-      strong {
-        color: rgb(182, 230, 240);
-      }
-    </style>
-    <title>二叉链表</title>
-  </head>
-  <body onselectstart="return false">
-    
+    }
+
+    p,
+    li {
+      font-size: 16.5px;
+      line-height: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      text-align: center;
+    }
+
+    .date {
+      text-align: center;
+    }
+
+    .toc {
+      position: fixed;
+      float: left;
+      max-width: 50px;
+      max-height: 50px;
+      margin-top: 200px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: x-large;
+      color: peru;
+    }
+
+    h3 {
+      font-size: large;
+      color: rgb(205, 158, 112);
+    }
+
+    h4 {
+      font-size: medium;
+      color: pink;
+    }
+
+    strong {
+      color: rgb(182, 230, 240);
+    }
+  </style>
+  <title>二叉链表</title>
+</head>
+
+<body onselectstart="return false">
+  
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
   <div class="breadcrumb">
@@ -83,12 +113,12 @@
   </div>
 </nav>
 
-    <div>
-      <div class="meta">
-        <h1>二叉链表</h1>
-        <p>2022-03-17 19:15:57</p>
-      </div>
-      <article><p>二叉链表的实现在数据结构里不可谓不是一个难点；它对递归方法的依赖程度比较高。递归，至少是对我来说，并不是那么直观的东西；几行的代码往往需要一个初学者在他的头脑中追踪几十行才能发现它到底是怎样运作的。</p>
+  <div>
+    <div class="meta">
+      <h1>二叉链表</h1>
+      <p>2022-03-17 19:15:57</p>
+    </div>
+    <article><p>二叉链表的实现在数据结构里不可谓不是一个难点；它对递归方法的依赖程度比较高。递归，至少是对我来说，并不是那么直观的东西；几行的代码往往需要一个初学者在他的头脑中追踪几十行才能发现它到底是怎样运作的。</p>
 <p>我在下面给出了一种实现方式：</p>
 <pre><code class="language-cpp">//bitree.cpp
 
@@ -217,6 +247,7 @@ int main()
 <p><code>inline void Bitree::create(Node *tree)</code></p>
 <p>当你传入 <code>Node *</code> 时，你所传入的其实只是该指针的一个拷贝；你在这个拷贝下创建了二叉链表的所有结点，但是对关键的根结点没有进行任何操作。明白问题所在，办法就显而易见了：一种办法是使 <code>create(Note *)</code> 函数返回一个指向 <code>Node</code> 的指针；而我选择改动少的方法，即将 <code>Node *</code> 改为 <code>Node *&amp;</code> ，即指针的一个引用。相应的，函数的声明部分也需要进行修改。</p>
 </article>
-    </div>
-  </body>
+  </div>
+</body>
+
 </html>

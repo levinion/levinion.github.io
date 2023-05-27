@@ -1,65 +1,96 @@
 <!DOCTYPE html>
 <html data-theme="dark">
-  <head>
-    {{template "header"}}
 
-    <style>
+<head>
+  {{template "header"}}
+
+  <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
       article {
-        background: rgb(28, 29, 33);
-        max-width: 70%;
-        text-align: left;
-        margin: 0 auto;
-        border-radius: 30px;
+        max-width: 90%;
       }
+
+      h1 {
+        font-size: large;
+      }
+
+      .date {
+        font-size: medium;
+      }
+
       p,
       li {
-        font-size: 16.5px;
-        line-height: 32px;
+        font-size: 15px;
       }
-      h1 {
-        text-align: center;
-        margin-bottom: 10px;
-      }
-      .meta p {
-        text-align: center;
-      }
-      .date {
-        text-align: center;
-      }
-      .toc {
-        position: fixed;
-        float: left;
-        max-width: 50px;
-        max-height: 50px;
-        margin-top: 200px;
-        text-align: center;
-      }
-      h2 {
-        font-size: x-large;
-        color: peru;
-      }
-      h3 {
-        font-size: large;
-        color: rgb(205, 158, 112);
-      }
-      h4 {
-        font-size: medium;
-        color: pink;
-      }
-      strong {
-        color: rgb(182, 230, 240);
-      }
-    </style>
-    <title>{{.MetaData.Title}}</title>
-  </head>
-  <body onselectstart="return false">
-    {{template "nav"}}
-    <div>
-      <div class="meta">
-        <h1>{{.MetaData.Title}}</h1>
-        <p>{{.MetaData.Created}}</p>
-      </div>
-      <article>{{.Content}}</article>
+    }
+
+    p,
+    li {
+      font-size: 16.5px;
+      line-height: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      text-align: center;
+    }
+
+    .date {
+      text-align: center;
+    }
+
+    .toc {
+      position: fixed;
+      float: left;
+      max-width: 50px;
+      max-height: 50px;
+      margin-top: 200px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: x-large;
+      color: peru;
+    }
+
+    h3 {
+      font-size: large;
+      color: rgb(205, 158, 112);
+    }
+
+    h4 {
+      font-size: medium;
+      color: pink;
+    }
+
+    strong {
+      color: rgb(182, 230, 240);
+    }
+  </style>
+  <title>{{.MetaData.Title}}</title>
+</head>
+
+<body onselectstart="return false">
+  {{template "nav"}}
+  <div>
+    <div class="meta">
+      <h1>{{.MetaData.Title}}</h1>
+      <p>{{.MetaData.Created}}</p>
     </div>
-  </body>
+    <article>{{.Content}}</article>
+  </div>
+</body>
+
 </html>

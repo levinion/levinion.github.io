@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html data-theme="dark">
-  <head>
-    
+
+<head>
+  
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,57 +16,86 @@
 </script> 
 
 
-    <style>
+  <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
       article {
-        background: rgb(28, 29, 33);
-        max-width: 70%;
-        text-align: left;
-        margin: 0 auto;
-        border-radius: 30px;
+        max-width: 90%;
       }
+
+      h1 {
+        font-size: large;
+      }
+
+      .date {
+        font-size: small;
+      }
+
       p,
       li {
-        font-size: 16.5px;
-        line-height: 32px;
+        font-size: 15px;
       }
-      h1 {
-        text-align: center;
-        margin-bottom: 10px;
-      }
-      .meta p {
-        text-align: center;
-      }
-      .date {
-        text-align: center;
-      }
-      .toc {
-        position: fixed;
-        float: left;
-        max-width: 50px;
-        max-height: 50px;
-        margin-top: 200px;
-        text-align: center;
-      }
-      h2 {
-        font-size: x-large;
-        color: peru;
-      }
-      h3 {
-        font-size: large;
-        color: rgb(205, 158, 112);
-      }
-      h4 {
-        font-size: medium;
-        color: pink;
-      }
-      strong {
-        color: rgb(182, 230, 240);
-      }
-    </style>
-    <title>MIT6.824-分布式系统-学习笔记</title>
-  </head>
-  <body onselectstart="return false">
-    
+    }
+
+    p,
+    li {
+      font-size: 16.5px;
+      line-height: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      text-align: center;
+    }
+
+    .date {
+      text-align: center;
+    }
+
+    .toc {
+      position: fixed;
+      float: left;
+      max-width: 50px;
+      max-height: 50px;
+      margin-top: 200px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: x-large;
+      color: peru;
+    }
+
+    h3 {
+      font-size: large;
+      color: rgb(205, 158, 112);
+    }
+
+    h4 {
+      font-size: medium;
+      color: pink;
+    }
+
+    strong {
+      color: rgb(182, 230, 240);
+    }
+  </style>
+  <title>MIT6.824-分布式系统-学习笔记</title>
+</head>
+
+<body onselectstart="return false">
+  
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
   <div class="breadcrumb">
@@ -83,12 +113,12 @@
   </div>
 </nav>
 
-    <div>
-      <div class="meta">
-        <h1>MIT6.824-分布式系统-学习笔记</h1>
-        <p>2023-03-24 23:14:57</p>
-      </div>
-      <article><h2 id="lecture-01---intro"><a class="anchor" href="#lecture-01---intro">#</a> Lecture 01 - Intro</h2>
+  <div>
+    <div class="meta">
+      <h1>MIT6.824-分布式系统-学习笔记</h1>
+      <p>2023-03-24 23:14:57</p>
+    </div>
+    <article><h2 id="lecture-01---intro"><a class="anchor" href="#lecture-01---intro">#</a> Lecture 01 - Intro</h2>
 <p>分布式系统是指在多台计算机之间协调同步计算的系统体系，它与运行在单台计算机上的非分布式系统形成对比。人们运行分布式系统的目的是获得多台计算机提供的强大<strong>性能</strong>以及提高出于地理等不可控条件下的兼容性和人为导致的<strong>容错性</strong>。而对于没有对算力和容错性有较高要求的用户来说，分布式系统的开发和使用可能是复杂而低效的。</p>
 <p>分布式系统所基于的基本架构有<strong>存储、通信和计算</strong>。分布式系统应提供简单的接口方便第三方应用调用其基本架构；其目标是通过抽象的接口将其分布式特性隐藏起来，使应用如在非分布式系统上那样运行。RPC 和线程是构建分布式系统的常用工具。</p>
 <h3 id="1-"><a class="anchor" href="#1-">#</a> 1. 可扩展性</h3>
@@ -154,6 +184,7 @@ Master 节点维护 log（顺序读写） 而非数据库（随机读写）是�
 <li>多 CPU 并发。多 CPU 会导致不同的指令调用顺序。系统几乎肯定是在多核机器上运行的，为解决此问题，VMM暴露给虚拟机的硬件应为单核。</li>
 </ol>
 </article>
-    </div>
-  </body>
+  </div>
+</body>
+
 </html>

@@ -10,10 +10,29 @@ html {
   color: white;
   font-size: x-large;
 }
+
 .breadcrumb {
   margin-right: 50px;
 }
+
 .breadcrumb a {
   color: white;
   font-size: large;
+}
+
+@media (max-width: 768px) {
+  .logo {
+    margin-left: 15px;
+    color: white;
+    font-size: large;
+  }
+
+  .breadcrumb {
+    margin-right: 25px;
+  }
+
+  .breadcrumb a {
+    color: white;
+    font-size: medium;
+  }
 }

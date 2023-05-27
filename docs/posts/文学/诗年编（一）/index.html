@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html data-theme="dark">
-  <head>
-    
+
+<head>
+  
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,57 +16,86 @@
 </script> 
 
 
-    <style>
+  <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
       article {
-        background: rgb(28, 29, 33);
-        max-width: 70%;
-        text-align: left;
-        margin: 0 auto;
-        border-radius: 30px;
+        max-width: 90%;
       }
+
+      h1 {
+        font-size: large;
+      }
+
+      .date {
+        font-size: small;
+      }
+
       p,
       li {
-        font-size: 16.5px;
-        line-height: 32px;
+        font-size: 15px;
       }
-      h1 {
-        text-align: center;
-        margin-bottom: 10px;
-      }
-      .meta p {
-        text-align: center;
-      }
-      .date {
-        text-align: center;
-      }
-      .toc {
-        position: fixed;
-        float: left;
-        max-width: 50px;
-        max-height: 50px;
-        margin-top: 200px;
-        text-align: center;
-      }
-      h2 {
-        font-size: x-large;
-        color: peru;
-      }
-      h3 {
-        font-size: large;
-        color: rgb(205, 158, 112);
-      }
-      h4 {
-        font-size: medium;
-        color: pink;
-      }
-      strong {
-        color: rgb(182, 230, 240);
-      }
-    </style>
-    <title>诗年编（一）</title>
-  </head>
-  <body onselectstart="return false">
-    
+    }
+
+    p,
+    li {
+      font-size: 16.5px;
+      line-height: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      text-align: center;
+    }
+
+    .date {
+      text-align: center;
+    }
+
+    .toc {
+      position: fixed;
+      float: left;
+      max-width: 50px;
+      max-height: 50px;
+      margin-top: 200px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: x-large;
+      color: peru;
+    }
+
+    h3 {
+      font-size: large;
+      color: rgb(205, 158, 112);
+    }
+
+    h4 {
+      font-size: medium;
+      color: pink;
+    }
+
+    strong {
+      color: rgb(182, 230, 240);
+    }
+  </style>
+  <title>诗年编（一）</title>
+</head>
+
+<body onselectstart="return false">
+  
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
   <div class="breadcrumb">
@@ -83,12 +113,12 @@
   </div>
 </nav>
 
-    <div>
-      <div class="meta">
-        <h1>诗年编（一）</h1>
-        <p>2022-01-06 20:11:09</p>
-      </div>
-      <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 乌</h2>
+  <div>
+    <div class="meta">
+      <h1>诗年编（一）</h1>
+      <p>2022-01-06 20:11:09</p>
+    </div>
+    <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 乌</h2>
 <p>乌是天空中黑羽毛的鸟<br>
 呼号在无尽黑色原野上的凛冽的大风 东西相吹<br>
 浪游者的歌声是破碎了的黄色的石子<br>
@@ -160,6 +190,7 @@
 那就是我们诗人<!-- raw HTML omitted -->
 <!-- raw HTML omitted --></p>
 </article>
-    </div>
-  </body>
+  </div>
+</body>
+
 </html>
