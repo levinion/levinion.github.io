@@ -2,7 +2,7 @@
 contentOnlyPages=["about"]
 
 [posts]
-excludeDirs=["drafts"]
+excludeDirs=["drafts","latex"]
 
 [server]
 addr="localhost:9090"
