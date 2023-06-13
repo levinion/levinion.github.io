@@ -479,13 +479,66 @@ static bool insideTriangle(int x, int y, const Vector3f *_v) {
 <h3 id="heading-41"><a class="anchor" href="#heading-41">#</a> 定义</h3>
 <p>Shading，引入颜色和明暗。在图形学上指材质作用于物体。</p>
 <h3 id="blinn-phong-"><a class="anchor" href="#blinn-phong-">#</a> Blinn-Phong 反射模型</h3>
-<p>根据明暗不同可将物体分为三个区块，分别是高光、漫反射和间接照明。</p>
+<p>根据明暗不同可将物体分为三个区块，分别是高光、漫反射和环境光照。注意，该反射模型只是一个经验公式。</p>
 <h4 id="heading-42"><a class="anchor" href="#heading-42">#</a> 漫反射</h4>
 <p>符合 Lambert&rsquo;s 余弦定律所表明的经验公式。其内容是：物体所吸收的光照与光线方向和物体表面法线之间夹角的余弦成正比。</p>
 <p>有公式：</p>
 <p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AL_%7Bd%7D%3Dk_%7Bd%7D%5Cleft%28+%5Cfrac%7BI%7D%7Br%5E2%7D+%5Cright%29max%280%2C%5Cvec%7Bn%7D%5Ccdot%7B%5Cvec%7Bl%7D%7D%29%0A%7D" alt=""></p>
 <p>其中，Ld 是漫反射光照强度，kd 是物体颜色（三通道的 rgb 值），第二项指示到达物体的光的强度，第三项即余弦值（且不为负，因为没有意义），指示物体接收到的光的强度。</p>
 <p>漫反射的特点在于和观测方向无关，因为它均匀反射到各个方向。</p>
+<h4 id="heading-43"><a class="anchor" href="#heading-43">#</a> 高光</h4>
+<p>观察方向与镜面反射方向足够接近时能够看到高光，或者说，法线方向与半程向量方向接近。半程向量即视线向量和光照向量的平均。</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0A%5Cvec%7Bh%7D%3Dbisector%28%5Cvec%7Bv%7D%2C%5Cvec%7Bl%7D%29%0A%7D" alt=""></p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AL_%7Bs%7D%3Dk_%7Bs%7D%5Cleft%28+%5Cfrac%7Bl%7D%7Br%5E2%7D+%5Cright%29max%280%2C%5Cvec%7Bn%7D%5Ccdot%7B%5Cvec%7Bh%7D%7D%29%5Ep%0A%7D" alt="">
+其中，ks 是镜面反射系数。p 值通常取 100-200，p 值越大则高光区越小。</p>
+<h4 id="heading-44"><a class="anchor" href="#heading-44">#</a> 环境光照</h4>
+<p>环境光照来自四周，与观测方向、光照方向无关，因此可被认为是常数，有经验公式：</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AL_%7Ba%7D%3Dk_%7Ba%7DI_%7Ba%7D%0A%7D" alt=""></p>
+<p>ka 是环境光照系数。</p>
+<h4 id="heading-45"><a class="anchor" href="#heading-45">#</a> 着色模型</h4>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AL%3DL_%7Bd%7D%2BL_%7Bs%7D%2BL_%7Ba%7D%3Dk_%7Bd%7D%5Cleft%28+%5Cfrac%7BI%7D%7Br%5E2%7D+%5Cright%29max%280%2C%5Cvec%7Bn%7D%5Ccdot%7B%5Cvec%7Bl%7D%7D%29%2Bk_%7Bs%7D%5Cleft%28+%5Cfrac%7Bl%7D%7Br%5E2%7D+%5Cright%29max%280%2C%5Cvec%7Bn%7D%5Ccdot%7B%5Cvec%7Bh%7D%7D%29%5Ep%2Bk_%7Ba%7DI_%7Ba%7D%0A%7D" alt=""></p>
+<h3 id="heading-46"><a class="anchor" href="#heading-46">#</a> 着色方式</h3>
+<ol>
+<li>Flat shading/平滑着色：对三角形求法线，内部无颜色过渡</li>
+<li>Gouraud shading：逐顶点着色，利用插值，着色效果较好</li>
+<li>Phong shading：逐像素着色，利用插值，着色效果最好</li>
+</ol>
+<p>着色频率取决于具体模型的复杂度，当面过于密集可能 flat shading 效果会更好。</p>
+<h3 id="heading-47"><a class="anchor" href="#heading-47">#</a> 图形/实时渲染管线</h3>
+<ol>
+<li>顶点处理：空间上的点</li>
+<li>变换：形成三角形</li>
+<li>光栅化：采样和深度测试</li>
+<li>着色</li>
+</ol>
+<h3 id="heading-48"><a class="anchor" href="#heading-48">#</a> 着色编程</h3>
+<p>只需针对一个顶点或像素进行着色，称为顶点着色器或片段/像素着色器。</p>
+<p>下面是一段 openGL GLSL 着色器例程：</p>
+<pre><code class="language-c">uniform sampler2D myTexture;
+uniform vec3 lightDir;
+varying vec2 uv;
+//插值得到的顶点法线
+varying vec3 norm;
+
+void diffuseShader(){
+  vec3 kd;
+  // 物体颜色
+  kd = texture2d(myTexture,uv);
+  // 着色模型，其中clamp将值限制在0-1
+  kd *= clamp(dot(-lightDir,norm), 0, 0, 1, 0);
+  // 输出片段颜色
+  gl_FragColor = vec4(kd,1,0);
+}
+
+</code></pre>
+<h4 id="-api"><a class="anchor" href="#-api">#</a> 一些 API</h4>
+<p>shadertoy、openGL、directX</p>
+<h4 id="heading-49"><a class="anchor" href="#heading-49">#</a> 硬件实现</h4>
+<p>GPUs。独立显卡和图形显卡。</p>
+<p>GPU 核心数量等于可并行的数量。其并行度高，适合做图形学（简单、相似）计算。</p>
+<h3 id="heading-50"><a class="anchor" href="#heading-50">#</a> 纹理映射</h3>
+<p>纹理（texture）即一张图片，将这张图片蒙罩在物体表面即称为纹理。纹理和物体存在一一对应关系。映射方法是光栅和纹理坐标的对应。</p>
+<p>纹理坐标系为 (u, v)，定义域为 0-1。</p>
 </article>
   </div>
 </body>
