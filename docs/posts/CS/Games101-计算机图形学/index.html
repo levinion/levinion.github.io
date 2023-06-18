@@ -489,8 +489,8 @@ static bool insideTriangle(int x, int y, const Vector3f *_v) {
 <h4 id="heading-43"><a class="anchor" href="#heading-43">#</a> 高光</h4>
 <p>观察方向与镜面反射方向足够接近时能够看到高光，或者说，法线方向与半程向量方向接近。半程向量即视线向量和光照向量的平均。</p>
 <p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0A%5Cvec%7Bh%7D%3Dbisector%28%5Cvec%7Bv%7D%2C%5Cvec%7Bl%7D%29%0A%7D" alt=""></p>
-<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AL_%7Bs%7D%3Dk_%7Bs%7D%5Cleft%28+%5Cfrac%7Bl%7D%7Br%5E2%7D+%5Cright%29max%280%2C%5Cvec%7Bn%7D%5Ccdot%7B%5Cvec%7Bh%7D%7D%29%5Ep%0A%7D" alt="">
-其中，ks 是镜面反射系数。p 值通常取 100-200，p 值越大则高光区越小。</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AL_%7Bs%7D%3Dk_%7Bs%7D%5Cleft%28+%5Cfrac%7Bl%7D%7Br%5E2%7D+%5Cright%29max%280%2C%5Cvec%7Bn%7D%5Ccdot%7B%5Cvec%7Bh%7D%7D%29%5Ep%0A%7D" alt=""></p>
+<p>其中，ks 是镜面反射系数。p 值通常取 100-200，p 值越大则高光区越小。</p>
 <h4 id="heading-44"><a class="anchor" href="#heading-44">#</a> 环境光照</h4>
 <p>环境光照来自四周，与观测方向、光照方向无关，因此可被认为是常数，有经验公式：</p>
 <p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AL_%7Ba%7D%3Dk_%7Ba%7DI_%7Ba%7D%0A%7D" alt=""></p>
@@ -538,7 +538,250 @@ void diffuseShader(){
 <p>GPU 核心数量等于可并行的数量。其并行度高，适合做图形学（简单、相似）计算。</p>
 <h3 id="heading-50"><a class="anchor" href="#heading-50">#</a> 纹理映射</h3>
 <p>纹理（texture）即一张图片，将这张图片蒙罩在物体表面即称为纹理。纹理和物体存在一一对应关系。映射方法是光栅和纹理坐标的对应。</p>
-<p>纹理坐标系为 (u, v)，定义域为 0-1。</p>
+<p>纹理坐标系为 (u, v)，定义域为 (0, 1)。</p>
+<h3 id="heading-51"><a class="anchor" href="#heading-51">#</a> 插值</h3>
+<h4 id="heading-52"><a class="anchor" href="#heading-52">#</a> 为什么要插值</h4>
+<p>为了得到颜色的平滑过渡</p>
+<h4 id="heading-53"><a class="anchor" href="#heading-53">#</a> 重心坐标</h4>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0A%28x%2C+y%29%3D%5Calpha+A%2B%5Cbeta+B%2B%5Cgamma+C%0A%7D" alt=""></p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0A%5Calpha%2B%5Cbeta%2B%5Cgamma%3D1%0A%7D" alt=""></p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0A%5Calpha%5Cgeq+0+%5Cquad+%5Cbeta%5Cgeq+0+%5Cquad+%5Cgamma%5Cgeq+0+%0A%7D" alt=""></p>
+<p>由此，得到：</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AV%3D%5Calpha+V_%7BA%7D%2B%5Cbeta+V_%7BB%7D%2B%5Cgamma+V_%7BC%7D%0A%7D" alt=""></p>
+<p>其中，V_A, V_B, V_C 可以是位置、纹理、颜色、深度等</p>
+<blockquote>
+<p>重心坐标在投影过程中会发生变化，因此应对三维属性在三维空间中做插值</p>
+</blockquote>
+<h3 id="heading-54"><a class="anchor" href="#heading-54">#</a> 纹理范围问题</h3>
+<h4 id="heading-55"><a class="anchor" href="#heading-55">#</a> 纹理过小</h4>
+<p>当纹理分辨率过低，屏幕像素映射到一个非整数纹理坐标，此时需应用双线性插值。</p>
+<p>线性插值即在两个像素之间按比例进行插值，双线性插值即取周围邻近的四个像素按垂直和水平两个方向进行线性插值。</p>
+<h4 id="heading-56"><a class="anchor" href="#heading-56">#</a> 纹理过大</h4>
+<p>会产生走样问题，近处产生锯齿，远处产生摩尔纹。</p>
+<h4 id="mipmap"><a class="anchor" href="#mipmap">#</a> Mipmap</h4>
+<p>纹理大小的通用解决方法。生成一系列原图的缩放图，原图称为第一层，其他层较上层分辨率缩小一半。需要的额外存储空间仅为原图的三分之一。</p>
+<p>对区域在纹理上投影的像素近似为一个正方形，令 L 为该正方形边长。则 Mipmap 层数为：</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AD%3D%5Clog_%7B2%7D%7BL%7D%0A%7D" alt=""></p>
+<p>由于 Mipmap 是离散函数，会在边界产生不连续，因此需要在层与层之间再进行一次插值，配合水平和垂直的插值，称为三线性插值。</p>
+<p>三线性插值在实时渲染中应用广泛，过渡连续，开销小。</p>
+<p>但是三线性插值会产生 OverBlur 现象（远处模糊）。原因在与Mipmap使用正方形进行查询，解决方法有各向异性过滤（对应矩形区域查询有更好的效果，开销较高，是原图的三倍。对显存要求高），EWA过滤（使用圆形多次查询，效果好但代价高）</p>
+<h3 id="pa3"><a class="anchor" href="#pa3">#</a> PA3</h3>
+<p>PA3 主要包括以上章节的全部内容，难度稍高。其中 bump 和 displacement 着色器的实现有些超纲，故暂先不放出（可能留待后面补全）</p>
+<h4 id="heading-57"><a class="anchor" href="#heading-57">#</a> 参数插值</h4>
+<p>第一部分投影变换与作业一、二一致，故不再说了。参数插值部分代码如下：</p>
+<pre><code class="language-cpp">// Screen space rasterization
+void rst::rasterizer::rasterize_triangle(
+    const Triangle &amp;t, const std::array&lt;Eigen::Vector3f, 3&gt; &amp;view_pos) {
+
+  auto v = t.toVector4();
+  int left = INT_MAX;
+  int right = INT_MIN;
+  int top = INT_MIN;
+  int bottom = INT_MAX;
+  for (auto p : v) {
+    if (p.x() &lt; left)
+      left = p.x();
+    if (p.x() &gt; right)
+      right = p.x();
+    if (p.y() &lt; bottom)
+      bottom = p.y();
+    if (p.y() &gt; top)
+      top = p.y();
+  }
+  for (auto x = left; x &lt;= right; x++)
+    for (auto y = bottom; y &lt;= top; y++) {
+      if (insideTriangle(x + 0.5, y + 0.5, t.v)) {
+        // 得到重心坐标
+        auto abg = computeBarycentric2D(x + 0.5, y + 0.5, t.v);
+        // 使用get提取tuple中的元素
+        auto alpha = std::get&lt;0&gt;(abg);
+        auto beta = std::get&lt;1&gt;(abg);
+        auto gamma = std::get&lt;2&gt;(abg);
+        // 利用给出的公式计算zp
+        //    * v[i].w() is the vertex view space depth value z.
+        //    * Z is interpolated view space depth for the current pixel
+        //    * zp is depth between zNear and zFar, used for z-buffer
+        float Z = 1.0 / (alpha / v[0].w() + beta / v[1].w() + gamma / v[2].w());
+        float zp = alpha * v[0].z() / v[0].w() + beta * v[1].z() / v[1].w() +
+                   gamma * v[2].z() / v[2].w();
+        zp *= Z;
+        auto index = get_index(x, y);
+        if (zp &lt; depth_buf[index]) {
+          // 颜色插值
+          auto interpolated_color = interpolate(alpha, beta, gamma, t.color[0],
+                                                t.color[1], t.color[2], 1);
+          // 法向量插值
+          auto interpolated_normal = interpolate(
+              alpha, beta, gamma, t.normal[0], t.normal[1], t.normal[2], 1);
+          // 纹理插值
+          auto interpolated_texcoords =
+              interpolate(alpha, beta, gamma, t.tex_coords[0], t.tex_coords[1],
+                          t.tex_coords[2], 1);
+          // 内部点位置插值
+          auto interpolated_shadingcoords = interpolate(
+              alpha, beta, gamma, view_pos[0], view_pos[1], view_pos[2], 1);
+
+          fragment_shader_payload payload(
+              interpolated_color, interpolated_normal.normalized(),
+              interpolated_texcoords, texture ? &amp;*texture : nullptr);
+          payload.view_pos = interpolated_shadingcoords;
+          auto pixel_color = fragment_shader(payload);
+          set_pixel({x, y}, pixel_color);
+          depth_buf[index] = zp;
+        }
+      }
+    }
+}
+</code></pre>
+<h4 id="phong-"><a class="anchor" href="#phong-">#</a> Phong 着色器</h4>
+<pre><code class="language-cpp">Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &amp;payload) {
+  // 漫反射系数
+  Eigen::Vector3f ka = Eigen::Vector3f(0.005, 0.005, 0.005);
+  // 颜色系数
+  Eigen::Vector3f kd = payload.color;
+  // 高光系数
+  Eigen::Vector3f ks = Eigen::Vector3f(0.7937, 0.7937, 0.7937);
+
+  auto l1 = light\{\{20, 20, 20}, {500, 500, 500\}\};
+  auto l2 = light\{\{-20, 20, 0}, {500, 500, 500\}\};
+
+  std::vector&lt;light&gt; lights = {l1, l2};
+  Eigen::Vector3f amb_light_intensity{10, 10, 10};
+  Eigen::Vector3f eye_pos{0, 0, 10};
+
+  float p = 150;
+
+  Eigen::Vector3f color = payload.color;
+  Eigen::Vector3f point = payload.view_pos;
+  Eigen::Vector3f normal = payload.normal;
+
+  Eigen::Vector3f result_color = {0, 0, 0};
+  for (auto &amp;light : lights) {
+    // 出射光方向
+    auto v = eye_pos - point;
+    // 入射光方向
+    auto l = light.position - point;
+    // 半程向量
+    auto h = (l + v).normalized();
+    // r^2
+    auto r2 = l.dot(l);
+    auto Ld = kd.cwiseProduct(light.intensity / r2) *
+              std::max(.0f, normal.normalized().dot(l.normalized()));
+    auto Ls = ks.cwiseProduct(light.intensity / r2) *
+              pow(std::max(.0f, normal.normalized().dot(h.normalized())), p);
+    auto La = ka.cwiseProduct(amb_light_intensity);
+    result_color += Ld + Ls + La;
+  }
+
+  return result_color * 255.f;
+}
+</code></pre>
+<h4 id="heading-58"><a class="anchor" href="#heading-58">#</a> 纹理贴图</h4>
+<pre><code class="language-cpp">Eigen::Vector3f
+texture_fragment_shader(const fragment_shader_payload &amp;payload) {
+  Eigen::Vector3f return_color = {0, 0, 0};
+  if (payload.texture) {
+    //其他部分代码基本和Phong相同，只是多了获取纹理颜色的这部分
+    return_color = payload.texture-&gt;getColor(payload.tex_coords.x(),
+                                             payload.tex_coords.y());
+  }
+  Eigen::Vector3f texture_color;
+  texture_color &lt;&lt; return_color.x(), return_color.y(), return_color.z();
+
+//...
+
+</code></pre>
+<h3 id="bump-textures"><a class="anchor" href="#bump-textures">#</a> 凹凸贴图（Bump Textures）</h3>
+<p>凹凸贴图上一点 P 的切线为 (1, d_p)，其中 dp 为 u 变化一个单位，v 变化的值：</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0Ad_%7Bp%7D%3Dc%2A%28h_%7Bp%2B1%7D-h_%7Bp%7D%29%0A%7D" alt=""></p>
+<p>则其法线为：</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0A%28-d_%7Bp%7D%5C+%2C%5C+1%29.normalized%28%29%0A%7D" alt=""></p>
+<p>在三维中：</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0An%3D%28++-%5Cfrac%7Bd_%7Bp%7D%7D%7Bd_%7Bu%7D%7D%2C%5C++-%5Cfrac%7Bd_%7Bp%7D%7D%7Bd_%7Bv%7D%7D%2C%5C+1%29.normalized%28%29%0A%7D" alt=""></p>
+<h3 id="displacement-textures"><a class="anchor" href="#displacement-textures">#</a> 位移贴图（Displacement Textures）</h3>
+<p>和凹凸贴图的区别在于，凹凸贴图并没有改变顶点的位置，而位移贴图则改变了，因此效果较好，但更加消耗性能。</p>
+<h3 id="heading-59"><a class="anchor" href="#heading-59">#</a> 纹理的其他应用</h3>
+<ol>
+<li>噪声：可通过噪声函数实现裂缝、大理石之类的纹路。</li>
+<li>存储信息：记录已经计算好的着色，便于之后计算（提前计算）</li>
+</ol>
+<h2 id="heading-60"><a class="anchor" href="#heading-60">#</a> 几何</h2>
+<h3 id="heading-61"><a class="anchor" href="#heading-61">#</a> 隐式表示法</h3>
+<h4 id="heading-62"><a class="anchor" href="#heading-62">#</a> 代数表示</h4>
+<p>使用数学公式定义一个形状，缺点在于复杂形状描述困难。有CSG（Constructive Solid Geometry），通过简单几何的运算（交并）得到复杂几何，建模软件广泛应用。</p>
+<h4 id="heading-63"><a class="anchor" href="#heading-63">#</a> 距离函数</h4>
+<p>距离函数指空间上一个点到物体表面或边界的最小距离。对两个物体的距离函数进行运算，之后再转化为实体（取 f (x)=0 的点）。</p>
+<h4 id="heading-64"><a class="anchor" href="#heading-64">#</a> 分形</h4>
+<p>递归方法</p>
+<h3 id="heading-65"><a class="anchor" href="#heading-65">#</a> 显式表示法</h3>
+<p>直接给出目标坐标和源坐标的映射关系，通过函数或参数映射的方式表述。</p>
+<h4 id="heading-66"><a class="anchor" href="#heading-66">#</a> 点云</h4>
+<p>点云使用无数离散的点描述一个形体，它是一个 (x, y, z) 的列表，理论上能表述任何物体</p>
+<h4 id="heading-67"><a class="anchor" href="#heading-67">#</a> 多边形面</h4>
+<p>常用三角形/四边形，可以表述很多几何体，应用最为广泛</p>
+<blockquote>
+<p>. obj 文件使用文本表示点的坐标、法线、纹理</p>
+</blockquote>
+<h3 id="heading-68"><a class="anchor" href="#heading-68">#</a> 曲线</h3>
+<h4 id="heading-69"><a class="anchor" href="#heading-69">#</a> 贝塞尔曲线</h4>
+<p>使用一系列的控制点定义一条曲线</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/18/ix90zy.png" alt=""></p>
+<p>贝塞尔曲线符合伯恩斯坦多项式：</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0Ab%5En%28t%29%3D%5Csum%5Climits%5En%5Climits_%7Bj%3D0%7Db_%7Bj%7DB_%7Bj%7D%5En%28t%29%0A%7D" alt="">
+对 n=3，<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B+b_%7B0%7D%3D%280%2C2%2C3%29+%5Cquad+b_%7B1%7D%3D%282%2C3%2C5%29%5Cquad+b_%7B2%7D%3D%286%2C7%2C9%29%5Cquad+b_%7B3%7D%3D%283%2C4%2C5%29%7D" alt=""></p>
+<p>有:</p>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bb%5En%28t%29%3Db_%7B0%7D%281-t%29%5E3%2Bb_%7B1%7D3t%281-t%29%5E2%2Bb_%7B2%7D3t%5E2%281-t%29%2Bb_%7B3%7Dt%5E3%7D" alt=""></p>
+<p>性质：</p>
+<ol>
+<li>过起点和终点:<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bb%280%29%3Db_%7B0%7D%5Cquad+b%281%29%3Db_%7B3%7D%7D" alt=""></li>
+<li><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bb%27%280%29%3D3%28b_%7B1%7D-b_%7B0%7D%29+%5Cquad+b%27%281%29%3D3%28b_%7B3%7D-b_%7B2%7D%29%7D" alt=""></li>
+<li>仿射变换最终结果只与控制点有关</li>
+<li>凸包性：线上的任何一个点必在控制点围成的凸包之内</li>
+</ol>
+<h4 id="-piecewise-"><a class="anchor" href="#-piecewise-">#</a> 逐段 (Piecewise) 贝塞尔曲线</h4>
+<p>为解决贝塞尔曲线难以控制的问题，每四个点定义一个（三次）贝塞尔曲线。</p>
+<p>为保证两段曲线连续且光滑，要求两个端控制点重合，旁边的两个控制点共线。</p>
+<p>C0 连续：两条曲线连续，即端点重合
+C1 连续：切线连续，要求两个点（第一条曲线的 2 点和另一条曲线的 1 点）共线且距离相同</p>
+<h4 id="b-"><a class="anchor" href="#b-">#</a> B 样条</h4>
+<p>对贝塞尔曲线的改进，避免改变一个点就会影响全部的缺点（具有局部性）</p>
+<h3 id="heading-70"><a class="anchor" href="#heading-70">#</a> 曲面/网格</h3>
+<p>曲面即曲线的延伸。在两个方向上分别定义贝塞尔曲线，从而得到贝塞尔曲面。</p>
+<h4 id="heading-71"><a class="anchor" href="#heading-71">#</a> 网格优化</h4>
+<ol>
+<li>网格细分：增加三角形</li>
+<li>网格简化</li>
+<li>网格正则化</li>
+</ol>
+<h4 id="heading-72"><a class="anchor" href="#heading-72">#</a> 网格细分</h4>
+<h5 id="loop-"><a class="anchor" href="#loop-">#</a> loop 细分</h5>
+<ol>
+<li>细分：从三角形三边中点将三角形分为四部分</li>
+<li>调整三角形各顶点的位置：新顶点的值是其周围四个点的平均（加权 1/8 和 3/8）；老顶点的值是其周围顶点和它自己的值的加权</li>
+</ol>
+<h5 id="catmull-clark-"><a class="anchor" href="#catmull-clark-">#</a> Catmull-Clark 细分</h5>
+<p>概念：</p>
+<ol>
+<li>四边形面和非四边形面</li>
+<li>奇异点：度不为 4 的点</li>
+</ol>
+<p>非四边形面在一次 Catmull-Clark 细分后转化为奇异点，非四边形面消失。</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/18/uc1da7.png" alt=""></p>
+<h4 id="heading-73"><a class="anchor" href="#heading-73">#</a> 网格简化</h4>
+<p>目标是减少网格数量同时维持大体的形状</p>
+<p>其中一种方法是边坍缩，边选择的手段是二次误差度量。二次误差度量即计算点到各边的距离的平方之和，使它的值最小。因为一条边的坍缩可能影响其他边，需要使用优先队列确定坍缩的顺序。</p>
+<h2 id="heading-74"><a class="anchor" href="#heading-74">#</a> 光线追踪</h2>
+<h3 id="shadow-mapping"><a class="anchor" href="#shadow-mapping">#</a> Shadow Mapping</h3>
+<h4 id="heading-75"><a class="anchor" href="#heading-75">#</a> 步骤</h4>
+<ol>
+<li>从光源看向场景，记录深度</li>
+<li>从相机看向场景，投影回光源，比较记录的深度是否一致，若不同，则在阴影中。</li>
+</ol>
+<h4 id="heading-76"><a class="anchor" href="#heading-76">#</a> 缺点</h4>
+<ol>
+<li>浮点数由于存在数值精度问题，在判定相等时存在困难</li>
+<li>分辨率过小出现锯齿，分辨率过大则开销大</li>
+</ol>
 </article>
   </div>
 </body>
