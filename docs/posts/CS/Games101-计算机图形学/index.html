@@ -745,6 +745,33 @@ texture_fragment_shader(const fragment_shader_payload &amp;payload) {
 C1 连续：切线连续，要求两个点（第一条曲线的 2 点和另一条曲线的 1 点）共线且距离相同</p>
 <h4 id="b-"><a class="anchor" href="#b-">#</a> B 样条</h4>
 <p>对贝塞尔曲线的改进，避免改变一个点就会影响全部的缺点（具有局部性）</p>
+<h4 id="pa4"><a class="anchor" href="#pa4">#</a> PA4</h4>
+<p>实现 de Casteljau 算法，代码很简单，但是请注意，你需要自己画出四个点才会出图 orz：</p>
+<pre><code class="language-cpp">cv::Point2f recursive_bezier(const std::vector&lt;cv::Point2f&gt; &amp;control_points,
+                             float t) {
+  // Implement de Casteljau's algorithm
+  // 使用递归实现
+  if (control_points.size() == 1) {
+    return control_points[0];
+  }
+
+  std::vector&lt;cv::Point2f&gt; next_control_points{};
+  for (auto i = 0; i &lt; control_points.size() - 1; i++) {
+    auto p = (1 - t) * control_points[i] + t * control_points[i + 1];
+    next_control_points.push_back(p);
+  }
+  return recursive_bezier(next_control_points, t);
+}
+
+void bezier(const std::vector&lt;cv::Point2f&gt; &amp;control_points, cv::Mat &amp;window) {
+  // Iterate through all t = 0 to t = 1 with small steps, and call de
+  // Casteljau's recursive Bezier algorithm.
+  for (auto t = .0; t &lt;= 1.0; t += 0.001) {
+    auto p = recursive_bezier(control_points, t);
+    window.at&lt;cv::Vec3b&gt;(p.y, p.x)[1] = 255;
+  }
+}
+</code></pre>
 <h3 id="heading-70"><a class="anchor" href="#heading-70">#</a> 曲面/网格</h3>
 <p>曲面即曲线的延伸。在两个方向上分别定义贝塞尔曲线，从而得到贝塞尔曲面。</p>
 <h4 id="heading-71"><a class="anchor" href="#heading-71">#</a> 网格优化</h4>
@@ -782,6 +809,84 @@ C1 连续：切线连续，要求两个点（第一条曲线的 2 点和另一�
 <li>浮点数由于存在数值精度问题，在判定相等时存在困难</li>
 <li>分辨率过小出现锯齿，分辨率过大则开销大</li>
 </ol>
+<h3 id="heading-77"><a class="anchor" href="#heading-77">#</a> 光线追踪概论</h3>
+<h4 id="heading-78"><a class="anchor" href="#heading-78">#</a> 为什么使用光线追踪</h4>
+<ol>
+<li>光栅化无法很好展示全局效果，包括软阴影、镜面反射、间接光照等</li>
+<li>光栅化虽然速度快但质量较低</li>
+<li>光线追踪质量高、真实性好，但生成慢，一般用于非实时渲染</li>
+</ol>
+<h4 id="heading-79"><a class="anchor" href="#heading-79">#</a> 光线的假设</h4>
+<ol>
+<li>光线沿直线传播</li>
+<li>光线之间不发生冲突</li>
+<li>光线的路径是从光源到人眼，且具有可逆性</li>
+</ol>
+<h4 id="heading-80"><a class="anchor" href="#heading-80">#</a> 光线追踪过程</h4>
+<ol>
+<li>从眼睛出发的一条光线（eye ray）指向物体，产生一个交点，记录最小的深度</li>
+<li>该交点与光源连线，判断是否被光源可见，从而判断是否在阴影中，然后计算着色</li>
+</ol>
+<h4 id="whited-"><a class="anchor" href="#whited-">#</a> Whited 风格光线追踪</h4>
+<p>对玻璃材质的物体，eye ray 在与物体相交时，会发生反射和折射（并发生能量损失），所有光线与物体的交点均作与光源的连线，每个交点的着色均会加到图像平面的像素中去。</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/19/ly52ub.png" alt=""></p>
+<h3 id="heading-81"><a class="anchor" href="#heading-81">#</a> 光线与物体求交</h3>
+<h4 id="heading-82"><a class="anchor" href="#heading-82">#</a> 光线与隐式表面求交</h4>
+<p>光线上一点 <img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Br%28t%29%3D%7Bo%7D%2Bt%7Bd%7D%5Cquad+0%5Cleq+t%3C%5Cinfty%7D" alt=""></p>
+<p>其中，t 表示光传播的时间</p>
+<p>球上一点 p: <img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%28p-c%29%5E2-R%5E2%3D0%7D" alt=""></p>
+<p>则 <img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%28%7Bo%7D%2Btd-c%29%5E2-R%5E2%3D0%7D" alt=""></p>
+<p>依据求根公式可求得 t。</p>
+<h4 id="heading-83"><a class="anchor" href="#heading-83">#</a> 光线与显式表面（三角形）求交</h4>
+<h5 id="heading-84"><a class="anchor" href="#heading-84">#</a> 光线与平面求交</h5>
+<p>平面定义：平面上一点 p，有 <img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%28p-p%27%29%5Ccdot+%5Cvec%7BN%7D%3D0%7D" alt=""> ，p&rsquo;是平面上的一个点，N 是平面的法线</p>
+<p>得到 <img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bt%3D%5Cfrac%7B%7B%28p%27-o%29%5Ccdot+%5Cvec%7BN%7D%7D%7D%7Bd%5Ccdot%5Cvec%7BN%7D%7D%7D" alt=""></p>
+<p>然后与光线方程联立</p>
+<p>此种方法的缺点是当三角形数量过多时计算量特别大，因此对于显然不会通过物体的情况，引入包围盒（AABBs）加速计算</p>
+<h5 id="heading-85"><a class="anchor" href="#heading-85">#</a> 光线与包围盒求交</h5>
+<ol>
+<li>只有当光线进入全部的三组对立面时才认为它进入盒子</li>
+<li>当光线离开任何一组对立面时认为它离开盒子</li>
+</ol>
+<p>对每一组对立面，有 t_max 和 t_min 分别是较大的交点和较小的交点</p>
+<p>此时，进入时间等于 max{t_min}，离开时间等于 min{t_max}</p>
+<p>当且仅当 t_enter &lt; t_exit &amp;&amp; t_exit &gt;= 0 时，光线与包围盒有交</p>
+<h6 id="heading-86"><a class="anchor" href="#heading-86">#</a> 均匀空间划分</h6>
+<!-- raw HTML omitted -->
+<p>对大包围盒进行平均划分成多个小包围盒。我们认为光线与包围盒求交要远快于与物体或三角形面求交。因此，将光线与小包围盒求交，如果通过的某个包围盒中存储有物体，则光线可能通过物体，此时做光线与格子中存在的物体求交。</p>
+<p>对包围盒的划分数量，划分太少则加速效果不明显，太多则可能拖累计算</p>
+<h6 id="heading-87"><a class="anchor" href="#heading-87">#</a> 其他空间划分</h6>
+<p>平均空间划分适合平面内均布有大量三角形的情况，但对三角形分布密集的情况会产生不必要的划分，因此产生了其他的划分方法：</p>
+<ul>
+<li>Oct-Tree：每次将空间分为平均的八份，然后对子空间递归，形成一个八叉树</li>
+<li>KD-Tree：每次将空间分为两份，然后沿三个坐标轴进行递归划分，形成二叉树</li>
+<li>BSD-Tree：与 BD-Tree 类似，但不再沿坐标轴，可任意划分，形成二叉树</li>
+</ul>
+<p>对于 KD-Tree，当求光线与物体的交点时，需遍历 KD-Tree，判断光线与子节点是否有交，对于有交的节点，递归判断子节点。</p>
+<p>对于此种方法，一个物体可能会存在于多个盒子中，因此需要在树中存储多个同样的物体；另外，KD-Tree 的建立并不简单。因此这种方法并没有被广泛使用。</p>
+<p>相对于对空间进行划分，对物体进行划分应用更为广泛，此种方法被称为 BVH。</p>
+<h6 id="bvh"><a class="anchor" href="#bvh">#</a> BVH</h6>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/21/124yhkh.png" alt=""></p>
+<p>BVH的过程是：先找到一个包围盒，将包围盒的物体划分为两堆，然后重新计算包围盒，再对子包围盒进行递归计算。</p>
+<p>BVH 能够很好地避免 KD-Tree 产生的一个物体出现在多个子节点中的问题，但是包围盒会产生重叠，因此划分方法十分重要。</p>
+<h3 id="heading-88"><a class="anchor" href="#heading-88">#</a> 辐射度量学</h3>
+<p>辐射度量学是为了更合理、科学地描述光照，它提供了光照的数个属性：radiant flux（辐射通量），intensity（光强），irradiance（辐射照度），radiance（辐射亮度）。</p>
+<blockquote>
+<p>这里提到了知识掌握的有效方法：Why, What and How，其中 How 是相对最无用的。私以为确实如此，不知道 Why 就不清楚学习的意义，也无法活用；不知道 What 就相当于没学；至于 How 则是细节问题，完全可以需要时再加以掌握。</p>
+</blockquote>
+<p>Radiant Energy：辐射能量，用 Q 表示，单位是 J</p>
+<p>Radiant Flux / Power：辐射通量，表示单位时间能量，<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cphi%3D%5Cfrac%7BdQ%7D%7Bdt%7D%7D" alt="">，单位是 W</p>
+<p>Radiant Intensity：辐射强度，<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7BI%28%5Comega%29%3D%5Cfrac%7Bd%5Cphi%7D%7Bd%5Comega%7D%7D" alt="">，其中 omega 是立体角（球上的面积除以半径的平方，即空间上的角度定义），表示单位角度能量</p>
+<p>Irradiance：单位面积上接收到的能量，<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7BE%3D%5Cfrac%7B%5Cphi%7D%7B4%5Cpi%7D%7D" alt="">，可用以解释光强衰减</p>
+<p>Radiance：描述某确定的微小面对某个立体角辐射的能量，或某个微面在某个立体角接收的能量，相当于 Intensity per unit area 或 Irradiance per solid angle, 与 Irradiance 区别在于 Radiance 具备方向性。<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7BL%28p%2C%5Comega%29%3D%5Cfrac%7BdI%28p%2C%5Comega%29%7D%7BdA%5Ccos+%5Ctheta%7D%7D" alt=""> 。Irradiance 可以通过 Radiance 积分得到。</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/22/825lr.png" alt=""></p>
+<h4 id="brdf"><a class="anchor" href="#brdf">#</a> BRDF</h4>
+<p>即反射方程，描述某个方向入射光反射所得到的出射光。</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/22/d8gec.png" alt=""></p>
+<h4 id="heading-89"><a class="anchor" href="#heading-89">#</a> 渲染方程</h4>
+<p>对于发光物体，它对某方向出射的光等于其发出的光和反射的光之和。因此，所有情形可由下式表述，这是现代图形学的基础：</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/22/in8an.png" alt=""></p>
+<p>求解过程是一系列数学推导掠过……总之结果是光照可以分解为弹射 n 次（n&gt;=0）次的光线权和，导致全局光照收敛到某一亮度。</p>
 </article>
   </div>
 </body>
