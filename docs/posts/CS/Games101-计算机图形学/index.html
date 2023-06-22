@@ -874,6 +874,7 @@ void bezier(const std::vector&lt;cv::Point2f&gt; &amp;control_points, cv::Mat &a
 <blockquote>
 <p>这里提到了知识掌握的有效方法：Why, What and How，其中 How 是相对最无用的。私以为确实如此，不知道 Why 就不清楚学习的意义，也无法活用；不知道 What 就相当于没学；至于 How 则是细节问题，完全可以需要时再加以掌握。</p>
 </blockquote>
+<h4 id="heading-89"><a class="anchor" href="#heading-89">#</a> 概念</h4>
 <p>Radiant Energy：辐射能量，用 Q 表示，单位是 J</p>
 <p>Radiant Flux / Power：辐射通量，表示单位时间能量，<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cphi%3D%5Cfrac%7BdQ%7D%7Bdt%7D%7D" alt="">，单位是 W</p>
 <p>Radiant Intensity：辐射强度，<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7BI%28%5Comega%29%3D%5Cfrac%7Bd%5Cphi%7D%7Bd%5Comega%7D%7D" alt="">，其中 omega 是立体角（球上的面积除以半径的平方，即空间上的角度定义），表示单位角度能量</p>
@@ -883,10 +884,94 @@ void bezier(const std::vector&lt;cv::Point2f&gt; &amp;control_points, cv::Mat &a
 <h4 id="brdf"><a class="anchor" href="#brdf">#</a> BRDF</h4>
 <p>即反射方程，描述某个方向入射光反射所得到的出射光。</p>
 <p><img src="https://picdl.sunbangyan.cn/2023/06/22/d8gec.png" alt=""></p>
-<h4 id="heading-89"><a class="anchor" href="#heading-89">#</a> 渲染方程</h4>
+<h4 id="heading-90"><a class="anchor" href="#heading-90">#</a> 渲染方程</h4>
 <p>对于发光物体，它对某方向出射的光等于其发出的光和反射的光之和。因此，所有情形可由下式表述，这是现代图形学的基础：</p>
 <p><img src="https://picdl.sunbangyan.cn/2023/06/22/in8an.png" alt=""></p>
 <p>求解过程是一系列数学推导掠过……总之结果是光照可以分解为弹射 n 次（n&gt;=0）次的光线权和，导致全局光照收敛到某一亮度。</p>
+<h3 id="heading-91"><a class="anchor" href="#heading-91">#</a> 路径追踪</h3>
+<h4 id="whited-style-ray-tracing-"><a class="anchor" href="#whited-style-ray-tracing-">#</a> Whited Style Ray Tracing 存在的问题</h4>
+<ol>
+<li>能够体现 Mirror Reflection，却无法很好表示 Glossy Reflection（有些粗糙的材质）。模型：犹他茶壶</li>
+<li>停留在漫反射，无全局光照。模型：康奈尔盒子，常用于测试全局光照效果。</li>
+</ol>
+<h4 id="heading-92"><a class="anchor" href="#heading-92">#</a> 路径追踪过程</h4>
+<p>借助蒙特卡罗积分，可求出直接光照：</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/22/m1s4i0.png" alt=""></p>
+<p>对于间接光照，类比直接光照的计算方法，但观察者变成了第一个物体：</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/22/m4o97m.png" alt=""></p>
+<p>但是此时如果光线数量过多，会存在指数爆炸问题，因此我们假设每个点在递归中只弹射一条光线，即 N=1 。当且仅当 N=1 时称为路径追踪：</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/22/m6frgg.png" alt=""></p>
+<p>为了使用递归，必须确定退出条件。使用俄罗斯轮盘赌，每次弹射有 P 概率存活。可以通过此种方式用有穷的递归达到无穷的同等期望。</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/22/szckni.png" alt=""></p>
+<p>到此已经差不多完备了，但仍存在一些问题：我们对着色点各个方向的立体角进行采样，其射出的光线存在不能打到光源、因此没有用处的冗余。通过改变积分域，建立立体角和光源界面的关系，然后对光源进行采样，可以有效避免该问题：</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/22/tupflr.png" alt=""></p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/22/ty82uq.png" alt=""></p>
+<h2 id="heading-93"><a class="anchor" href="#heading-93">#</a> 材质与表面</h2>
+<blockquote>
+<p>本章的目的是使用BDRF重新解释着色</p>
+</blockquote>
+<p>漫反射材质将入射光线均匀反射到各个方向，我们认为入射和出射光线存在能量守恒，则反射方程可以转化为以下形式：</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/22/ulhxh6.png" alt=""></p>
+<p>然后我们定义 rho 为反射率，rho 范围为 (0, 1)。</p>
+<p>另外还有金属光泽材质（Glossy）和理想反射/折射材质、全反射材质（入射角度和出射角度相同）、镜面折射材质（入射角和出射角正弦比等于折射率）。</p>
+<h3 id="heading-94"><a class="anchor" href="#heading-94">#</a> 菲涅尔项</h3>
+<p>入射光与法线的夹角决定有多少能量被反射，由菲涅尔项表示。由于公式过于复杂，故在要求不高时使用近似公式：</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/22/vhlshc.png" alt=""></p>
+<h3 id="heading-95"><a class="anchor" href="#heading-95">#</a> 微表面模型</h3>
+<p>微表面模型认为从近处看到的是几何，从远处看则几何消失，变成外观。也就是说，在近处可认为有无数小的微表面，光线在微表面上发生镜面反射。</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/22/xbadal.png" alt=""></p>
+<p>微表面模型 BRDF 如图所示，F 项为菲涅尔项，决定有多少能量被反射；D 项决定法线分布；G 项称为几何项，决定有多少光线（几乎平行入射的光线）会发生子投影和子遮挡，修正用。</p>
+<h3 id="heading-96"><a class="anchor" href="#heading-96">#</a> 各向同性/各向异性</h3>
+<p>各向同性与各向异性取决于微表面分布是否与方向有关，各向同性与方向无关，各个地方微表面分布相同；各向异性与方向有关。</p>
+<h2 id="heading-97"><a class="anchor" href="#heading-97">#</a> 高级渲染主题</h2>
+<h3 id="heading-98"><a class="anchor" href="#heading-98">#</a> 高级光线传播</h3>
+<p>两种无偏路径追踪：BDPT、MLT；两种有偏路径追踪：光子映射、VCM（Vertex connnection and merging）</p>
+<h4 id="bdpt"><a class="anchor" href="#bdpt">#</a> 双向路径追踪（BDPT）</h4>
+<p>从光源和相机分别发出半路径，再将半路径端点连接起来。</p>
+<p>适合光源处光线传播复杂的情况，但实现困难，且计算缓慢。</p>
+<h4 id="metropolismlt"><a class="anchor" href="#metropolismlt">#</a> Metropolis（MLT）</h4>
+<p>通过在一个 path 周围产生新的 path 样本找出全部 path。</p>
+<p>因为只需要一条path，特别适合复杂场景的路径追踪。</p>
+<p>缺点在于很难估计收敛，结果噪点多，很难用以生成动画。</p>
+<h4 id="photon-mapping"><a class="anchor" href="#photon-mapping">#</a> 光子映射（Photon Mapping）</h4>
+<p>能够很好地表现 Castics 现象</p>
+<p>光子映射过程如下：</p>
+<ol>
+<li>光子追踪：从光源出发，记录光子经反射和折射后最后停留的位置</li>
+<li>光子收集：从相机出发，发出 sub-path，记录反射和折射后最终停留的位置</li>
+<li>局部密度估计：对每个着色点，找出其最近的 n 个光子，计算其所占据的面积，从而得到光子的密度：n/area</li>
+</ol>
+<p>光子映射是一种有偏但一致的方法：只要着色点不是无限多，结果必定存在模糊；但着色点无限多则必定真实。</p>
+<h4 id="vcm"><a class="anchor" href="#vcm">#</a> VCM</h4>
+<p>BDPT 和光子映射的结合</p>
+<h4 id="instant-radiosityir"><a class="anchor" href="#instant-radiosityir">#</a> Instant Radiosity（IR）</h4>
+<p>认为被照亮的点可以被看做光源。</p>
+<p>优点在于快且结果质量较好，但在窄的/缝隙场景会发光，且无法渲染 Glossy 物体</p>
+<h3 id="heading-99"><a class="anchor" href="#heading-99">#</a> 高级表面模型</h3>
+<blockquote>
+<p>定义材质即定义该材质与光线如何作用</p>
+</blockquote>
+<h4 id="heading-100"><a class="anchor" href="#heading-100">#</a> 非表面模型</h4>
+<h5 id="heading-101"><a class="anchor" href="#heading-101">#</a> 散射介质</h5>
+<p>对于云、雾等散射介质，光进入介质中会发生反射和折射，可使用路径追踪计算</p>
+<h5 id="heading-102"><a class="anchor" href="#heading-102">#</a> 毛发</h5>
+<p>人的头发模型：玻璃柱模型</p>
+<p>三种头发模型：R（光线在毛发表面反射）、TT（光线穿透毛发）、TRT（光线穿透毛发并在内壁反射回来）</p>
+<p>对于动物毛发，与人的头发模型不一致。动物毛发中髓质较大，更加容易发生反射。故提出双层圆柱模型（是的，就是讲师提出的模型！），以描述髓质与光线的作用。与人的头发模型不同的是，动物毛发多出两个散射模型：TTs 和 TRTs，描述被髓质散射的光线。</p>
+<h5 id="granular-"><a class="anchor" href="#granular-">#</a> Granular 模型（颗粒模型）</h5>
+<p>通过小的颗粒构图，缺点在于时间开销大</p>
+<h4 id="heading-103"><a class="anchor" href="#heading-103">#</a> 表面模型</h4>
+<h5 id="heading-104"><a class="anchor" href="#heading-104">#</a> 半透明材质</h5>
+<p>符合次表面反射模型（BSSRDF），可采用 Dipole 方法近似计算。</p>
+<p><img src="https://picdl.sunbangyan.cn/2023/06/22/10elqjx.png" alt=""></p>
+<h5 id="heading-105"><a class="anchor" href="#heading-105">#</a> 布料</h5>
+<p>布料由纤维缠绕而成，分为几个层级：纤维缠绕形成股、股缠绕形成线、线编织成布料。</p>
+<p>具体渲染方法有如下几种：</p>
+<ol>
+<li>通过编制图案可以得到 BRDF 模型，从而进行渲染。</li>
+<li>分割空间为无数个格子，从而将布料当成云、雾等反射介质处理，结果真实但计算量极大。</li>
+<li>分别渲染每一个纤维。缺点同上。</li>
+</ol>
 </article>
   </div>
 </body>
