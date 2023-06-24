@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+
+<head>
+  
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script> 
+
+
+  <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
+      article {
+        max-width: 90%;
+      }
+
+      h1 {
+        font-size: large;
+      }
+
+      .date {
+        font-size: medium;
+      }
+
+      p,
+      li {
+        font-size: 15px;
+      }
+    }
+
+    p,
+    li {
+      font-size: 16.5px;
+      line-height: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      text-align: center;
+    }
+
+    .date {
+      text-align: center;
+    }
+
+    .toc {
+      position: fixed;
+      float: left;
+      max-width: 50px;
+      max-height: 50px;
+      margin-top: 200px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: x-large;
+      color: peru;
+    }
+
+    h3 {
+      font-size: large;
+      color: rgb(205, 158, 112);
+    }
+
+    h4 {
+      font-size: medium;
+      color: pink;
+    }
+
+    strong {
+      color: rgb(182, 230, 240);
+    }
+  </style>
+  <title>MIT6.S081-操作系统</title>
+</head>
+
+<body onselectstart="return false">
+  
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <div>
+    <div class="meta">
+      <h1>MIT6.S081-操作系统</h1>
+      <p>2023-06-24 17:36:35</p>
+    </div>
+    <article><h2 id="1-"><a class="anchor" href="#1-">#</a> 1 引言</h2>
+<h3 id="11-"><a class="anchor" href="#11-">#</a> 1.1 课程内容简介</h3>
+<h4 id="heading"><a class="anchor" href="#heading">#</a> 课程目标</h4>
+<ol>
+<li>理解操作系统的设计和实现。设计指具体结构，实现指具体代码。</li>
+<li>通过现有的示例操作系统（XV6），对其进行扩展，并通过接口开发软件，以作为实践环节。</li>
+</ol>
+<h4 id="heading-1"><a class="anchor" href="#heading-1">#</a> 操作系统目标</h4>
+<ol>
+<li>硬件抽象。以便从高层次操作硬件，以获得更好的通用性和可移植性。</li>
+<li>并发性。能够同时使用多个应用程序。</li>
+<li>隔离性。能够隔离应用程序，防止 bug 的传播。</li>
+<li>共享性。能够共享内存，从而进行数据交互。</li>
+<li>安全性。拥有权限机制从而禁止或允许用户的操作。</li>
+<li>高性能。操作系统应当能够发挥出硬件的全部性能。</li>
+<li>生态。一个好的操作系统应当能够支持大量不同类型的应用程序。</li>
+</ol>
+<h3 id="12-"><a class="anchor" href="#12-">#</a> 1.2 操作系统结构</h3>
+<p>计算机的最底层是其所拥有的<strong>硬件资源</strong>，包括 CPU、内存、磁盘、网卡等。</p>
+<p>最上层是<strong>用户空间</strong>，用户空间中运行着大量的应用程序。</p>
+<p><strong>Kernel</strong>（内核）运行在硬件资源和用户空间之间。它是一个特殊的应用程序，负责维护用户空间进程（支持上层）以及管理硬件资源（调用下层）。</p>
+<p>内核提供多种服务，包括文件系统和进程管理系统、进程间通信服务、网络和硬件驱动等。</p>
+<p>应用程序通过系统调用（System Call）访问内核，其形式类似函数调用，典型的系统调用有 open、write、fork 等。</p>
+<h3 id="13-"><a class="anchor" href="#13-">#</a> 1.3 挑战与乐趣并存</h3>
+<h4 id="heading-2"><a class="anchor" href="#heading-2">#</a> 挑战</h4>
+<ol>
+<li>内核的<strong>编程环境恶劣</strong>，它并没有一个方便的软件基础，需要与底层的硬件资源交互。</li>
+<li>操作系统的<strong>高效性和易用性之间的矛盾</strong>。高效性意味着操作层级应较低，而易用性则需要提供高层次的抽象接口。而对操作系统开发人员来说，我们又需要提供尽可能简单、却又功能性很强的接口。</li>
+<li>应用程序的<strong>灵活性和安全性之间的矛盾</strong>。内核对应用程序的限制应尽可能小，从而保证其灵活性；但同时又要限制应用程序，以避免其对硬件的直接访问，从而破坏隔离性和安全性。</li>
+<li>操作系统大量服务之间的交互是困难且复杂的。</li>
+<li>操作系统需要紧跟硬件的发展。</li>
+</ol>
+<h4 id="heading-3"><a class="anchor" href="#heading-3">#</a> 乐趣</h4>
+<ol>
+<li>我们需要思考操作系统服务之间的交互方式，这应当是有趣的。</li>
+<li>重新思考设计操作系统使其匹配最新硬件的过程是有趣的。</li>
+<li>对计算机运行原理感兴趣，喜欢构建能够被其他应用程序使用的基础架构，或是为了定位操作系统级别的程序 BUG，都需要操作系统的知识。</li>
+</ol>
+<h3 id="15-readwriteexit-"><a class="anchor" href="#15-readwriteexit-">#</a> 1.5 read，write，exit 系统调用</h3>
+<pre><code class="language-c">//copy.c :copy input to output.
+
+#include &quot;kernel/types.h&quot;
+#include &quot;user/user.h&quot;
+
+int main(){
+  char buf[64];
+  while(1){
+    int n=read(0,buf,sizeof(buf));
+    if(n&lt;=0) break;
+    write(1,buf,n);
+  }
+  exit(0);
+}
+</code></pre>
+<h4 id="read"><a class="anchor" href="#read">#</a> read</h4>
+<pre><code class="language-c">int n=read(0,buf,sizeof(buf))
+</code></pre>
+<p>read 系统调用接受三个参数：</p>
+<ol>
+<li>第一个参数是<strong>文件描述符</strong>，指向一个之前打开的文件。特别地，文件描述符 0 连接到 console 的输入，文件描述符 1 连接到 console 的输出。</li>
+<li>第二个参数是<strong>指向某段内存的指针</strong>，程序可通过该指针读取相应地址内存中的数据。</li>
+<li>第三个参数是<strong>代码读取的最大长度</strong>，在这里是 64 个字符。</li>
+</ol>
+<p>一般情况下，read 的返回值是读取到的字节数。当遇到文件尾，read 返回 0；当发生错误，read 返回-1。</p>
+<h4 id="write"><a class="anchor" href="#write">#</a> write</h4>
+<pre><code class="language-c">write(1,buf,n);
+</code></pre>
+<p>write 系统调用同样接受三个参数，其与 read 相同。</p>
+<h4 id="exit"><a class="anchor" href="#exit">#</a> exit</h4>
+<p>exit 接受一个参数，当为 0 时代表正常退出，否则表示发生错误。</p>
+<h3 id="16-open-"><a class="anchor" href="#16-open-">#</a> 1.6 open 系统调用</h3>
+<pre><code class="language-c">int fd = open(&quot;output.txt&quot;, O_WRONLY | O_CREATE);
+</code></pre>
+<p>open 系统调用接受 2 个参数。第一个参数表示打开的文件名，第二个参数是标志位，表示在内核中的实现。</p>
+<p>open 返回一个新分配的文件描述符，可被用来执行其他系统调用。</p>
+<p>文件描述符对应内核维护的一个表单数据，包括该文件所包含的所有数据。每个进程都拥有独立的文件描述符空间。</p>
+<h3 id="17-shell"><a class="anchor" href="#17-shell">#</a> 1.7 Shell</h3>
+<p>Shell 即命令行接口，是用户和机器的交互界面。</p>
+<h3 id="18-fork-"><a class="anchor" href="#18-fork-">#</a> 1.8 fork 系统调用</h3>
+<pre><code class="language-c">int pid = fork();
+
+if (pid == 0){
+  printf(&quot;child\n&quot;);
+} else {
+  printf(&quot;parent\n&quot;);
+}
+</code></pre>
+<p>fork 的作用是拷贝当前进程的内存，并创建一个新进程。两个进程独立运行。在新进程中，pid 返回 0；而在原始进程中，pid 返回新进程的 pid，它是一个大于 0 的整数。</p>
+<h3 id="19-execwait-"><a class="anchor" href="#19-execwait-">#</a> 1.9 exec，wait 系统调用</h3>
+<h4 id="exec"><a class="anchor" href="#exec">#</a> exec</h4>
+<pre><code class="language-c">char *argv[] = {&quot;echo&quot;, &quot;this&quot;, &quot;is&quot;, &quot;echo&quot;, 0 };
+exec(&quot;echo&quot;, argv);
+</code></pre>
+<p>exec 从文件中读取并加载指令，替代当前进程指令。第一个参数接受文件路径名，第二个参数接受传入的命令行参数。</p>
+<blockquote>
+<p>Linux 中没有 exec，但有 exec 族函数。在此处比较接近的是 execv，位于 <code>unistd.h</code> 中</p>
+</blockquote>
+<p>exec 执行会替换当前进程，因此正常情况下无返回值，当前进程直接结束。因此我们通常将 exec 和 fork 组合使用。</p>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MIPPNbcxvfU0rZb3JHn%2F-MIUKdbclTLPYY8wEZKW%2Fimage.png?alt=media&amp;token=6d077551-35b1-4d2a-a1d7-d3399beef508" alt=""></p>
+<h4 id="wait"><a class="anchor" href="#wait">#</a> wait</h4>
+<pre><code class="language-c">wait(&amp;status);
+</code></pre>
+<p>wait 接受一个 int 地址参数，内核会等待子进程完成，并将子进程的返回值写入。如果子进程成功，则 status 为 0，否则为 1。</p>
+<p>exec-fork 风格系统调用代价是高昂的，它为了开启一个子进程往往需要复制整个内存。</p>
+</article>
+  </div>
+</body>
+
+</html>
