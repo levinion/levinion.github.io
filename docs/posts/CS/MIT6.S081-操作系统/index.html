@@ -156,7 +156,7 @@
 <li>重新思考设计操作系统使其匹配最新硬件的过程是有趣的。</li>
 <li>对计算机运行原理感兴趣，喜欢构建能够被其他应用程序使用的基础架构，或是为了定位操作系统级别的程序 BUG，都需要操作系统的知识。</li>
 </ol>
-<h3 id="15-readwriteexit-"><a class="anchor" href="#15-readwriteexit-">#</a> 1.5 read，write，exit 系统调用</h3>
+<h3 id="14-readwriteexit-"><a class="anchor" href="#14-readwriteexit-">#</a> 1.4 read，write，exit 系统调用</h3>
 <pre><code class="language-c">//copy.c :copy input to output.
 
 #include &quot;kernel/types.h&quot;
@@ -165,15 +165,15 @@
 int main(){
   char buf[64];
   while(1){
-    int n=read(0,buf,sizeof(buf));
+    int n=read(0，buf，sizeof(buf));
     if(n&lt;=0) break;
-    write(1,buf,n);
+    write(1，buf，n);
   }
   exit(0);
 }
 </code></pre>
 <h4 id="read"><a class="anchor" href="#read">#</a> read</h4>
-<pre><code class="language-c">int n=read(0,buf,sizeof(buf))
+<pre><code class="language-c">int n=read(0，buf，sizeof(buf))
 </code></pre>
 <p>read 系统调用接受三个参数：</p>
 <ol>
@@ -183,20 +183,18 @@ int main(){
 </ol>
 <p>一般情况下，read 的返回值是读取到的字节数。当遇到文件尾，read 返回 0；当发生错误，read 返回-1。</p>
 <h4 id="write"><a class="anchor" href="#write">#</a> write</h4>
-<pre><code class="language-c">write(1,buf,n);
+<pre><code class="language-c">write(1，buf，n);
 </code></pre>
 <p>write 系统调用同样接受三个参数，其与 read 相同。</p>
 <h4 id="exit"><a class="anchor" href="#exit">#</a> exit</h4>
 <p>exit 接受一个参数，当为 0 时代表正常退出，否则表示发生错误。</p>
-<h3 id="16-open-"><a class="anchor" href="#16-open-">#</a> 1.6 open 系统调用</h3>
-<pre><code class="language-c">int fd = open(&quot;output.txt&quot;, O_WRONLY | O_CREATE);
+<h3 id="15-open-"><a class="anchor" href="#15-open-">#</a> 1.5 open 系统调用</h3>
+<pre><code class="language-c">int fd = open(&quot;output.txt&quot;， O_WRONLY | O_CREATE);
 </code></pre>
 <p>open 系统调用接受 2 个参数。第一个参数表示打开的文件名，第二个参数是标志位，表示在内核中的实现。</p>
 <p>open 返回一个新分配的文件描述符，可被用来执行其他系统调用。</p>
 <p>文件描述符对应内核维护的一个表单数据，包括该文件所包含的所有数据。每个进程都拥有独立的文件描述符空间。</p>
-<h3 id="17-shell"><a class="anchor" href="#17-shell">#</a> 1.7 Shell</h3>
-<p>Shell 即命令行接口，是用户和机器的交互界面。</p>
-<h3 id="18-fork-"><a class="anchor" href="#18-fork-">#</a> 1.8 fork 系统调用</h3>
+<h3 id="16-fork-"><a class="anchor" href="#16-fork-">#</a> 1.6 fork 系统调用</h3>
 <pre><code class="language-c">int pid = fork();
 
 if (pid == 0){
@@ -206,10 +204,10 @@ if (pid == 0){
 }
 </code></pre>
 <p>fork 的作用是拷贝当前进程的内存，并创建一个新进程。两个进程独立运行。在新进程中，pid 返回 0；而在原始进程中，pid 返回新进程的 pid，它是一个大于 0 的整数。</p>
-<h3 id="19-execwait-"><a class="anchor" href="#19-execwait-">#</a> 1.9 exec，wait 系统调用</h3>
+<h3 id="17-execwait-"><a class="anchor" href="#17-execwait-">#</a> 1.7 exec，wait 系统调用</h3>
 <h4 id="exec"><a class="anchor" href="#exec">#</a> exec</h4>
-<pre><code class="language-c">char *argv[] = {&quot;echo&quot;, &quot;this&quot;, &quot;is&quot;, &quot;echo&quot;, 0 };
-exec(&quot;echo&quot;, argv);
+<pre><code class="language-c">char *argv[] = {&quot;echo&quot;， &quot;this&quot;， &quot;is&quot;， &quot;echo&quot;， 0 };
+exec(&quot;echo&quot;， argv);
 </code></pre>
 <p>exec 从文件中读取并加载指令，替代当前进程指令。第一个参数接受文件路径名，第二个参数接受传入的命令行参数。</p>
 <blockquote>
@@ -222,6 +220,520 @@ exec(&quot;echo&quot;, argv);
 </code></pre>
 <p>wait 接受一个 int 地址参数，内核会等待子进程完成，并将子进程的返回值写入。如果子进程成功，则 status 为 0，否则为 1。</p>
 <p>exec-fork 风格系统调用代价是高昂的，它为了开启一个子进程往往需要复制整个内存。</p>
+<h3 id="18-io-"><a class="anchor" href="#18-io-">#</a> 1.8 I/O 重定向</h3>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MIPPNbcxvfU0rZb3JHn%2F-MIdhkxV4q6JhvAWWhEA%2Fimage.png?alt=media&amp;token=459186e7-79db-4fc2-84db-f3512de7fbd7" alt=""></p>
+<p>I/O 重定向广泛用于 Unix 管道工具。它通过 <code>&gt;</code>、<code>&lt;</code> 等管道符改变默认的输出/输入文件符，从而实现 I/O 重定向。</p>
+<h2 id="lab1"><a class="anchor" href="#lab1">#</a> Lab1</h2>
+<ol>
+<li>获取源代码并切换到util分支</li>
+</ol>
+<pre><code class="language-sh">git clone git://g.csail.mit.edu/xv6-labs-2021
+cd xv6-labs-2021
+git checkout util
+</code></pre>
+<ol start="2">
+<li>尝试编译运行 xv6</li>
+</ol>
+<pre><code class="language-sh">make qemu
+</code></pre>
+<p>遇到报错如下：</p>
+<pre><code class="language-sh">user/sh.c: In function 'runcmd':
+user/sh.c:58:1: error: infinite recursion detected [-Werror=infinite-recursion]
+   58 | runcmd(struct cmd *cmd)
+      | ^~~~~~
+user/sh.c:89:5: note: recursive call
+   89 |     runcmd(rcmd-&gt;cmd);
+      |     ^~~~~~~~~~~~~~~~~
+</code></pre>
+<p>修改 user/sh. c 文件，添加 noreturn 编译器属性以避免警告：</p>
+<pre><code class="language-c">// Execute cmd.  Never returns.
+__attribute__((noreturn))
+void
+runcmd(struct cmd *cmd)
+</code></pre>
+<p>编译成功</p>
+<pre><code class="language-sh">xv6 kernel is booting
+
+hart 1 starting
+hart 2 starting
+init: starting sh
+$ 
+</code></pre>
+<ol start="3">
+<li>sleep 程序</li>
+</ol>
+<p>在 user/user. h 中创建如下别名以解决报错，或选择在 <code>user/sleep.c</code> 中引入 <code>../kernel/types.h</code> 头文件：</p>
+<pre><code class="language-c">#define uint unsigned int
+//or
+#include &quot;../kernel/types.h&quot;
+</code></pre>
+<p>编写 user/sleep. c：</p>
+<pre><code class="language-c">#include &quot;user.h&quot;
+
+int main(int argc， char **argv) {
+  if (argc &lt;= 1) {
+    printf(&quot;lack args\n&quot;);
+    exit(1);
+  }
+  sleep(atoi(argv[1]));
+  exit(0);
+}
+</code></pre>
+<p>修改 makefile：</p>
+<pre><code class="language-c">UPROGS=\
+...
+	$U/_sleep\
+</code></pre>
+<p>重新编译并运行：</p>
+<pre><code class="language-sh">$ sleep
+lack args
+$ sleep 10
+$ 
+</code></pre>
+<ol start="4">
+<li>ping-pong 程序</li>
+</ol>
+<p>c 语言中管道图示如下：</p>
+<p><img src="https://img-blog.csdnimg.cn/add7f392ea684a8ca9e717ac048df5db.png" alt=""></p>
+<pre><code class="language-c">#include &quot;user.h&quot;
+
+int main() {
+  int p1[2]，p2[2];
+  pipe(p1);
+  pipe(p2);
+
+  if (fork() == 0) {
+    char buf[32];
+    close(p2[0]);
+    close(p1[1]);
+    //read ping
+    read(p1[0]， buf， 4);
+    printf(&quot;%d: received %s\n&quot;， getpid()， buf);
+    close(p1[0]);
+    //write pong
+    write(p2[1]， &quot;pong&quot;， 4);
+    close(p2[1]);
+    exit(0);
+  } else {
+    char buf[32];
+    close(p1[0]);
+    close(p2[1]);
+    //write ping
+    write(p1[1]， &quot;ping&quot;， 4);
+    close(p1[1]);
+    //read pong
+    read(p2[0]， buf， 4);
+    printf(&quot;%d: received %s\n&quot;， getpid()， buf);
+    close(p2[0]);
+    exit(0);
+  }
+}
+</code></pre>
+<p>注意修改 makefile（下同）。结果如下：</p>
+<pre><code class="language-sh">$ pingpong
+4: received ping
+3: received pong
+$ 
+</code></pre>
+<ol start="5">
+<li>素数虽然难度标的是 hard，但其实并不太难，只是需要灵活应用 pipe：</li>
+</ol>
+<pre><code class="language-c">#include &quot;user.h&quot;
+
+int work(int *p， int n) {
+  // 读取上一个管道传入的数据
+  int num;
+  read(p[0]， &amp;num， 4);
+  close(p[0]);
+  // 递归退出条件：无法被整除，表明是素数，打印
+  if (n == 1) {
+    printf(&quot;prime %d\n&quot;， num);
+    return 0;
+  }
+  // 若不能被整除，则新建一个管道并递归，否则返回
+  if (num % n != 0) {
+    int p1[2];
+    pipe(p1);
+    write(p1[1]， &amp;num， 4);
+    close(p1[1]);
+    work(p1， n - 1);
+  }
+  return 0;
+}
+
+int main() {
+  // 倒序判断是否是素数
+  for (int i = 1; i &lt; 36; i++) {
+    int p[2];
+    pipe(p);
+    write(p[1]， &amp;i， 4);
+    work(p， i-1);
+    close(p[1]);
+  }
+  exit(0);
+}
+</code></pre>
+<p>结果如下：</p>
+<pre><code class="language-sh">$ primes
+prime 2
+prime 3
+prime 5
+prime 7
+prime 11
+prime 13
+prime 17
+prime 19
+prime 23
+prime 29
+prime 31
+$ 
+</code></pre>
+<ol start="6">
+<li>find 程序</li>
+</ol>
+<pre><code class="language-c">#include &quot;../kernel/types.h&quot;
+#include &quot;../kernel/fs.h&quot;
+#include &quot;../kernel/stat.h&quot;
+#include &quot;../user/user.h&quot;
+
+// 获取文件的base name
+char *getname(char *path) {
+  char *p;
+  // Find first character after last slash.
+  for (p = path + strlen(path); p &gt;= path &amp;&amp; *p != '/'; p--)
+    ;
+  p++;
+  return p;
+}
+
+void find(char *path， char *filename) {
+  char buf[512];
+  int fd = open(path， 0);
+  struct stat st;
+  struct dirent de;
+  fstat(fd， &amp;st);
+  switch (st.type) {
+    // 如果path指示一个文件，则比较base name
+  case T_FILE:
+    if (strcmp(filename， getname(path)) == 0)
+      printf(&quot;%s\n&quot;， path);
+    break;
+    // 若path指示一个目录，则递归搜索目录下的所有路径
+  case T_DIR:
+    // 处理路径，添加分隔符
+    strcpy(buf， path);
+    char *p = buf + strlen(buf);
+    *p++ = '/';
+
+    while (read(fd， &amp;de， sizeof(de)) == sizeof(de)) {
+      if (de.inum == 0 || strcmp(de.name， &quot;.&quot;) == 0 ||
+          strcmp(de.name， &quot;..&quot;) == 0)
+        continue;
+
+      // 处理路径，将读取到的文件/目录名追加到buf作为查找路径
+      memmove(p， de.name， DIRSIZ);
+      p[DIRSIZ] = 0;
+      find(buf， filename);
+    }
+    break;
+  }
+  close(fd);
+}
+
+int main(int argc， char *argv[]) {
+  if (argc &lt; 3) {
+    printf(&quot;args is too short\n&quot;);
+    exit(1);
+  }
+  find(argv[1]， argv[2]);
+  exit(0);
+}
+</code></pre>
+<p>结果如下：</p>
+<pre><code class="language-sh">$ echo &gt; a
+$ mkdir b
+$ echo &gt; b/a
+$ find . a
+./a
+./b/a
+$ 
+</code></pre>
+<ol start="7">
+<li>xargs 程序</li>
+</ol>
+<pre><code class="language-c">#include &quot;../kernel/param.h&quot;
+#include &quot;user.h&quot;
+
+int main(int argc， char *argv[]) {
+  // 初始化参数列表
+  char *params[MAXARG];
+
+  // 判断xargs后的参数
+  if (argc &gt; 1) {
+    for (int i = 1; i &lt; argc; i++) {
+      params[i - 1] = argv[i];
+    }
+  } else {
+    printf(&quot;error\n&quot;);
+    exit(1);
+  }
+  params[argc] = 0;
+
+  // 从stdin读取参数，追加到参数列表最后
+  // 注意这里的数组大小，若太大则可能溢出；
+  char *buf[64];
+  int i = 0;
+  while (1) {
+    int len = read(0， &amp;buf[i]， 16);
+    if (len == 0 || buf[i] == (char *)'\n') {
+      break;
+    }
+    i++;
+  }
+  buf[i] = 0;
+
+  params[argc - 1] = (char *)buf;
+
+  // 建立子进程，主进程等待
+  if (fork() == 0) {
+    exec(params[0]， params);
+  } else {
+    wait(0);
+  }
+  exit(0);
+}
+</code></pre>
+<p>结果如下：</p>
+<pre><code class="language-sh">$ echo hello too | xargs echo bye
+bye hello to
+</code></pre>
+<h2 id="3-"><a class="anchor" href="#3-">#</a> 3 系统结构与系统调用</h2>
+<h3 id="31-"><a class="anchor" href="#31-">#</a> 3.1 操作系统隔离性</h3>
+<h4 id="heading-4"><a class="anchor" href="#heading-4">#</a> 为何需要隔离性</h4>
+<ol>
+<li>应用程序之间需要隔离性：在操作系统上运行的应用不应该不必要地影响其他正在运行的应用程序。</li>
+<li>应用程序和操作系统之间需要隔离性：应用程序的崩溃不应该导致整个操作系统崩溃，要求操作系统有处理异常的能力。</li>
+</ol>
+<h4 id="heading-5"><a class="anchor" href="#heading-5">#</a> 操作系统隔离性的实现</h4>
+<p>操作系统通过抽象阻止应用程序直接访问硬件资源，如进程是 CPU 的抽象、文件是磁盘的抽象。借助操作系统的抽象接口，能够实现多个应用程序复用计算机硬件资源，同时满足强隔离性的目的。</p>
+<h3 id="32-"><a class="anchor" href="#32-">#</a> 3.2 操作系统防御性</h3>
+<h4 id="heading-6"><a class="anchor" href="#heading-6">#</a> 为何需要防御性</h4>
+<ol>
+<li>操作系统需要应对恶意应用程序，防止恶意应用程序使操作系统崩溃。</li>
+<li>操作系统应当保持对应用程序隔离，防止应用程序获取内核权限从而控制硬件资源。</li>
+</ol>
+<p>操作系统防御性是隔离性的表现之一。操作系统借助硬件支持，包括用户/内核态（user/kernel mode）和 page table（页表，或虚拟内存）实现强隔离。</p>
+<h3 id="33-"><a class="anchor" href="#33-">#</a> 3.3 硬件对于强隔离的支持</h3>
+<p>硬件对于强隔离的支持包括：user/kernel mode 和 page table。</p>
+<h4 id="userkernel-mode"><a class="anchor" href="#userkernel-mode">#</a> user/kernel mode</h4>
+<p>处理器具有两种操作状态：当运行在用户态时，只能够执行普通权限指令；当运行在内核态时，能够执行特殊权限指令。</p>
+<p>普通权限指令包括寄存器的加减、跳转操作；特殊权限指令与硬件状态相关，如设置 page table 寄存器和控制时钟中断。</p>
+<p>假如应用程序打算执行一条特殊权限指令，会由于用户态而拒绝执行。这时 CPU 会跳转到内核态，并且杀掉进程。</p>
+<p>对于 RISC-V，处理器还具有第三种状态：机器态（machine mode）。机器态拥有最高的特权级别，能够执行任何指令，主要用于处理器初始化和异常/中断处理。</p>
+<h4 id="heading-7"><a class="anchor" href="#heading-7">#</a> 虚拟内存</h4>
+<p>page table 提供了虚拟内存地址和物理内存地址的对应关系。每一个独立进程都维护着一个独立的 page table，保证其物理内存地址不重叠，使其无法访问到其他应用程序的内存，从而保证了内存的隔离性。</p>
+<h3 id="heading-8"><a class="anchor" href="#heading-8">#</a> 用户态/内核态切换</h3>
+<p>用户态和内核态划定了用户空间和内核空间的界线：应用程序运行在用户空间，而内核程序运行在内核空间。</p>
+<p>应用程序通过系统调用转移控制权给内核。在 RISC-V 中，通过 ECALL 指令转移控制权。</p>
+<pre><code class="language-asm">ecall &lt;uint&gt;
+</code></pre>
+<p>ECALL 接受一个数字，可跳转到内核中特定的系统调用接入点。应用程序通过 syscall 函数发起系统调用，syscall 调用 ECALL，从而完成用户态/内核态切换。</p>
+<h3 id="34-"><a class="anchor" href="#34-">#</a> 3.4 宏内核与微内核</h3>
+<h4 id="tcb"><a class="anchor" href="#tcb">#</a> TCB</h4>
+<p>TCB 即被信任的计算空间（Trusted Computing Base），代指安全的内核。一个安全的内核应当具有以下特征：</p>
+<ol>
+<li>内核应当具有尽可能少的漏洞。</li>
+<li>内核应当认为所有应用程序都是恶意的。</li>
+</ol>
+<p>所有敏感的操作都应当运行在内核态，也就是 TCB 当中。</p>
+<h4 id="heading-9"><a class="anchor" href="#heading-9">#</a> 宏内核</h4>
+<p>所有操作系统服务均运行在内核态，这样的操作系统内核称为宏内核。绝大多数的 Unix 操作系统均是宏内核。</p>
+<ul>
+<li>Pro：宏内核组件具有良好的集成性，因此具有不错的性能</li>
+<li>Cron：由于服务都运行在内核中，宏内核发生故障的可能性更大。</li>
+</ul>
+<h4 id="heading-10"><a class="anchor" href="#heading-10">#</a> 微内核</h4>
+<p>微内核只在内核中提供了最基本的服务，以减少内核中的代码量。在微内核中，原本由内核提供的服务现在以一个用户程序的形式运行。</p>
+<ul>
+<li>Pro：微内核代码量少，发生 Bug 的可能性更低，因此更加安全。</li>
+<li>Cron：需要在用户态和内核态之间反复跳转，也同时更难共享内存，从而带来性能损耗。</li>
+</ul>
+<h3 id="35-"><a class="anchor" href="#35-">#</a> 3.5 编译运行内核</h3>
+<h4 id="xv6-"><a class="anchor" href="#xv6-">#</a> xv6 的代码结构</h4>
+<ul>
+<li>kernel：kernel 中包含了所有内核代码，这些代码编译成一个名叫 kernel 的二进制文件，该二进制文件运行在内核态中。</li>
+<li>user：user 中包含了所有的用户程序。</li>
+<li>mkfs：mkfs 创建一个空的文件镜像，通过挂载到磁盘上得到一个空的文件系统。</li>
+</ul>
+<h4 id="heading-11"><a class="anchor" href="#heading-11">#</a> 内核编译过程</h4>
+<ol>
+<li>编译：对每个. c 文件经编译器得到. s，这是 RISC-V 汇编代码文件</li>
+<li>汇编：对. s 文件调用汇编器，形成. o，这是汇编代码的二进制形式</li>
+<li>链接：使用系统加载器（Loader）链接成内核文件 kernel</li>
+</ol>
+<blockquote>
+<p>这里所说的系统加载器也就是链接器（Linker）</p>
+</blockquote>
+<h3 id="36-xv6-"><a class="anchor" href="#36-xv6-">#</a> 3.6 xv6 启动过程</h3>
+<blockquote>
+<p>这部分内容比较零碎，由 claude 进行总结，我只是进行了一些整理和调整</p>
+</blockquote>
+<ol>
+<li>XV6 的入口地址是 <code>0x80000000</code>， 这个地址是 QEMU 要求的硬性条件， XV6 的载入器 <code>kernel.ld</code> 会将内核加载到这个地址开始。</li>
+<li>XV6 首先在 <code>entry.s</code> 中启动，此时还没有内存分页和进程隔离，处于 machine mode。XV6 会尽快切换到 supervisor mode。</li>
+<li>其他初始化工作：
+<ul>
+<li>consoleinit: 初始化控制台，用于后续打印输出；</li>
+<li>kinit: 初始化页表分配器；</li>
+<li>kvminit: 初始化虚拟内存管理</li>
+<li>kvminithart: 打开页表</li>
+<li>processinit: 初始化进程表</li>
+<li>trapinit/trapinithart: 初始化用户/内核模式切换</li>
+<li>plicinit/plicinithart: 初始化中断控制器 PLIC</li>
+<li>binit: 初始化缓冲区缓存</li>
+<li>iinit: 初始化 inode 缓存</li>
+<li>fileinit: 初始化文件系统</li>
+<li>virtio_disk_init: 初始化磁盘</li>
+</ul>
+</li>
+<li>userinit: 创建初始进程，并返回用户空间。这个初始进程定义在 initcode 中，它发起第一个系统调用，通过 exec 调用 init 程序。exec 系统调用由 sys_exec 函数处理，它将从用户空间读取参数并启动 init 进程。</li>
+<li>init 进程配置控制台，调用 fork 启动 shell。</li>
+<li>最后 shell 被执行，XV6 启动完成。</li>
+</ol>
+<p>所以，XV6 的启动过程可以概括为: 执行一系列初始化函数配置系统环境 -&gt; userinit 启动第一个用户进程 -&gt; 该进程执行 exec 系统调用启动 init 进程 -&gt; init 进程 fork 出 shell 进程 -&gt; shell 被执行，系统启动完成。</p>
+<h2 id="lab2"><a class="anchor" href="#lab2">#</a> Lab2</h2>
+<h3 id="system-call-tracing"><a class="anchor" href="#system-call-tracing">#</a> System call tracing</h3>
+<ol>
+<li>添加文件到 makefile</li>
+</ol>
+<pre><code class="language-makefile">	$U/_trace\
+</code></pre>
+<ol start="2">
+<li>在<code>user/user.h</code>声明函数头文件；在<code>user/usys.pl</code>中添加存根；在<code>kernel/syscall.h</code>中添加系统调用的数值代号</li>
+</ol>
+<pre><code class="language-c">// user/user.h
+int trace(int);
+
+// user/usys.pl
+entry(&quot;trace&quot;);
+
+// kernel/syscall.h
+#define SYS_trace  22
+</code></pre>
+<ol start="3">
+<li>在 <code>kernel/syscall.c</code> 中添加声明；修改 <code>kernel/proc.c</code> 中的 proc 结构体，增加一个 mask 字段；在 <code>kernel/sysproc.c</code> 中实现 <code>sys_trace()</code> 函数。</li>
+</ol>
+<pre><code class="language-c">// syscall.c
+extern uint64 sys_trace(void);
+
+static uint64 (*syscalls[])(void) = {
+...
+    [SYS_trace] sys_trace,
+};
+
+// proc.c
+struct proc {
+...
+  int mask;
+};
+
+// sysproc.c
+uint64 sys_trace(void) {
+  int mask;
+  //从寄存器中取值
+  if (argint(0, &amp;mask) &lt; 0) {
+    return -1;
+  }
+  myproc()-&gt;mask = mask;
+  return 0;
+}
+</code></pre>
+<ol start="4">
+<li>修改 <code>kernel/proc.c</code>中的<code>fork</code>函数，以从父进程复制到子进程的跟踪掩码</li>
+</ol>
+<pre><code class="language-c">//proc.c
+int fork(void){
+  ...
+  np-&gt;mask = p-&gt;mask;
+  ...
+}
+</code></pre>
+<ol start="5">
+<li>修改 <code>kernel/syscall.c</code> 中的 <code>syscall</code> 函数，打印输出</li>
+</ol>
+<pre><code class="language-c">void
+syscall(void)
+{
+  int num;
+  struct proc *p = myproc();
+
+  num = p-&gt;trapframe-&gt;a7;
+  if(num &gt; 0 &amp;&amp; num &lt; NELEM(syscalls) &amp;&amp; syscalls[num]) {
+    p-&gt;trapframe-&gt;a0 = syscalls[num]();
+    if ((1 &lt;&lt; num) &amp; p-&gt;mask) {
+      printf(&quot;%d: syscall %s -&gt; %d\n&quot;, p-&gt;pid, syscalls[num], p-&gt;trapframe-&gt;a0);
+    }
+  } else {
+    printf(&quot;%d %s: unknown sys call %d\n&quot;,
+            p-&gt;pid, p-&gt;name, num);
+    p-&gt;trapframe-&gt;a0 = -1;
+  }
+}
+</code></pre>
+<h3 id="sysinfo"><a class="anchor" href="#sysinfo">#</a> Sysinfo</h3>
+<h2 id="4-"><a class="anchor" href="#4-">#</a> 4 虚拟内存</h2>
+<p>虚拟内存是对物理内存的抽象，它提供虚拟地址空间到物理地址的映射，是计算机隔离性的重要环节之一。</p>
+<p>现代计算机均通过某种方式对虚拟内存提供了硬件支持。</p>
+<h3 id="41-"><a class="anchor" href="#41-">#</a> 4.1 地址空间</h3>
+<h4 id="heading-12"><a class="anchor" href="#heading-12">#</a> 地址空间的必要性</h4>
+<p>程序必须存在于物理内存当中，假若不具有隔离性，很可能会破坏其他应用程序甚至操作系统的正常运作。我们通过向每个程序提供独立的地址空间来实现必要的隔离性。</p>
+<h3 id="42-"><a class="anchor" href="#42-">#</a> 4.2 页表</h3>
+<h4 id="heading-13"><a class="anchor" href="#heading-13">#</a> 如何创建地址空间</h4>
+<p>我们通过页表创建独立的地址空间。页表在硬件中通过处理器和内存管理单元实现。</p>
+<p>对任何涉及地址的指令，其使用的均是虚拟地址。虚拟地址会被转到内存管理单元（MMU，Memory Management Unit）并翻译成物理地址，由得到的物理地址去索引物理内存。</p>
+<h4 id="mmu-"><a class="anchor" href="#mmu-">#</a> MMU 如何翻译虚拟地址</h4>
+<p>为了完成虚拟地址到物理地址的映射，MMU 需要在内存中保存一份表单，表单地址保存在 CPU 的寄存器中（在 RISC-V 中是 SATP 寄存器）。</p>
+<p>每一个应用程序应当保存了一份自己的表单，在切换应用程序中，SATP 中的内容也必须做相应的切换。</p>
+<h4 id="risc-v-"><a class="anchor" href="#risc-v-">#</a> RISC-V 中虚拟内存的实现</h4>
+<p>虚拟地址和表单不是一对一的关系。在 RISC-V 中，一个 page 的大小是 4KB。</p>
+<p>对于一个虚拟地址，它的内容分为 index 和 offset 两部分。MMU 通过 index 找到物理内存 page 号，通过 page 起始地址加上偏移量从而找到物理地址。</p>
+<p>RISC-V 寄存器是 64 位，最大支持 64 位虚拟地址；但高 25 位并未使用，因此最大支持 2^39，即 512G 内存。其中 27 位作为 index，12 位作为 offset，对应 page 的 4096 字节。</p>
+<p>RISC-V 最大支持 56 位物理地址，因此最大内存理论上最多能够到达 2^56 字节。其中 44 位物理 page 号，12 位 offset（直接从虚拟地址中拷贝）。</p>
+<p>在 RISC-V 中，page-table 是一个多级结构。</p>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MKKjB2an4WcuUmOlE__%2F-MKPwJezGQDkWaLDRuDs%2Fimage.png?alt=media&amp;token=654cbddc-fab3-4180-8bd7-d275c63ae67f" alt=""></p>
+<p>虚拟地址的 27 位 index 又细分为 L2、L1、L0，依次对应高、中、低级 page directory。每级 page directory 索引 512 个条目，每个条目（PTE）占 8 字节。在索引时，从高到低依次索引，然后在最低级的 page directory 中可得到实际物理地址。</p>
+<p>分级结构很容易理解：通过将一个大的表单拆分多个小的表单，我们可以不索引许多没有用到的PTE，从而大大减少了内存开销。</p>
+<p>一个 page directory 分为 44 位 PPN（page 起始地址）和 10 位标志位，其他 10 位作为拓展位留空。标志位包括：</p>
+<ol>
+<li>Valid：表明 PTE 是否合法，合法（被使用）的 Valid 置一，否则置零。</li>
+<li>Readable 和 Writable，表明是否可读写 page</li>
+<li>Executable：是否可从该 page 执行指令</li>
+<li>User：是否可被用户空间进程访问</li>
+<li>其他：不重要</li>
+</ol>
+<h3 id="43-"><a class="anchor" href="#43-">#</a> 4.3 页表缓存</h3>
+<p>三级寻址需要三次内存读取，因此代价较高，所以需要缓存最近读取过的内存地址，该技术称为页表缓存（TLB，Translation Lookside Buffer）。</p>
+<p>TLB 会保存查询到的虚拟地址到物理地址的映射关系，在下一次访问同一虚拟地址时可直接从 TLB 中查取，从而避免查询 page table。在 table page 切换后 TLB 也会清空（RISC-V 中通过 sfence_vma 指令）。</p>
+<h3 id="44-xv6-"><a class="anchor" href="#44-xv6-">#</a> 4.4 xv6 页表实现</h3>
+<h4 id="heading-14"><a class="anchor" href="#heading-14">#</a> 物理内存分布</h4>
+<p>物理地址寻址由具体主板决定，一般来说，从某个物理地址分隔（教程中是 0x80000000），以上是从 DRAM 寻址，以下是 I/O 设备。</p>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MK_UbCc81Y4Idzn55t8%2F-MKaeaT3eXOyG4jfKKU7%2Fimage.png?alt=media&amp;token=a04af08d-3c8d-4c61-a63d-6376dec252ea" alt=""></p>
+<p>上电后，主板运行 boot ROM 中的代码，然后跳转到 0x80000000，从而启动操作系统。</p>
+<h4 id="xv6--1"><a class="anchor" href="#xv6--1">#</a> xv6 虚拟地址空间</h4>
+<p>处于简单考虑，在 xv6 中，虚拟地址和物理地址的映射是相等映射。但是，虚拟地址和物理地址之间的映射关系可能是一对一、一对多、多对一。</p>
+<p>我们还可以为 page table 设置权限，从而提早发现和处理 bug。</p>
+<h3 id="45-kvminit-"><a class="anchor" href="#45-kvminit-">#</a> 4.5 kvminit 函数</h3>
+<p>kvminit 函数设置地址空间。其结构如下：</p>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MKgiYv2CppKnuZEsKO3%2F-MKjcMW3TzZ3kdPwse0X%2Fimage.png?alt=media&amp;token=080b793a-f859-479b-aa53-20dec81d4e88" alt=""></p>
+<ol>
+<li>代码的最上方为最高级 page 分配内存，并将内存置零</li>
+<li><code>kvmmap</code> 函数将 I/O 设备映射到内核</li>
+<li>vmprint 打印当前的 kernel page table</li>
+</ol>
+<h3 id="46-kvminithart-"><a class="anchor" href="#46-kvminithart-">#</a> 4.6 kvminithart 函数</h3>
+<p>kvminithart 函数运行在 kvminit 函数之后。</p>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MKgiYv2CppKnuZEsKO3%2F-MKjffmTgmjxQO-BCcin%2Fimage.png?alt=media&amp;token=050d4673-2526-43c7-83aa-6b623e840074" alt=""></p>
+<p>kvminithart 的作用是告知内核使用已经设置好的 page table，在此之后虚拟内存开始工作。</p>
 </article>
   </div>
 </body>
