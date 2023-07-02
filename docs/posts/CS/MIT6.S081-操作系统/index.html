@@ -992,7 +992,140 @@ syscall(void)
 <li>程序的栈，记录了函数调用情况，同时反映当前线程的执行点</li>
 </ol>
 <h4 id="heading-26"><a class="anchor" href="#heading-26">#</a> 多线程并行</h4>
-<p>多线程并行一般有两种策略：在每个CPU上运行一个线程，以及在一个CPU上运行多个线程。</p>
+<p>多线程并行一般有两种策略：在每个 CPU 上运行一个线程，以及在一个 CPU 上运行多个线程。</p>
+<p>在 xv6 中，内核线程共享内存，而用户线程独立运行；对于更复杂的 Linux 系统，一个用户进程也往往包含多个线程。</p>
+<h3 id="92-"><a class="anchor" href="#92-">#</a> 9.2 线程调度</h3>
+<h4 id="heading-27"><a class="anchor" href="#heading-27">#</a> 线程系统遇到的挑战</h4>
+<ol>
+<li>如何实现线程切换。线程切换的过程称为线程调度，每个CPU都实现了一个线程调度器</li>
+<li>决定在线程切换时保留哪些信息以及如何保存。</li>
+<li>如何处理运算密集型线程</li>
+</ol>
+<h4 id="heading-28"><a class="anchor" href="#heading-28">#</a> 如何处理运算密集型线程</h4>
+<p>运算密集型线程无法自愿出让给其他线程，因此需要从长时间运行的运算密集型线程中撤回对 CPU 的控制以转交给其他线程使用。</p>
+<p>处理方法是使用定时器中断，强制从用户空间进程获得 CPU 控制权。中断处理程序使得 CPU 出让给线程调度器，以便完成线程切换。</p>
+<p>这里涉及两个流程：</p>
+<ol>
+<li>pre-emptive scheduling。即使用户代码未出让 CPU，定时器中断仍然强制取得 CPU 控制权，并出让给线程调度器。</li>
+<li>voluntary scheduling。内核中用户进程对应内核线程代表用户进程出让 CPU。</li>
+</ol>
+<p>线程分为以下几类，分别对应以下几种状态：</p>
+<ol>
+<li>当前 CPU 上运行的线程，对应 RUNNING 状态</li>
+<li>等待 CPU 运行的线程，对应 RUNABLE 状态（即能够被执行）</li>
+<li>没有在等待 CPU 运行的线程，可能在等待 I/O 或其他事件，对应 SLEEPING 状态</li>
+</ol>
+<p>线程切换实际上就是将一个 RUNNING 线程转换成一个 RUNABLE 线程，在切换过程中，需要拷贝其 CPU 状态（程序计数器和寄存器）到内存。</p>
+<h3 id="93-xv6-"><a class="anchor" href="#93-xv6-">#</a> 9.3 xv6 线程切换</h3>
+<h4 id="heading-29"><a class="anchor" href="#heading-29">#</a> 线程切换流程</h4>
+<p>对于一个触发中断的用户程序来说，其用户空间状态保存在 <code>trapframe</code> 中，其对应内核线程的内核寄存器保存在一个 context 对象中，以供恢复使用。</p>
+<p>线程切换流程如下：</p>
+<ol>
+<li>当从一个用户进程切换到另一个用户进程，需要从第一个用户进程进入到内核，保存进程状态并运行它的内核线程。</li>
+<li>从第一个用户进程的内核线程切换到第二个用户进程的内核线程。</li>
+<li>第二个用户进程的内核线程暂停自己，并恢复第二个用户进程的用户寄存器</li>
+<li>第二个用户进程继续执行。</li>
+</ol>
+<h4 id="heading-30"><a class="anchor" href="#heading-30">#</a> 实际线程切换流程</h4>
+<p>在第二步中，一个内核线程并不直接切换到另一个内核线程，而是切换到这个 CPU 对应的调度器线程，并由调度器线程（同样是一个内核线程）切换到下一个内核线程。</p>
+<h4 id="heading-31"><a class="anchor" href="#heading-31">#</a> 线程切换程序</h4>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MPlA8TdJmidn6m4MngD%2F-MPnrlXVjhqSv55SaNaq%2Fimage.png?alt=media&amp;token=11b1bceb-efc7-4bdb-8ef1-511e44f8b149" alt=""></p>
+<p>proc记录了进程状态相关的字段，其中：</p>
+<ol>
+<li>trapframe 字段保存用户空间线程寄存器</li>
+<li>context 字段保存内核线程寄存器</li>
+<li>kstack 表示当前进程内核保存函数调用的位置</li>
+<li>state 保存进程状态：RUNNING、RUNABLE 或 SLEEPING</li>
+<li>lock 字段是锁</li>
+</ol>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MPlA8TdJmidn6m4MngD%2F-MPntE1YFDaXfM--9WoX%2Fimage.png?alt=media&amp;token=d67e55ae-f178-406a-8764-e59d4aac0070" alt=""></p>
+<p>在代码中创建了两个计算密集型线程，当定时器中断发生时，devintr 函数中使用 yield 让出 CPU 并允许线程切换。</p>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MPo3XwIXuht-vwuwogZ%2F-MPqDSuDUAjxhmKs3bRj%2Fimage.png?alt=media&amp;token=a35fcd6d-48db-4d1f-9990-b18150ecada7" alt=""></p>
+<p>yield 函数获取进程的锁，以阻止其他 CPU 调度器线程由于状态被改变为 RUNNABLE 而运行该进程；改变进程状态为 RUNNABLE，接着调用 sched 函数：</p>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MPo3XwIXuht-vwuwogZ%2F-MPqG5J_0Kd38sS3FXWM%2Fimage.png?alt=media&amp;token=eab1e070-55e5-49d6-b66f-99c4b7f5c14a" alt=""></p>
+<p>sched 先进行合理性检查，然后利用 switch （核心）函数将内核线程寄存器保存在 <code>p-&gt;context</code> 中，然后从 <code>c-&gt;context</code> 恢复当前 CPU 调度线程寄存器，从而执行 CPU 调度线程。</p>
+<h2 id="10-"><a class="anchor" href="#10-">#</a> 10 睡眠和唤醒</h2>
+<h3 id="101-"><a class="anchor" href="#101-">#</a> 10.1 线程切换过程中锁的限制</h3>
+<ol>
+<li>不允许进程在执行 switch 过程中持有其他锁</li>
+<li>调用 switch 函数过程中，必须持有 p-&gt;lock</li>
+</ol>
+<h3 id="102-sleepwakeup"><a class="anchor" href="#102-sleepwakeup">#</a> 10.2 Sleep&amp;Wakeup</h3>
+<h4 id="sleepwakeup-"><a class="anchor" href="#sleepwakeup-">#</a> Sleep&amp;Wakeup 有什么作用</h4>
+<p>当我们需要等待一个 I/O 事件时，通常会出让 CPU，此时调用 Coordination（协调机制）。在 xv6 和大多数 Unix 操作系统中，Coordination 是通过 Sleep&amp;Wakeup 方式实现的。</p>
+<h4 id="sleepwakeup--1"><a class="anchor" href="#sleepwakeup--1">#</a> Sleep&amp;Wakeup 的机制</h4>
+<p>当一个进程需要等待某个时间，会调用 sleep 函数并等待特定条件；当条件满足，代码调用 wakeup 函数以唤醒进程。</p>
+<p>sleep 和 wakeup 往往是成对出现的。它们之间通过 sleep channel 进行链接，以决定 wakeup 所唤醒的是哪个进程。</p>
+<p>对于 sleep，它接受一个 sleep channel 参数，然后将进程的状态设为 SLEEPING，表示进程不运行。</p>
+<p>对于 wakeup，它检查进程状态，如果进程状态是 SLEEPING 且对应的 channel 是 wakeup 接收到的参数，则将进程状态设置为 RUNNABLE。</p>
+<h3 id="103-lost-wakeup"><a class="anchor" href="#103-lost-wakeup">#</a> 10.3 Lost Wakeup</h3>
+<p>lost wakeup 是指内核发起唤醒信号但未能成功唤醒进程的情况。</p>
+<p>其发生原因之一是：sleep 在释放锁之前，进程未进入 SLEEPING 状态，此时中断处理程序获取锁并调用了 wakeup，导致唤醒未能生效，从而使进程一直处于 SLEEPING 情况。</p>
+<p>解决方法是：sleep 获取一个锁作为参数，当获取进程锁后才释放传入的锁；wakeup 同时获取两个锁。</p>
+<h3 id="104-exit"><a class="anchor" href="#104-exit">#</a> 10.4 exit</h3>
+<p>我们使用 exit 系统调用以释放一个进程。</p>
+<p>在杀死线程过程中，该线程可能正在更新复杂内核数据，或是持有重要系统资源（互斥锁等），因此 exit 无法在进程运行时执行。</p>
+<p>exit 的流程如下：</p>
+<ol>
+<li>关闭所有已经打开的文件</li>
+<li>释放目录引用</li>
+<li>如果有子进程，设置子进程的父进程为 PID 为 1 的进程（init 进程）</li>
+<li>使用 wakeup 唤醒父进程</li>
+<li>将当前进程的状态设置为 ZOMBIE，此时并未释放全部资源</li>
+<li>父进程的 wait 返回，调用 freeproc 释放子进程的剩余资源，子进程的状态设置为 UNUSED</li>
+</ol>
+<h3 id="105-kill"><a class="anchor" href="#105-kill">#</a> 10.5 kill</h3>
+<p>kill 系统调用的功能是：kill 接受一个 PID，然后使该进程停止运行。</p>
+<p>kill 的流程如下：</p>
+<ol>
+<li>扫描进程表单，查找目标进程，将进程 proc 结构体中 killed 位设置为 1。若进程处于 SLEEPING 状态则设置为 RUNNABLE（被唤醒）。</li>
+<li>进程运行到可安全停止位置时，检查 killed 标志位，若设置为 1，则自愿执行 exit</li>
+</ol>
+<p>因此 kill 系统调用十分温和，只有在进程下一次执行系统调用或触发中断时才会退出。</p>
+<h2 id="11--1"><a class="anchor" href="#11--1">#</a> 11 文件系统</h2>
+<h3 id="111-"><a class="anchor" href="#111-">#</a> 11.1 文件系统实现概论</h3>
+<h4 id="heading-32"><a class="anchor" href="#heading-32">#</a> 文件系统的特性</h4>
+<ol>
+<li>提供了用户友好的文件名以及层级路径名</li>
+<li>提供了信息的持久化存储</li>
+</ol>
+<h4 id="heading-33"><a class="anchor" href="#heading-33">#</a> 文件系统的机制</h4>
+<ol>
+<li>文件系统提供了对硬件的抽象</li>
+<li>文件系统提供了很好的 crash safety，支持在计算机崩溃后维持文件系统的完好</li>
+<li>合理的在磁盘上排布文件的方式</li>
+<li>性能机制。通过 buffer cache 或 block cache，并行等方式加速文件系统的使用。</li>
+</ol>
+<h4 id="-api"><a class="anchor" href="#-api">#</a> 文件系统 API</h4>
+<ol>
+<li>open 系统调用创建或打开文件，返回文件描述符。它使用文件路径名确认文件。</li>
+</ol>
+<pre><code class="language-c">fd=open(&quot;x/y&quot;,O_RDONLY)
+</code></pre>
+<ol start="2">
+<li>write 系统调用向文件中写数据</li>
+</ol>
+<pre><code class="language-c">write(fd,&quot;abc&quot;,3)
+</code></pre>
+<ol start="3">
+<li>link 系统调用创建链接</li>
+</ol>
+<pre><code class="language-c">link(&quot;x/y&quot;,&quot;x/z&quot;)
+</code></pre>
+<h4 id="inode"><a class="anchor" href="#inode">#</a> inode和文件描述符</h4>
+<p>inode 是文件系统中代表文件的对象，通过编号（int）进行区分，它实现了 read 和 write 方法，同时实现了引用计数以支持链接。</p>
+<p>文件描述符（file descriptor）主要与用户进程交互，它维护了文件的 offset。</p>
+<h4 id="heading-34"><a class="anchor" href="#heading-34">#</a> 文件系统结构</h4>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MRhBFGrbi6iZo-luZ0H%2F-MRhtSv2iQvU3nu1K7ZF%2Fimage.png?alt=media&amp;token=be934984-d1c5-4fbc-9618-21eb6b6f3373" alt=""></p>
+<p>文件系统自底向上结构分别为：</p>
+<ol>
+<li>文件系统的最底层是磁盘，磁盘提供了持久化存储</li>
+<li>buffer cache/block cache，通过将数据保存在内存中以避免频繁读写磁盘</li>
+<li>logging 层</li>
+<li>inode cache，负责同步</li>
+<li>inode</li>
+<li>文件名、文件描述符操作 API</li>
+</ol>
 </article>
   </div>
 </body>
