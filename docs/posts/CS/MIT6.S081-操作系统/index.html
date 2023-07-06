@@ -1126,6 +1126,214 @@ syscall(void)
 <li>inode</li>
 <li>文件名、文件描述符操作 API</li>
 </ol>
+<h3 id="112-"><a class="anchor" href="#112-">#</a> 11.2 文件系统存储设备</h3>
+<h4 id="sector--block"><a class="anchor" href="#sector--block">#</a> sector 和 block</h4>
+<ul>
+<li>sector 是磁盘驱动可以读写的最小单元，通常是 512 字节</li>
+<li>block 是操作系统/文件系统视角的数据，通常是 1024 字节</li>
+</ul>
+<p>文件系统运行在 CPU 上，将内部数据存储在内存，会读取 block 形式存储在 SSD 或 HDD 设备上的数据。其 api 包括 read/write。</p>
+<h4 id="heading-35"><a class="anchor" href="#heading-35">#</a> 磁盘</h4>
+<p>文件系统提供了对磁盘的抽象，在文件系统看来磁盘是一个 block 的数组。</p>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MRhzbAZwhuzp63wWdRE%2F-MRielGcbrHOzPCrxHcO%2Fimage.png?alt=media&amp;token=f685aafe-7c22-4965-9936-d811b090023d" alt=""></p>
+<p>下面是一种常见的文件系统磁盘布局（同样是 xv6 的布局）：</p>
+<ul>
+<li>block0 要么闲置要么用作 boot sector，包含了启动操作系统的代码</li>
+<li>block1 被称为 super block，描述了文件系统。其保存文件系统的大部分信息。</li>
+<li>block2-block32 是 log 区。其大小可能视文件系统而不同。</li>
+<li>block32-block45 存储 inode，一个 inode 是 64 字节。</li>
+<li>block46 是 bitmap block，占据一个 block，记录数据 block 是否空闲</li>
+<li>之后是数据 block，存储文件和目录（文件夹）内容</li>
+</ul>
+<p>其中，bitmap block，inode blocks，log blocks 被统称为 metadata block，存储文件系统元数据。</p>
+<h3 id="143-inode"><a class="anchor" href="#143-inode">#</a> 14.3 inode</h3>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MRhzbAZwhuzp63wWdRE%2F-MRiq3PDZ1MKm5xRPATf%2Fimage.png?alt=media&amp;token=b690c6fe-e665-4ded-adc7-91be326015d0" alt=""></p>
+<p>一个 inode 占据 64 字节，它包括以下字段：</p>
+<ul>
+<li>type，表明 inode 是文件或目录</li>
+<li>nlink，link 计数器，跟踪多少文件名指向当前 inode</li>
+<li>size，表明文件数据有多少字节</li>
+<li>direct block number，在 xv6 中有 11 个 direct block number 字段，直接指向文件对应的前 11 个块的编号</li>
+<li>indirect block number，指向一个 block，当文件拥有的块超出 direct block number 的数量，则在 indirect block 中记录其他块的数值编号</li>
+</ul>
+<h4 id="directory"><a class="anchor" href="#directory">#</a> 目录（directory）</h4>
+<p>目录提供了层次化的命名空间。目录包含了 directory entries，每一个 entry 长度为 16 个字节，都是下面这样的数据结构：</p>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MRiqHd8klcdJiYeRvr7%2F-MRjJHrfQCURA-qgeXJN%2Fimage.png?alt=media&amp;token=6c7a7330-c2ea-4c6b-93d4-7a64f2f7b489" alt=""></p>
+<ul>
+<li>entry 的前两个字节包含了目录中文件或子目录的 inode 编号</li>
+<li>后 14 个字节包含了文件名或子目录名</li>
+</ul>
+<h4 id="heading-36"><a class="anchor" href="#heading-36">#</a> 文件查找流程</h4>
+<p>对于路径名&quot;/y/x&quot;对应的文件：</p>
+<ol>
+<li>首先从 root inode 开始查找，文件系统中 root inode 的编号是确定的</li>
+<li>扫描 root inode 下所有 block，找到 y，假设它的 inode 编号是 251</li>
+<li>查找 inode 251，扫描其下所有 block，找到 x 并得到对应的 inode 编号</li>
+</ol>
+<h4 id="heading-37"><a class="anchor" href="#heading-37">#</a> 文件创建流程</h4>
+<ol>
+<li>在inode block中找到一个空闲的inode索引，分配给新创建的文件。</li>
+<li>在inode数组中为新创建的文件分配一个inode结构体，并初始化文件的属性。</li>
+<li>在数据块位图中找到一组空闲的数据块索引，分配给新创建的文件。</li>
+<li>更新inode block和数据 block。</li>
+<li>在父级目录的 inode 中加入新创建文件的目录项，包括文件名和对应的 inode 索引。</li>
+<li>更新 root inode，修改 size 字段以包含新创建的文件</li>
+</ol>
+<p>简单来说，即是分配 inode 并更新新文件的 data block</p>
+<h4 id="block-cache"><a class="anchor" href="#block-cache">#</a> block cache</h4>
+<p>为了减少磁盘开销，以及加速文件读写，通常采用缓存机制。当应用程序读取或写入文件，首先检查块缓存，如果在缓存中则无需访问磁盘。</p>
+<p>块缓存中的数据有两种策略：</p>
+<ol>
+<li>写回策略：数据块的修改不会被立刻写回磁盘，而是在满足一定条件（如I/O延迟，缓存阈值，磁盘空闲）时写回并覆盖磁盘原有内容，可以减少磁盘读写</li>
+<li>强制写入策略：数据块修改立刻写回磁盘，可保证数据一致性，但会增加磁盘开销并影响性能</li>
+</ol>
+<h2 id="12--1"><a class="anchor" href="#12--1">#</a> 12 崩溃恢复</h2>
+<h3 id="121-"><a class="anchor" href="#121-">#</a> 12.1 文件系统崩溃</h3>
+<p>文件系统安全要求文件系统在遭遇崩溃（文件系统操作过程中的电力故障和内核 panic）恢复后仍然能够正常使用。</p>
+<p>文件系统安全通常使用 logging 解决。</p>
+<h3 id="122-logging"><a class="anchor" href="#122-logging">#</a> 12.2 logging</h3>
+<h4 id="heading-38"><a class="anchor" href="#heading-38">#</a> 特点</h4>
+<ul>
+<li>logging 保证了文件系统的系统调用是原子性的，从而避免系统调用写了一半的情况</li>
+<li>支持快速恢复，相比读取全文件系统 block 进行恢复成本要小得多</li>
+<li>性能高：logging 本身十分高效</li>
+</ul>
+<h4 id="heading-39"><a class="anchor" href="#heading-39">#</a> 实现方式</h4>
+<p>logging 将磁盘分为 log 和文件系统两部分。</p>
+<ol>
+<li>log write: 任何对文件系统的操作都将先写入 log。</li>
+<li>commit op: 当一系列对文件系统的操作结束，使用 commit 提交操作，同时在 log 中记录操作的个数</li>
+<li>install log: 执行操作，将 log 分区的 block 移至文件系统分区即可</li>
+<li>clean log: 清除 log，将 log 中操作个数设置为 0</li>
+</ol>
+<p>对于各种崩溃的情况：</p>
+<ol>
+<li>如果崩溃发生在 1-2，什么都不做</li>
+<li>如果崩溃发生在 2-4，可以执行第 3 步而不必担心破坏文件系统，因为重复写入是允许的</li>
+</ol>
+<h4 id="log-"><a class="anchor" href="#log-">#</a> log 结构</h4>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MS_F6nYy0utF738c_Y7%2F-MS_Jd_2T4uf7GBC3ayB%2Fimage.png?alt=media&amp;token=376169b6-3c62-40c2-989d-63925944752c" alt=""></p>
+<p>log 结构如图所示：</p>
+<ol>
+<li>第一个 block 称为 header block，其中：n 表示有效的 log block 数量，剩下的字段表示有效的 log block 对应的编号</li>
+<li>接下来的 block 是 log 的数据块。</li>
+</ol>
+<h4 id="heading-40"><a class="anchor" href="#heading-40">#</a> 崩溃恢复流程</h4>
+<ol>
+<li>文件系统崩溃后重启，调用 initlog 函数（实际调用 recover_from_log 函数）</li>
+<li>先调用 read_head 函数从磁盘中读取 header</li>
+<li>之后调用 install_trans 函数读取 log header 中的 n，然后根据 n 将所有 log block 拷贝到文件系统 block（步骤 3），然后清除 log（步骤 4）</li>
+</ol>
+<p>说人话，先读取 header 块，然后分别执行步骤 3 和步骤 4</p>
+<h3 id="123-logging-"><a class="anchor" href="#123-logging-">#</a> 12.3 logging 面临的挑战</h3>
+<h4 id="cache-eviction"><a class="anchor" href="#cache-eviction">#</a> cache eviction（缓存淘汰）</h4>
+<p>当缓存满了，我们需要选择块进行淘汰（写入磁盘）；但并非所有块都是可以写回的（因为要满足操作的原子性）</p>
+<p>我们使用 pin/unpin，利用引用计数的方式淘汰未被引用的块。</p>
+<h4 id="log"><a class="anchor" href="#log">#</a> 文件系统操作必须适配log大小</h4>
+<p>假设 log block 的最大数量为 30，这意味着文件系统尝试写入的最大 block 数为 30。尝试写入超过这个数值的操作是不允许的（因为会被写入文件系统区域）</p>
+<p>因此，一个大的写操作通常被分成多个小的写操作。</p>
+<p>另外，buffer cache 的尺寸必须要大于 log（因为需要完整缓存 log 数据）</p>
+<h4 id="heading-41"><a class="anchor" href="#heading-41">#</a> 并发文件系统调用</h4>
+<p>在两个并发的写操作过程中，如果它们总的大小超过 log，有可能发生没有一个操作可以提交的情况。</p>
+<p>此时，我们需要保证写的总 log 数小于 log 区域大小。我们可以通过 group commit 实现，即将同时提交多个操作（多个操作作为一个原子行为）。</p>
+<h2 id="13--ext3-"><a class="anchor" href="#13--ext3-">#</a> 13 文件系统性能和快速崩溃恢复（以 ext3 为例）</h2>
+<h3 id="131--logging"><a class="anchor" href="#131--logging">#</a> 13.1 为什么学习 logging</h3>
+<ol>
+<li>logging 可以用在任何已知的存储系统故障恢复流程中</li>
+<li>log 在分布式系统中也有大量应用</li>
+<li>log 本身有很多有趣机制</li>
+</ol>
+<h3 id="132-logging-"><a class="anchor" href="#132-logging-">#</a> 13.2 logging 系统规则</h3>
+<ol>
+<li>write ahead rule：需要在 log 中定义好所有原子性更新然后才能应用，这是 logging 实现故障恢复的基础</li>
+<li>freeing rule：在 log 中所有写操作已经被更新到文件系统之前不能释放 log</li>
+</ol>
+<h3 id="133-xv6-logging-"><a class="anchor" href="#133-xv6-logging-">#</a> 13.3 xv6 logging 方案的缺陷</h3>
+<p>xv6 logging 方案的最大缺陷在于性能。在每次 commit 之后，需要执行多个写磁盘操作，这些操作是同步的，又因为磁盘读写相对较慢，因此耗时很长。</p>
+<p>另外，每个 block 需要被写两次（一次 log，一次文件系统）。</p>
+<h3 id="134-ext3-"><a class="anchor" href="#134-ext3-">#</a> 13.4 ext3 数据结构</h3>
+<h4 id="heading-42"><a class="anchor" href="#heading-42">#</a> 内存中</h4>
+<ul>
+<li>block cache，用以缓存数据</li>
+<li>transaction（可以粗略翻译成事务） 信息，包括序列号，修改的 block 编号（cache 中的），handle（读写 cache 的系统调用）</li>
+</ul>
+<h4 id="heading-43"><a class="anchor" href="#heading-43">#</a> 磁盘中</h4>
+<ul>
+<li>文件系统树，包括 inode、文件、目录</li>
+<li>bitmap block，标记 data block 是否空闲</li>
+<li>log 区域</li>
+</ul>
+<h3 id="135-ext3--log-"><a class="anchor" href="#135-ext3--log-">#</a> 13.5 ext3 对 log 的改进</h3>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MT66ObFz9yro09pElsP%2F-MT8GvWqF04nL5dPmHhj%2Fimage.png?alt=media&amp;token=a044312e-b866-4d72-9aec-87c08e2c87b0" alt=""></p>
+<p>ext3 的 log 包含以下部分：</p>
+<ol>
+<li>第一个 block 被称为 super block，其中包含了第一个有效 transaction 的起始位置（log 分区中的 block 编号）和序列号</li>
+<li>之后的块均用来存放 transaction，对一个 transaction，它的数据结构如下：
+<ul>
+<li>首先是一个 descriptor block，它与 header block 类似，包含 log 数据对应的实际 block 编号</li>
+<li>然后是对每一个 block 的更新数据</li>
+<li>最后是一个 commit block</li>
+</ul>
+</li>
+</ol>
+<h3 id="136-ext3-"><a class="anchor" href="#136-ext3-">#</a> 13.6 ext3 性能提升措施</h3>
+<h4 id="heading-44"><a class="anchor" href="#heading-44">#</a> 异步的系统调用</h4>
+<p>异步的系统调用即是应用程序调用文件系统的系统调用，但是仅修改完毕缓存中的 block 即返回，不去执行耗时更长的写磁盘操作。</p>
+<p>与此同时，文件系统在后台并行地进行写磁盘操作。通过这种方式，实现了 I/O 并发。</p>
+<p>其优点在于，异步的系统调用加速了应用程序的运行，同时使得大批量的执行成为可能</p>
+<p>其缺点在于，系统调用的返回结果不表示写操作的完成（也就是说，即使应用程序中写操作返回，我们也不能想当然地以为数据已经保存到磁盘上）。因此，在 crash 之后，我们要么拿到新文件（写操作完成），要么拿到旧文件（写操作未完成）。问题就在于，我们不知道拿到的是新文件还是旧文件。</p>
+<p>为了保证异步 I/O 能够拿到可预期的结果，我们使用了 fsync 系统调用。它接受一个文件描述符，保证与该文件相关的写操作全部完成之后返回。但 fsync 会牺牲异步 I/O 带来的性能，因此通常只在必要的地方使用。另外，fsync 有时也被称为 flush。</p>
+<h4 id="heading-45"><a class="anchor" href="#heading-45">#</a> 批量执行</h4>
+<p>批量执行即是将多个操作打包成一个操作以统一执行。具体来说，ext3 同一时间只会有一个打开的 transaction（创建周期一般是 5s），在这 5s 之中，所有的操作均会打包在这个 transaction 之中；待结束之后统一提交执行。</p>
+<blockquote>
+<p>注意，ext3 在内存中执行的数据结构与 log 中不同：在内存中，有一个 transaction 打包批量执行系统调用，然后一次性将变更内容提交到 log 中持久化；此时 log 中可能存在多个已经 commit 的 transaction，当它们执行完毕（将数据写入 data block）时清空当前 transaction</p>
+</blockquote>
+<p>它的好处在于：</p>
+<ol>
+<li>避免查找和写元信息（descriptor block 和 commit block）的固有性能损耗</li>
+<li>对于多次修改同一 block 的情况，可避免多次不必要的磁盘读写，现在可以在内存中完成</li>
+<li>向磁盘中连续的 block 写入比写入零散的 block 效率更高。</li>
+</ol>
+<h4 id="heading-46"><a class="anchor" href="#heading-46">#</a> 并发</h4>
+<p>ext3的并发体现在：</p>
+<ol>
+<li>允许多个系统调用同时修改当前的 transaction</li>
+<li>允许不同状态的 transaction 存在：内存中一个打开的 transaction 接受系统调用，log 中多个 transaction 可以写数据，以及正在被释放的 transaction</li>
+</ol>
+<h3 id="137-ext3-"><a class="anchor" href="#137-ext3-">#</a> 13.7 ext3 系统调用</h3>
+<pre><code class="language-c">// 标志transaction的开始，获取一个handle
+h = start()
+// 获取要修改的block对应的缓存
+get(h, block_number)
+// 修改缓存的内容，略
+...
+// 标志transaction的结束
+stop(h)
+</code></pre>
+<p>我们需要 <code>start</code> 和 <code>stop</code> 来标志一个 transaction 的起始，以便我们能够获得当前事务的个数。</p>
+<h4 id="commit"><a class="anchor" href="#commit">#</a> commit</h4>
+<p>当全部 transaction 结束，我们可以提交操作：</p>
+<ol>
+<li>阻止新的系统调用（因为同一时间只有一个接收系统调用的transaction），系统调用等待</li>
+<li>等待这个 transaction 中的系统调用完成，即数据已经更新到 cache 中。</li>
+<li>开启一个新的 transaction，以接收系统调用</li>
+<li>更新 descriptor block，其中包含所有被修改了的 block 编号</li>
+<li>将 cache 中的 block 写入 log</li>
+<li>等待前两步写 log 操作结束，写入 commit block</li>
+<li>等待写 commit block 结束，则表示当前 transaction 抵达 commit point（在之后遇到 panic 则退回此处继续执行）</li>
+<li>将 transaction 中 block 写入文件系统实际位置</li>
+<li>释放 transaction，重用空间</li>
+</ol>
+<h4 id="heading-47"><a class="anchor" href="#heading-47">#</a> 恢复</h4>
+<p>crash 并重启，意味着我们丢失了内存中的所有数据，而磁盘中的数据被保留。</p>
+<p>crash 可能打断任何正在进行中的 transaction，包括正在 commit 的以及正在向文件系统写 block 的。</p>
+<ol>
+<li>crash 并重启，读取 super block，得到 log 起始位置；然后线性扫描直到找到 log 结束位置。</li>
+<li>当某个 commit block 后的一个 block 不是 descriptor block，或 descriptor block 无法找到 commit block，则停止扫描，将这个 commit block 认为是最后一个合法位置。</li>
+<li>然后根据 log 将数据写入文件系统</li>
+</ol>
+<h4 id="-transaction-"><a class="anchor" href="#-transaction-">#</a> 为何不能同时有两个 transaction 接收系统调用</h4>
+<p>第二个 transaction 可能会读写第一个 transaction 的 block，从而被当作第一个 transaction 执行，从而使第一个 transaction 失去原子性。</p>
 </article>
   </div>
 </body>
