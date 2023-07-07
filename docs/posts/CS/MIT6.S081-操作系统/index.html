@@ -1334,6 +1334,449 @@ stop(h)
 </ol>
 <h4 id="-transaction-"><a class="anchor" href="#-transaction-">#</a> 为何不能同时有两个 transaction 接收系统调用</h4>
 <p>第二个 transaction 可能会读写第一个 transaction 的 block，从而被当作第一个 transaction 执行，从而使第一个 transaction 失去原子性。</p>
+<h2 id="14-"><a class="anchor" href="#14-">#</a> 14 应用程序虚拟内存</h2>
+<h3 id="141-"><a class="anchor" href="#141-">#</a> 14.1 应用程序使用虚拟内存需要的特性</h3>
+<ol>
+<li>User level trap，内核中的 Page Fault 能够通过 trap 传播到用户空间，用户空间的 handler 可以处理相应的 Page Fault，然后以正常的方式返回到内核并恢复指令执行。</li>
+<li>Prot1，降低内存 Page 的访问权限</li>
+<li>管理多个 Page 的 ProtN，相当于多个 Prot1，但是成本更小</li>
+<li>Unprot，增加内存 Page 的访问权限</li>
+<li>能够查看内存 Page 是否 Dirty（被修改过）</li>
+<li>map2，对物理内存映射，一份物理内存对应两份虚拟内存，同时拥有不同的访问权限</li>
+</ol>
+<p>对于 xv6，没能实现上面的任何一个特性，但是现代 Unix 系统具有以上特性。</p>
+<h3 id="142-"><a class="anchor" href="#142-">#</a> 14.2 支持应用程序使用虚拟内存的系统调用</h3>
+<h4 id="mmap"><a class="anchor" href="#mmap">#</a> mmap</h4>
+<p>mmap 接收某个对象（文件等），将其映射到调用者的地址空间。其参数如下：</p>
+<ol>
+<li>想要映射到的特定地址。null 表示由内核选择</li>
+<li>想要映射的地址段长度 len</li>
+<li>Protection bit，如 R|W</li>
+<li>flags（略）。MAP_PRIVATE 表示更新文件不会写入磁盘。</li>
+<li>传入的对象，如文件描述符等</li>
+<li>offset</li>
+</ol>
+<pre><code class="language-c">addr = mmap(null, len, R|W, MAP_PRIVATE, fd, offset)
+</code></pre>
+<p>上面的系统调用表示的语义是：将文件描述符指向的文件内容，从起始位置加上 offset 的位置开始，连续 len 长度的内容，映射到特定的内存地址。</p>
+<p>通过这样的方式，可以使用普通指针操作，而无需使用 read/write 系统调用即可从磁盘读写文件内容。</p>
+<p>mmap 还可被用来映射匿名内存，作为 sbrk 的替代方案，向内核申请物理内存，然后映射到特定虚拟内存地址。</p>
+<h4 id="mprotect"><a class="anchor" href="#mprotect">#</a> mprotect</h4>
+<p>mprotect 可以修改映射到虚拟内存地址空间的对象的虚存访问权限。</p>
+<pre><code class="language-c">mprotect(addr, len, R)
+</code></pre>
+<p>如上面的系统调用将 addr 到 addr+len 地址设置为可读，任何写（store）操作将会触发 Page Fault。</p>
+<h4 id="munmap"><a class="anchor" href="#munmap">#</a> munmap</h4>
+<p>munmap 可以移除一个地址或一段内存地址的映射关系。</p>
+<pre><code class="language-c">munmap(addr)
+</code></pre>
+<h4 id="sigaction"><a class="anchor" href="#sigaction">#</a> sigaction</h4>
+<p>sigaction 的应用场景是：当应用程序设置的 signal 触发则调用特定函数。它接受一个信号和一个 handler。</p>
+<h4 id="sigalarmunix"><a class="anchor" href="#sigalarmunix">#</a> sigalarm（非标准Unix接口）</h4>
+<p>sigalarm 类似 sigaction，但它类似定时器，每隔一段时间就调用 handler。该功能也可通过 sigaction 实现。</p>
+<h3 id="143-"><a class="anchor" href="#143-">#</a> 14.3 虚拟内存系统如何支持用户应用程序</h3>
+<h4 id="vmas"><a class="anchor" href="#vmas">#</a> VMAs：如何实现内存映射</h4>
+<p>VMAs 即 Virtual Memory Areas，它会记录一些有关连续的虚拟内存地址段的信息。</p>
+<p>一个地址空间中可能包含多个 section，每个 section 都有一个 VMA 对象，其中的所有 Page 都对应这个 VMA 对象。VMA 可以表示进程映射关系。</p>
+<p>假设进程中存在一个 mmap file，对于这段地址有一个 VMA 与之对应，VMA 中会包括文件权限以及文件描述符、offset 等信息。</p>
+<h4 id="user-level-trap"><a class="anchor" href="#user-level-trap">#</a> user level trap</h4>
+<ol>
+<li>segfault 事件传播到用户空间</li>
+<li>通过 upcall 在用户空间运行 handler</li>
+<li>handler 返回内核代码</li>
+<li>内核恢复被中断的进程</li>
+</ol>
+<h3 id="144-"><a class="anchor" href="#144-">#</a> 14.4 大缓存表</h3>
+<p>缓存表即是一个记录运算结果的表单。它有些类似预计算，即提前计算好相应内容，需要时直接在表单中查取结果。</p>
+<p>对于一个大的缓存表来说，其可能大于物理内存。我们使用一个虚拟内存 page，而不为其分配任何物理内存。当触发 Page Fault 时，分配物理内存。</p>
+<p>当物理内存达到上限，我们可以回收部分物理内存 page（修改这些物理内存的 PTE 权限，使访问时能够出发 Page Fault。</p>
+<h3 id="145-copying-gc"><a class="anchor" href="#145-copying-gc">#</a> 14.5 copying GC</h3>
+<p>在 copying GC 中，heap 被分为 from 和 to 两个部分，应用程序从 from 空间申请内存。</p>
+<p>copying GC 的基本思想是将仍在使用的对象拷贝到 to 空间。</p>
+<p>在 GC 开始后，从根节点开始，依次将它的子节点拷贝到 to 空间（被称为 forward）。为了记住已经被拷贝的对象，会在 from 空间中保留一个 forwarding 指针。</p>
+<p>GC 结束之前，from 空间所有对象被丢弃。</p>
+<p>应用程序只能使用 to 空间中的对象。每次获取对象之前，需要检查对象是否在 from 空间（即指针检查），如果是，则将其 forward 到 to 空间。</p>
+<p>因此 copying GC 有以下缺点：</p>
+<ol>
+<li>每次解引用（获取对象）都需要复数指令，增加了应用程序的开销</li>
+<li>不能很好地支持多线程 GC，存在资源抢占问题。</li>
+</ol>
+<h3 id="146--gc"><a class="anchor" href="#146--gc">#</a> 14.6 使用虚拟内存特性的 GC</h3>
+<p>我们可以利用虚拟内存减少指针检查损耗和并行运行 GC。它的思想是：将 to 空间再做划分，包含 scanned，unscanned 两个区域。则：</p>
+<ol>
+<li>在程序开始，整个空间都是 unscanned。</li>
+<li>开始 GC 时，拷贝根节点对象到 to 空间，to 空间的 unscanned 权限为 None。当应用程序第一次使用根节点会得到 Page Fault。</li>
+<li>然后在 Page Fault Handler 中，GC 扫描所有对象，将对象指向的其他对象从 from 空间 forward 到 to 空间。以 root 节点为例，根节点指向两个对象，将这两个对象拷贝到 to 空间的 unscanned 区域，而根节点被标记为 scanned（因为自身和子节点都在 to 空间），之后恢复对应内存 page 的权限。</li>
+</ol>
+<p>这种方式具有以下优点：</p>
+<ol>
+<li>无需对指针做额外检查（因为已经通过硬件完成）</li>
+<li>简化 GC 并发，通过硬件引入显式同步机制，避免资源抢占</li>
+</ol>
+<p>另外，通过 map2 为 GC 和应用程序提供了不同的访问权限，从而使 GC 获取读写内存 page 的能力。</p>
+<h2 id="15-"><a class="anchor" href="#15-">#</a> 15 微内核</h2>
+<h3 id="151-"><a class="anchor" href="#151-">#</a> 15.1 宏内核</h3>
+<p>宏内核表示操作系统内核是一个完成各种事情的大的程序。</p>
+<h4 id="heading-48"><a class="anchor" href="#heading-48">#</a> 优势</h4>
+<ol>
+<li>接口高度抽象，可移植</li>
+<li>可以向应用程序隐藏复杂度，从而使应用开发变得简单</li>
+<li>由内核管理资源，可以简化应用程序的处理逻辑</li>
+<li>集成性强，各个系统之间调度简易快速</li>
+<li>内核代码拥有最高权限</li>
+</ol>
+<h4 id="heading-49"><a class="anchor" href="#heading-49">#</a> 缺陷</h4>
+<ol>
+<li>庞大复杂，因此更容易遇到 Bug 和漏洞</li>
+<li>内核倾向于实现通用性，因此包含了各种功能，但是这些功能不一定都会用到，从而导致效率降低以及优化困难</li>
+<li>内核存在许多限制，应用拥有较少的自主权，从而削弱抽象能力</li>
+<li>可扩展性弱</li>
+</ol>
+<h3 id="152-"><a class="anchor" href="#152-">#</a> 15.2 微内核</h3>
+<p>内核仅支持进程/任务/线程，以及 IPC 作为消息的传递途径。其他原本由内核提供的服务，如文件系统等，现在作为用户进程运行。</p>
+<p>以 vim 读取一个文件为例，通过 IPC 发送一条消息到文件系统进程。文件系统发送一个 IPC 到磁盘驱动程序，磁盘驱动程序与磁盘交互。磁盘驱动返回一个磁盘块给文件系统，文件系统通过 IPC 发送数据给 vim。</p>
+<h4 id="heading-50"><a class="anchor" href="#heading-50">#</a> 优点</h4>
+<ol>
+<li>审美。宏内核大且复杂，更难精细化设计。</li>
+<li>安全。更少的代码意味着更少的 Bug。同时也更容易测试。</li>
+<li>易优化。小内核意味着优化更加容易。</li>
+<li>速度。小内核意味着没有多余功能，因此速度更快。</li>
+<li>自由。小内核设计限制较少，提供给应用程序更多的灵活性。</li>
+<li>将内核拆分到用户空间使得代码更加模块化。</li>
+<li>用户空间代码相比内核更加容易修改，同时易于定制。</li>
+<li>将操作系统放在用户空间使得其更为健壮（因为可以重启服务）。</li>
+<li>可以在微内核上模拟或运行多个操作系统。</li>
+</ol>
+<h4 id="heading-51"><a class="anchor" href="#heading-51">#</a> 挑战</h4>
+<ol>
+<li>API 需要尽可能少，但却能够实现大部分功能。</li>
+<li>需要开发用户空间服务以实现系统操作的其他部分。</li>
+<li>IPC 需要足够快。</li>
+<li>由于服务被拆分，在集成时优化空间较小，性能可能相比宏内核更低。</li>
+</ol>
+<h3 id="153-l4-"><a class="anchor" href="#153-l4-">#</a> 15.3 L4 微内核</h3>
+<p>L4 是最早的一批可以工作的微内核。</p>
+<h4 id="heading-52"><a class="anchor" href="#heading-52">#</a> 特点</h4>
+<ol>
+<li>只有 7 个系统调用。相比之下，Linux 约有 350 个系统调用，xv6 有 21 个系统调用。</li>
+<li>代码少。只有 13000 行代码，只有 Linux 代码的几十分之一。</li>
+<li>只包含非常基础的抽象，包括Task、线程、地址空间、IPC。每个 Task 中有多个线程。每个线程有一个标识符，可以通过其实现 IPC 通信。</li>
+</ol>
+<h4 id="heading-53"><a class="anchor" href="#heading-53">#</a> 系统调用</h4>
+<ol>
+<li>Threadcreate：提供一个地址空间 ID （或者说 Task）并创建一个新的线程。如果 Task 不存在，则创建一个新的 Task。</li>
+<li>Send/Recv：IPC 发送和接收信息</li>
+<li>Mapping：映射内存 Page 到当前 Task 或其他 Task 的地址空间。</li>
+<li>Privileged Task：将硬件控制寄存器映射到自己的地址空间。</li>
+<li>将中断转换为 IPC 信息。</li>
+<li>一个 Task 可以设置内核通知自己另一个 Task 的 Page Fault。</li>
+</ol>
+<h4 id="l4-"><a class="anchor" href="#l4-">#</a> L4 做的事</h4>
+<ol>
+<li>线程切换。它完成线程切换的方式几乎和 xv6 一致。</li>
+<li>Pager。Pager Task 通过 IPC 实现 Page Fault Handler。</li>
+</ol>
+<h3 id="154-ipc-"><a class="anchor" href="#154-ipc-">#</a> 15.4 IPC 优化</h3>
+<h4 id="heading-54"><a class="anchor" href="#heading-54">#</a> 一种慢的设计</h4>
+<p>通过异步 buffer，使用 send 系统调用将消息写入 buffer，另一边通过 recv 系统调用接收。</p>
+<p>因此：</p>
+<ul>
+<li>为了实现消息的发送和回复，需要两个 buffer 以及 4 个系统调用。</li>
+<li>进行了 8 次用户空间和内核空间的切换（每次系统调用切换 2 次）。</li>
+<li>recv 时需要等待数据</li>
+<li>至少需要一次线程调度和上下文切换。</li>
+</ul>
+<h4 id="-ipc"><a class="anchor" href="#-ipc">#</a> 优化 IPC</h4>
+<ol>
+<li>同步。发送者需要等待接收者。P1 在内核中直接跳转到 P2 的用户空间。这种方式不需要 buffer。通过这种方式，省略了上下文切换或线程调度。</li>
+<li>只需知道两端数据所在的内存地址即可直接在用户空间中拷贝消息，而不必拷贝到内核。</li>
+<li>如果消息只有几十个字节（极小），可以在寄存器中传递而无需拷贝。</li>
+<li>对于长消息，可以共享 Page。</li>
+<li>对于 rpc，存在一个 call 系统调用，可减少一般的内核态和用户态切换。</li>
+</ol>
+<p>通过以上优化，对于短 rpc 请求，可以使速度提升 20 倍。</p>
+<h3 id="155--l4--linux"><a class="anchor" href="#155--l4--linux">#</a> 15.5 运行在 L4 上的 Linux</h3>
+<p>对于使用微内核实现传统操作系统的情况，我们需要在用户空间实现内核未能提供的全部服务。而另一种更加容易的方式是，将现有的操作系统内核（Linux）作为用户程序运行在微内核之上。</p>
+<p>由于 Linux 区分用户态和内核态，而在用户空间无法访问硬件，因此需要通过 L4 系统调用或 LPC 对硬件进行控制。</p>
+<p>具体实现方法是：Linux 内核作为一个 L4 Task，而每个 Linux 进程又作为一个独立的 L4 Task。缺点是，Linux 失去了进程调度的能力，因为现在由 L4 完成。</p>
+<h3 id="156-"><a class="anchor" href="#156-">#</a> 15.6 微内核思想的影响</h3>
+<ol>
+<li>微内核使用更加灵活的方式使用虚拟内存，其结果是 mmap 系统调用合并到了 Linux 等主流操作系统中。</li>
+<li>将操作系统作为应用程序运行在另一个操作系统上，这种思想是虚拟机的实现基础。</li>
+<li>服务可扩展的思想，使得 Linux 也引入了可加载的内核模块，从而允许修改 Linux 的工作方式。</li>
+<li>IPC 的思想也在 macOS 中存在应用。</li>
+</ol>
+<h2 id="16-"><a class="anchor" href="#16-">#</a> 16 虚拟机</h2>
+<h3 id="161-"><a class="anchor" href="#161-">#</a> 16.1 虚拟机概论</h3>
+<h4 id="heading-55"><a class="anchor" href="#heading-55">#</a> 什么是虚拟机</h4>
+<p>虚拟机是对计算机的一种模拟。</p>
+<p>虚拟机的底层是 Host 空间，其上运行着一个 VMM（Virtual Machine Monitor），它取代标准的操作系统内核与硬件进行交互。</p>
+<p>其上层被称为 Guest 空间，其中有一个或多个 Guest 操作系统内核。Guest 空间又有两种模式：Guest Supervisor Mode 以及 Guest User Mode。</p>
+<h4 id="heading-56"><a class="anchor" href="#heading-56">#</a> 为什么使用虚拟机</h4>
+<ol>
+<li>运行多个低强度服务而无需物理机，节省时间和资金</li>
+<li>易管理</li>
+<li>便于内核开发和调试</li>
+<li>通过 VMM 提供的抽象以实现更多功能，如快照等。</li>
+</ol>
+<h3 id="162-trap"><a class="anchor" href="#162-trap">#</a> 16.2 Trap</h3>
+<p>实现虚拟机的一种方式是软件模拟全部寄存器，但性能极慢，因此我们往往将指令运行在真实 CPU 上。</p>
+<ul>
+<li>我们将 Guest kernel 运行在 User Mode。</li>
+<li>当需要使用特权指令，会触发 trap 并走回 VMM，从而获取控制权。</li>
+</ul>
+<h3 id="163-emulate"><a class="anchor" href="#163-emulate">#</a> 16.3 Emulate</h3>
+<p>VMM 会为每个 Guest 维护一套虚拟状态信息，包括虚拟的 STVEC 寄存器、SEPC 寄存器等特权寄存器。当读取 SEPC 寄存器，VMM 会将虚拟 SEPC 寄存器拷贝到真正的 SEPC 寄存器，从而使 VMM 读到虚拟 SEPC 寄存器。</p>
+<p>Guest 运行在用户空间，当需要运行特权指令时，trap 到 VMM（VMM 运行在内核态），通过 VMM 模拟指令，这种方式被称为 Trap and Emulate。</p>
+<p>VMM 需要保存以下虚拟状态信息：</p>
+<ol>
+<li>VMM 需要跟踪 Guest 的状态，防止用户空间应用非法调用特权指令，因此会在虚拟状态信息中保存 Guest kernel 的 mode。当 sret 被调用时，VMM 更新 mode 为 user mode。</li>
+<li>hartid，代表 CPU 核的编号，判断当前模拟的是哪个 CPU</li>
+</ol>
+<h3 id="164-page-table"><a class="anchor" href="#164-page-table">#</a> 16.4 Page Table</h3>
+<p>VMM 会生成一个新的 Page Table 来模拟 Guest 的 Page Table。也就是说，Guest 的物理地址并不对应真实物理地址</p>
+<p>VMM 维护了一个映射表，将 Guest 物理内存地址（gpa）映射到真实物理内存地址，称为主机物理内存地址（hpa）。对每个 Page Table，VMM 会创建一个 Shadow Page Table，它提供了 gpa 到 hpa 的翻译工作。</p>
+<h3 id="165-"><a class="anchor" href="#165-">#</a> 16.5 外设</h3>
+<p>对于虚拟机来说，需要使 Guest 能够识别需要的外设，包括鼠标键盘、声卡、显卡等。一般有三种实现策略：</p>
+<h4 id="heading-57"><a class="anchor" href="#heading-57">#</a> 模拟真实设备</h4>
+<p>在第一种策略中，VMM 不会映射外设对应的内存地址，而是将其设为无效。当访问这些内存会触发 trap，从而走到 VMM。VMM 根据 trap 信息模拟真实硬件并相应 Guest 指令。</p>
+<p>这种方式能够模拟一个不存在的设备，但缺点在于十分低效，因为每次与外设的交互都需要触发一个 trap。</p>
+<h4 id="heading-58"><a class="anchor" href="#heading-58">#</a> 提供虚拟设备</h4>
+<p>第二种策略在内存中格式化了一个命令队列，Guest 系统将读写设备的命令写到队列中。</p>
+<p>与此同时，VMM 在后台检查虚拟硬件的命令队列并读取命令，然后将命令应用到一个文件（虚拟磁盘），然后将结果写入命令队列，通知 Guest 命令已执行。</p>
+<p>该方式相比模拟硬件能够规避 trap，从而实现更高的性能。</p>
+<h4 id="-pass-through"><a class="anchor" href="#-pass-through">#</a> 对于真实设备的 pass-through</h4>
+<p>第三种策略最典型的例子是网卡。网卡可以表现为多个独立的子网卡，Guest可以直接与子网卡进行交互。</p>
+<h3 id="166-"><a class="anchor" href="#166-">#</a> 16.6 硬件对虚拟机的支持</h3>
+<h4 id="heading-59"><a class="anchor" href="#heading-59">#</a> 为何提供虚拟机支持</h4>
+<ol>
+<li>虚拟机应用广泛</li>
+<li>Trap and Emulate 方案中涉及到大量 trap，性能差</li>
+<li>x86 不适合虚拟化，需要一些具体实现以支持虚拟化</li>
+</ol>
+<h4 id="non-root"><a class="anchor" href="#non-root">#</a> non-root</h4>
+<p>一种性能提高方式是将本来 VMM 在软件中保存的虚拟状态信息保存在硬件中。现在，硬件中存在一套独立的，供 Guest mode （non-root mode，相对于 root mode）使用的虚拟控制寄存器，它是真实寄存器在硬件中的拷贝。</p>
+<p>因此，Guest 能够不触发 trap 而执行特权指令。</p>
+<h4 id="heading-60"><a class="anchor" href="#heading-60">#</a> 系统调用</h4>
+<p>当 VMM 创建一个新的虚拟机时需要通过一些指令配置硬件。</p>
+<p>VMM 在内存中通过一个结构体与 VT-x 硬件交互，称为 VMCS（Virtual Machine Control Structure）。当创建虚拟机时，VMM 会创建一个结构体，并填入配置信息和寄存器初始值，然后通知 VT-x 硬件运行一个新的虚拟机。</p>
+<ul>
+<li>VMLAUNCH：创建一个新的虚拟机，接受一个 VMCS 结构体地址，开始运行 Guest kernel</li>
+<li>VMRESUME：当 Guest kernel trap 到 VMM，需要通过 VMRESUME 恢复至 Guest kernel。</li>
+<li>VMCALL：在 non-root mode 使用，使代码从 non-root mode 退出并通过 trap 走到 VMM。</li>
+</ul>
+<p>虽然 Guest 可以不触发 trap 地执行特权指令，但有时需要使代码进入 VMM，如调用 VMCALL 或设备中断。</p>
+<h4 id="page-table-"><a class="anchor" href="#page-table-">#</a> Page Table 支持</h4>
+<p>硬件提供了 EPT（Extended Page Table）寄存器，它指向一个 Page Table，使得 VMM 可以控制 Guest 可以使用哪些内存地址。</p>
+<p>当 MMU 翻译 Guest 虚拟内存地址时：</p>
+<ol>
+<li>将 Guest 虚拟地址（gva）翻译到 Guest 物理地址（gha）</li>
+<li>通过 EPT 将 Guest 物理地址（gha）翻译成主机物理地址（hpa）</li>
+</ol>
+<blockquote>
+<p>这里 EPT 的作用与 Shadow Page Table 十分类似。</p>
+</blockquote>
+<h3 id="dune"><a class="anchor" href="#dune">#</a> Dune</h3>
+<p>Dune 是对支持虚拟机的硬件在 host 中的应用。它支持对进程的管理，使得进程同时拥有 Guest Supervisor mode 和 Guest User mode。</p>
+<blockquote>
+<p>类似一个沙盒</p>
+</blockquote>
+<p>Dune 还支持以一种方便的方式获取 PTE 及其 dirty 位，从而加速进程的垃圾回收。</p>
+<h2 id="17-"><a class="anchor" href="#17-">#</a> 17 内核与高级语言</h2>
+<h3 id="171-c-"><a class="anchor" href="#171-c-">#</a> 17.1 C 语言实现操作系统的优劣势</h3>
+<h4 id="heading-61"><a class="anchor" href="#heading-61">#</a> 背景</h4>
+<p>许多操作系统，如 Windows、Linux、BSD 都是由 C 实现的。</p>
+<h4 id="heading-62"><a class="anchor" href="#heading-62">#</a> 优势</h4>
+<ol>
+<li>C 语言提供了强大的控制能力，能够完全控制内存分配和释放</li>
+<li>C 语言没有高度的抽象（原文是隐藏的代码，其实就是语言接近底层），与 RISC-V 指令高度对应</li>
+<li>有直接内存访问能力，可以读写寄存器</li>
+<li>依赖少，可以裸机运行</li>
+</ol>
+<h4 id="heading-63"><a class="anchor" href="#heading-63">#</a> 劣势</h4>
+<p>很难写出安全的 C 代码：</p>
+<ol>
+<li>buffer overrun：数组越界，栈溢出</li>
+<li>use-after-free bugs：使用了一些已经释放的内存</li>
+<li>线程共享内存时难以决定释放时机。</li>
+</ol>
+<p>其中，buffer overrun 和 use-after-free bugs 经常出现。</p>
+<h3 id="172-"><a class="anchor" href="#172-">#</a> 17.2 高级编程语言实现操作系统的优劣势</h3>
+<p>这里的高级编程语言主要指一些 GC 语言。</p>
+<h4 id="heading-64"><a class="anchor" href="#heading-64">#</a> 优势</h4>
+<ol>
+<li>高级编程语言提供了内存安全</li>
+<li>高级编程语言提供了类型安全</li>
+<li>高级编程语言通过 GC 实现了自动的内存管理</li>
+<li>高级编程语言对并发更友好</li>
+<li>高级编程语言有更好的抽象，能够编写出更加模块化的代码</li>
+</ol>
+<h4 id="heading-65"><a class="anchor" href="#heading-65">#</a> 劣势</h4>
+<ol>
+<li>高级编程语言通常性能更低，因为有一些额外的代价（High Level Language Tax）：索引数组元素时检查边界、空指针检查、类型转换</li>
+<li>GC 本身的代价</li>
+<li>不适合内核编程：
+<ul>
+<li>没有直接访问内存的能力</li>
+<li>不能集成汇编语言</li>
+<li>编程语言的并发与内核并发不一致</li>
+</ul>
+</li>
+</ol>
+<h4 id="c-"><a class="anchor" href="#c-">#</a> C 与高级语言内核编程对比实验背景</h4>
+<ol>
+<li>使用高级语言构建内核</li>
+<li>保留 Linux 中最重要部分对等的功能</li>
+<li>优化性能使其与 Linux 接近</li>
+</ol>
+<p>通过以上方式，测量高级编程语言的优劣</p>
+<h3 id="173-golang-"><a class="anchor" href="#173-golang-">#</a> 17.3 Golang 高级语言系统编程</h3>
+<p>这里使用 Golang 作为对比的高级语言，理由有：</p>
+<ol>
+<li>Go 是一个静态编译的编程语言，其性能相对更好。</li>
+<li>Go 在设计上适合系统编程：
+<ul>
+<li>能够容易地调用汇编或其他外部代码</li>
+<li>能够很好地支持并发</li>
+<li>非常灵活</li>
+</ul>
+</li>
+<li>支持 GC</li>
+</ol>
+<blockquote>
+<p>为什么不使用 Rust？因为 Rust 认为高性能语言不应该使用 GC，从而略过了这一问题。该论文到底还是实验性质的。而事实证明，Rust 的确适合内核编程。</p>
+</blockquote>
+<h3 id="174-biscuit"><a class="anchor" href="#174-biscuit">#</a> 17.4 Biscuit</h3>
+<p>Biscuit 即是本次使用 Golang 编写的实验性的操作系统内核。</p>
+<h4 id="heading-66"><a class="anchor" href="#heading-66">#</a> 特点</h4>
+<ol>
+<li>Biscuit 是一个宏内核，具备用户空间和内核空间。它使用 goroutine 作为内核线程，通过 Go runtime 进行调度。</li>
+<li>Biscuit 提供了一个中间层，从而使得 Go runtime 能够运行在裸机上。</li>
+<li>相比 xv6 更加复杂，同时具有更高的性能。具备虚拟内存系统、文件系统以及设备驱动。具有 58 个系统调用以及 28000 行代码，相比之下，xv6 具有 18 或 19 个系统调用以及不到 10000 行代码。</li>
+</ol>
+<h4 id="heading-67"><a class="anchor" href="#heading-67">#</a> 特性</h4>
+<ol>
+<li>通过 go 的并发机制支持多核 CPU。</li>
+<li>支持用户空间多线程</li>
+<li>高性能的日志式文件系统</li>
+<li>较复杂的虚拟内存系统，使用 VMAs 并支持 mmap 等功能</li>
+<li>拥有一个完整的 TCP/IP 栈。</li>
+<li>两个高性能驱动，分别是 Intel 10Gb 网卡以及复杂的磁盘驱动 AHCI</li>
+</ol>
+<h4 id="heading-68"><a class="anchor" href="#heading-68">#</a> 应用程序支持</h4>
+<ol>
+<li>每个应用程序有自己的 Page Table</li>
+<li>用户空间和内核空间内存由硬件隔离，通过 PTE 的 User/Kernel bit 区分</li>
+<li>每个用户线程有一个对应的内核线程</li>
+<li>内核线程由 Go runtime 提供的 goroutine 实现</li>
+</ol>
+<h4 id="heading-69"><a class="anchor" href="#heading-69">#</a> 系统调用</h4>
+<p>biscuit系统调用流程如下：</p>
+<ol>
+<li>用户线程将参数保存在寄存器中，通过库函数使用系统调用接口</li>
+<li>用户线程执行 SYSENTER</li>
+<li>控制权传递给了内核线程</li>
+<li>内核线程执行系统调用，并通过 SYSEXIT 返回用户空间</li>
+</ol>
+<h4 id="heading-70"><a class="anchor" href="#heading-70">#</a> 设计挑战</h4>
+<ol>
+<li>要使 Go runtime 运行在裸机上，却对 runtime 本身做尽量少的修改以便向后兼容</li>
+<li>安排 goroutine 去运行不同的应用程序。</li>
+<li>设备驱动，使用一个普通的 gorutine 处理中断。</li>
+<li>heap 耗尽</li>
+</ol>
+<h3 id="175-heap-"><a class="anchor" href="#175-heap-">#</a> 17.5 Heap 耗尽问题</h3>
+<p>在 xv6 中我们静态分配内存，因此不需要 heap。而在其他正常的内核中，内存是动态分配的，需要有一个heap。</p>
+<p>当应用程序打开许多文件描述符、socket 等，heap 会被逐渐填满。当 heap 没有额外空间时，在 xv6 中返回一个错误；而在 Go runtime 中，new 分配对象必定成功。</p>
+<p>针对这种情况（heap 耗尽）一般有以下几种解决方法（原文是 strawman，稻草人，指一种没法达成目的的原案）：</p>
+<ol>
+<li>没有空闲则 panic</li>
+<li>等待内存分配器（容易造成死锁）</li>
+<li>没有内存则返回空指针，如果检查到空指针则失败（bail out）</li>
+</ol>
+<h3 id="176-heap-"><a class="anchor" href="#176-heap-">#</a> 17.6 Heap 耗尽解决方案</h3>
+<p>在系统调用的开始，跳转到内核之前，调用 reserve 函数。它会保留足够的内存以执行系统调用。reserve 函数使得系统调用必定成功。</p>
+<p>当没有足够内存的情况，reserve 会等待；由于此时是系统调用最开始，不存在任何锁，因此不需要担心死锁的情况。</p>
+<p>在等待的同时，内核能够撤回 cache 并增加 heap 的空余空间。</p>
+<p>这种方案有以下优点：</p>
+<ol>
+<li>内核不需要检查内存分配是否失败</li>
+<li>因为必定成功，所以不需要错误处理代码</li>
+<li>不存在死锁的可能（因为根本没有锁）</li>
+</ol>
+<h4 id="heading-71"><a class="anchor" href="#heading-71">#</a> 如何计算系统调用需要的内存</h4>
+<p>通过 go 的 runtime 可以得到函数调用图，再加上类型大小确定，可以计算出总内存大小，即系统调用可能的最大内存。</p>
+<p>在实际情况中可能存在内存逃逸，当一个函数返回时，它可能回传一部分内存给调用者，这种现象称为内存逃逸。这部分内存需要加到调用者的内存计数中。</p>
+<p>另外，go 的 Slice 会自动扩容，因此需要标准最大容量</p>
+<h3 id="177-"><a class="anchor" href="#177-">#</a> 17.7 评价使用高级语言的收益</h3>
+<h4 id="heading-72"><a class="anchor" href="#heading-72">#</a> 是否使用了高级语言特性</h4>
+<p>如果我们避开了任何高级语言特性，那么实验就没有意义了。</p>
+<p>事实证明，Biscuit 使用了相当多的 go 提供的高级语言特性，如 allocation、maps、slice、channel（很少使用）、多返回值（最喜欢的特性？）、闭包、defer（稍微使用）、Interface、断言、import</p>
+<h4 id="heading-73"><a class="anchor" href="#heading-73">#</a> 高级语言是否简化了代码</h4>
+<p>有。</p>
+<ul>
+<li>GC 自动地完成了释放内存的工作</li>
+<li>多返回值对代码风格很好</li>
+<li>map 避免了线性扫描</li>
+</ul>
+<h4 id="-bug"><a class="anchor" href="#-bug">#</a> 高级语言是否减少了内核 Bug</h4>
+<p>在 65 个 Bug 当中，至少有 40 个 Bug Golang 直接解决或给出了更好的结果。</p>
+<h3 id="178-"><a class="anchor" href="#178-">#</a> 17.8 评价高级语言的性能损失</h3>
+<h4 id="heading-74"><a class="anchor" href="#heading-74">#</a> 测试环境</h4>
+<ul>
+<li>裸机（区别于 QEMU）
+<ul>
+<li>4 核 2.8Ghz Xeon-X3460</li>
+<li>16G 内存</li>
+<li>禁用超线程</li>
+</ul>
+</li>
+<li>应用程序
+<ul>
+<li>NGINX（1.11.5）-webserver</li>
+<li>Redis（3.0.5）-key/value store</li>
+<li>CMailbench-mail-server benchmark</li>
+</ul>
+</li>
+</ul>
+<h4 id="-linux-"><a class="anchor" href="#-linux-">#</a> 性能是否与 Linux 接近</h4>
+<ol>
+<li>首先关闭 Linux 中所有 Biscuit 不提供的功能</li>
+<li>吞吐量测试，Biscuit 更慢，mailbench 差 10%，nginx 与 redis 差 10%-15%</li>
+</ol>
+<h4 id="heading-75"><a class="anchor" href="#heading-75">#</a> 高级语言额外的代价有多大</h4>
+<ul>
+<li>3%的时间用于 GC cycles</li>
+<li>Prologue（确保栈足够大）占用 CPU 时间最多（4%-6%）</li>
+<li>Write barrier（跟踪不同空间指针）时间很少（&lt;1%）</li>
+<li>Safety cycles（空指针检查）占用 2%-3%</li>
+</ul>
+<p>测试结果表明代价可接受，当然 GC 的占比在实际环境中很可能更高</p>
+<h4 id="gc-"><a class="anchor" href="#gc-">#</a> GC 会带来多少损耗</h4>
+<p>在空闲内存较小时，存在严重的 overhead 现象。为了控制 GC 的 overhead 在 10%以内，物理内存大小至少应是 heap 的三倍。</p>
+<h4 id="gc--1"><a class="anchor" href="#gc--1">#</a> GC 延迟如何</h4>
+<p>go 的 GC 是一个带有短暂 pause 的并发 GC：会暂停一段极短的时间来执行 write barrier。</p>
+<ul>
+<li>单个 pause 最大时间为 115 微秒，出现在 web server 中。</li>
+<li>一个 HTTP 请求的最大 pause 时间是 582 微秒。</li>
+<li>超过 100 微秒的 pause 少于 0.3%</li>
+</ul>
+<p>最大 pause 时间 582 微秒不理想，但还在可以接受范围内（一个请求允许的最长处理时间大概在数毫秒或几十毫秒）</p>
+<h4 id="go--c-"><a class="anchor" href="#go--c-">#</a> go 相对于 c 的代价如何</h4>
+<p>测试通过 pipe 传输一个字节。</p>
+<ul>
+<li>1.2K 行 Go 代码，相比之下，C 有 1.8 行代码</li>
+<li>C 比 Go 快约 15%</li>
+</ul>
+<h4 id="heading-76"><a class="anchor" href="#heading-76">#</a> 是否应当在一个新的内核中使用高级语言</h4>
+<ul>
+<li>如果性能至关重要（15%提升），应当使用 C</li>
+<li>如果想要最小化内存使用，使用 C</li>
+<li>如果安全更重要，使用高级语言</li>
+<li>如果性能不是那么重要，高级语言是很好的选择</li>
+</ul>
+<h2 id="18-"><a class="anchor" href="#18-">#</a> 18 计算机网络</h2>
+<h3 id="181-"><a class="anchor" href="#181-">#</a> 18.1 计算机网络概述</h3>
 </article>
   </div>
 </body>
