@@ -1777,6 +1777,180 @@ stop(h)
 </ul>
 <h2 id="18-"><a class="anchor" href="#18-">#</a> 18 计算机网络</h2>
 <h3 id="181-"><a class="anchor" href="#181-">#</a> 18.1 计算机网络概述</h3>
+<h4 id="lan"><a class="anchor" href="#lan">#</a> 局域网（LAN）</h4>
+<p>局域网通信由以太网协议决定。一个局域网即是连接在同一网络中的相近主机。它的中心是一个以太网设备，包括交换机或线缆。主机连接在这个设备上，包括电脑、服务器或路由器。</p>
+<p>一个局域网的大小是有限的，它最多只能容纳 100 个左右的设备。</p>
+<h4 id="heading-77"><a class="anchor" href="#heading-77">#</a> 互联网</h4>
+<p>互联网是连接多个独立的局域网的网络，它们之间通常由路由器（Router）连接。路由器是组成互联网的核心。</p>
+<p>当一个局域网中的主机需要与另一个局域网中的主机通信，需要经过一系列路由器的转发，这种转发被称为（Routing）。</p>
+<p>因此，我们还需要使这个局域网中的主机能够寻址到另一个局域网中的主机。</p>
+<p>局域网之上的长距离网络通信协议是 Internet Protocol。</p>
+<h3 id="182-"><a class="anchor" href="#182-">#</a> 18.2 以太网</h3>
+<p>局域网通信协议是以太网协议。</p>
+<p>局域网中的两个主机，Host1 和 Host2 之间通过以太网传输 Frame。Frame 即是 packet，指两个主机在以太网传输的一个个数据 Byte。</p>
+<h4 id="packet-"><a class="anchor" href="#packet-">#</a> packet 数据结构</h4>
+<p>每个以太网 packet 的数据结构如下：</p>
+<ol>
+<li>Header：包括目的以太网地址、源以太网地址、packet 类型</li>
+<li>payload</li>
+</ol>
+<p>以太网地址是一个 48bit 的数字，唯一识别一个网卡。packet 类型告诉接收端主机如何处理 packet。</p>
+<p>另外，packet 的开头和结尾还有标志 packet 起始和结束的 bit。</p>
+<p>以太网的 48bit 地址是网卡的唯一 ID，前 24bit 表示制造商，而每个网卡制造商有自己的唯一编号；后 24bit 是网卡制造商提供的唯一数字，通常是递增的数字。</p>
+<h4 id="tcpdumppacket"><a class="anchor" href="#tcpdumppacket">#</a> tcpdump获取packet</h4>
+<p>我们通常可以使用 tcpdump 查看以太网 packet，他能够得到：</p>
+<ol>
+<li>接收 packet 的时间</li>
+<li>可读的 packet 数据</li>
+<li>收到 packet 的 16 进制数</li>
+</ol>
+<p>packet 结构如下：</p>
+<ol>
+<li>前 48bit 是一个广播地址，0xffffffffffff，指 packet 需要发送给局域网中所有主机</li>
+<li>之后 48vit 是发送主机的以太网地址。在 QEMU 中，这个地址由 QEMU 生成。</li>
+<li>之后 16bit 是 packet 类型。0x0806 表示对应协议是 ARP</li>
+<li>之后是 packet 的 payload</li>
+</ol>
+<h3 id="183-arp"><a class="anchor" href="#183-arp">#</a> 18.3 ARP</h3>
+<p>ARP 是一个与以太网通信相关的协议，全称是 Address Resolution Protocol，能够动态解析 32bit 的 IP 地址为对应主机的 48bit 以太网地址。</p>
+<p>当一个 packet 需要转发给以太网中的另一个主机，这个发送方可能是路由器或局域网中的主机。发送方会先在局域网广播一个 ARP packet，通知包含这个 IP 地址的主机返回其以太网地址。然后如果该主机存在，会向发送方发送一个 ARP response packet。</p>
+<p>一个 ARP packet 结构与一个普通的 packet 相同。其 header 中包含了一个 16bit 数（0x0806），表明这是一个 ARP packet。然后接收到该 packet 的主机将这个 packet 发送给 ARP 协议处理代码。</p>
+<h4 id="tcpdump--arp-packet"><a class="anchor" href="#tcpdump--arp-packet">#</a> tcpdump 接收 ARP packet</h4>
+<p>一个 packet 的数据结构如下：</p>
+<ol>
+<li>前 14 的字节是以太网 header</li>
+<li>倒数 4 个字节是 TIP，即发送方想要找出的对应以太网地址的 IP 地址</li>
+<li>往前 6 个字节是 THA，即目的地的以太网地址，未知的情况下是全 0</li>
+<li>往前 4 个字节是 SIP，即发送方的 IP 地址</li>
+<li>往前 6 个字节是 SHA，发送方的以太地址</li>
+<li>剩下 8 字节表明我们对以太网和 IP 地址格式感兴趣</li>
+</ol>
+<h4 id="header-"><a class="anchor" href="#header-">#</a> header 嵌套</h4>
+<p>header 是嵌套的，我们需要逐个解析并剥离得到原始的 header</p>
+<h3 id="184-ip"><a class="anchor" href="#184-ip">#</a> 18.4 IP</h3>
+<p>IP 协议能够向互联网上任意位置发送 packet。</p>
+<p>如果 IP packet 通过以太网传播，其结构如下：</p>
+<ol>
+<li>目的以太网地址</li>
+<li>源以太网地址</li>
+<li>以太网类型（0x0800）</li>
+<li>IP header</li>
+<li>IP payload</li>
+</ol>
+<p>IP header 中关键信息包括：目的 IP 地址（ip_dst）、源 IP 地址（ip_src)、协议（ip_p）</p>
+<h3 id="185-udp"><a class="anchor" href="#185-udp">#</a> 18.5 UDP</h3>
+<p>通过 IP header 我们能够将一个 packet 传递到互联网上任意主机。如果需要传递给主机上的某个应用程序，我们需要使用 TCP 和 UDP 协议。</p>
+<h4 id="tcp"><a class="anchor" href="#tcp">#</a> TCP</h4>
+<p>TCP 不仅能够将 packet 发送到正确应用程序，并且包含了序列号等数据结构以检测丢包并支持重传，从而保证数据完整有序传输。</p>
+<h4 id="udp"><a class="anchor" href="#udp">#</a> UDP</h4>
+<p>UDP 是一种更简单的协议，它只将 packet 发送到对应应用，不提供其他功能。</p>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MOEZ9iqKkt92zbewl4r%2F-MOQ0ZD1O8xfxdq8_uRj%2Fimage.png?alt=media&amp;token=ad49b938-5048-46bc-90c5-0dab11be8d25" alt=""></p>
+<p>UDP header 中最重要的字段是 sport 源端口和 dport 目的端口。</p>
+<h4 id="tcpdump--udp-packet"><a class="anchor" href="#tcpdump--udp-packet">#</a> tcpdump 接收 UDP packet</h4>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MOEZ9iqKkt92zbewl4r%2F-MOQ6WulHc9P9FS0aSs9%2Fimage.png?alt=media&amp;token=3c6ec09a-57b9-4a72-a406-5249f15833f6" alt=""></p>
+<p>从前到后依次是：以太网 Header、IP header、以及 8 字节的 UDP header，表明源端口是 0x0700，目的端口是 0x6402，第 4-5 个字节表示长度，6-7 个字节是校验和（xv6 未生成，因此是 0）</p>
+<p>payload 中显示报文的内容是：<code>a.message.from.xv6</code>。</p>
+<p>因此，嵌套关系如下：ASCII TEXT &lt; UDP packet &lt; IP packet &lt; Ethernet packet</p>
+<h3 id="186-"><a class="anchor" href="#186-">#</a> 18.6 网络协议栈</h3>
+<p>网络协议栈对应报文的嵌套结构，自顶向下是 socket layer、TCP/UDP 层、IP 以及 ARP 层、以太网层（实际是网卡驱动层，直接与网卡硬件交互）</p>
+<p>网络协议栈中有一个 packet buffer，这个 buffer 在整个网络协议栈中传递，进行协议解析和数据交付。</p>
+<p>这个 packet buffer 就是一个缓存队列，使用其的理由如下：</p>
+<ol>
+<li>网卡接收方向，短暂应对大流量。IP processing thread 很可能慢于网卡的处理速度，因此需要暂时储存 packet。</li>
+<li>网卡发送方向，可使网卡空闲时发送大量 packet</li>
+<li>帮助组件解耦。</li>
+</ol>
+<h3 id="187-livelock"><a class="anchor" href="#187-livelock">#</a> 18.7 Livelock</h3>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MOiDmZD0rM6lblY2ZRj%2F-MOl8tjPHW_SMJt8Db_A%2Fimage.png?alt=media&amp;token=9ae61022-5d51-419f-9799-7a3d4df9dc13" alt=""></p>
+<p>路由器的性能图如上，其中 X 轴对应接收端网卡的 packet 接收速率，Y 轴是发送端网卡的 packet 发送速率。</p>
+<p>图中拟合曲线呈现先上升后下降关系。</p>
+<p>上升段：路由器将 packet 从输入网卡拷贝到输出网卡，路由器的发送速率和接收速率一致，因此 X 轴与 Y 轴的值相等</p>
+<p>转折点：曲线转折点大概在 5000，这意味着处理一个 packet 大约要消耗 200 微秒（1/5^3x10^6）</p>
+<p>下降段：本来路由器的处理速度是恒定的，因此应当会呈现出一个水平线。但事实上多余的 packet 也会生成一个中断，因此每个 packet 都会消耗 CPU 时间，从而使转发 packet 的时间减少</p>
+<p>这里曲线的下降就被称为中断的 Livelock。这是由于 CPU 运行着两个独立的任务，由于中断的优先级更高，使得另一个任务占有的 CPU 时间减少。</p>
+<p>多余的 packet 会被加入 packet buffer，当 buffer 到达长度上限则丢弃多余的 packet。</p>
+<h3 id="188--livelock"><a class="anchor" href="#188--livelock">#</a> 18.8 解决 Livelock</h3>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MOsCkHjvo5b9zNajd7W%2F-MOsEcZS49o2HAkVFsMk%2Fimage.png?alt=media&amp;token=926c3ccd-ab5f-4d72-b6cc-d4dcf104aefd" alt=""></p>
+<p>我们的目的是获得 non-livelock 性能曲线（水平曲线），它只受 CPU 限制的影响</p>
+<p>在网卡第一次发生中断时，中断处理函数唤醒处理 packet 的线程，并关闭网卡中断。packet 处理线程在循环中检查网卡并处理 packet，直到没有等待处理的 packet。然后处理线程重新打开网卡中断，并进入 sleep 状态。</p>
+<p>由于关闭中断，CPU 运行时间完全用来处理 packet，在高负载下，其性能曲线呈现一条水平曲线</p>
+<h2 id="19-meltdown"><a class="anchor" href="#19-meltdown">#</a> 19 Meltdown</h2>
+<h3 id="191-meltdown-"><a class="anchor" href="#191-meltdown-">#</a> 19.1 Meltdown 发生背景</h3>
+<p>Meltdown 产生的原因是 CPU 优化技术使得用户态和内核态切换时不发生 Page Table 切换，也就是共用同一张页表。而 CPU 的乱序执行又可能导致指令的提前执行。这样我们就能利用一些方式从内存中偷取一些数据。</p>
+<p>Meltdown 攻击基本流程如下：</p>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MYSvuD9ti3ftrziSAy-%2F-MYTm8Lr_UKZahCEw9Tx%2Fimage.png?alt=media&amp;token=95371eb3-aa17-4110-a048-ef9b0f7334ee" alt=""></p>
+<ol>
+<li>在程序中声明一个 <code>buffer[8192]</code>，这个 buffer 是普通的用户内存且可被正常访问</li>
+<li>得到包含想要窃取数据的虚拟内存地址</li>
+<li>将虚拟内存地址取值并保存在寄存器 r2 中</li>
+<li>获取寄存器 r2 的低 bit 位</li>
+<li>将这个值乘以 4096，得到 4096 或 0</li>
+<li>读取申请的 buffer，要么是 <code>buffer[0]</code>，要么是 <code>buffer[4096]</code></li>
+</ol>
+<p>这段攻击代码依赖于预测执行和CPU的缓存方式</p>
+<h3 id="192-"><a class="anchor" href="#192-">#</a> 19.2 预测执行</h3>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MYULXJ5uy1-48YAgi36%2F-MYUWzZR_-9ym6ZuYFQ1%2Fimage.png?alt=media&amp;token=fb4fb137-95da-4fec-910f-4bf341cc66bb" alt=""></p>
+<p>预测执行是一种用来提升 CPU 性能的技术</p>
+<ol>
+<li>在 r0 寄存器保存一个内存地址，可能有效也可能无效</li>
+<li>内存中还保存了一个 valid 变量，将其加载到 r1 寄存器</li>
+<li>当且仅当 valid 等于 1 时使用 r0 中的地址，将 r0 地址指向的内容加载到 r2</li>
+<li>对 r2 寄存器加一，保存在 r3 寄存器</li>
+</ol>
+<p>第二行使用 load 指令读取内存数据，该指令需要花费数百个 CPU cycle。分支预测即是第三行基于上一次返回的结果提前执行分支，这是一种 CPU 优化方法，此时第 2 行指令未返回可能就已经执行第 4 行指令。当 load 返回，如果 valid 等于 0，则取消已经执行的代码的效果并重新执行正确的分支。</p>
+<p>这里提前执行的分支将值保存在一个临时寄存器中，当分支命中则变成真实寄存器，否则抛弃临时寄存器。</p>
+<p>如果 r0 指针无效，当超前执行代码时不会产生 Page Fault。它需要等待 load 返回后才能产生 Page Fault。</p>
+<h3 id="193-cpu-"><a class="anchor" href="#193-cpu-">#</a> 19.3 CPU 缓存</h3>
+<p>CPU 分为 CPU 核和 CPU 缓存。</p>
+<p>CPU 核负责指令解析，包含寄存器，有加法单元、除法单元以做运算。CPU 核是 CPU 的执行部分。</p>
+<p>CPU 缓存设计在 CPU 内部，位于 CPU 核与内存控制器之间，用以加速 CPU 访问内存数据。CPU 包含多级缓存，如果 L1 cache 未命中，则依次向下查找。当所有缓存均未命中，则查取内存数据。</p>
+<h3 id="194-meltdown-"><a class="anchor" href="#194-meltdown-">#</a> 19.4 Meltdown 攻击</h3>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MYgsYzAyKmvdt-tzkze%2F-MYjSV7ePTdr8TyqojC4%2Fimage.png?alt=media&amp;token=d26b9d51-f486-4e90-b6b5-75dfb4f697f5" alt=""></p>
+<p>17 行后代码利用 Flush+Reload 机制（读取 CPU 时间）探索 CPU 缓存，如果 b-a&lt;c-b 则表明 <code>buffer[0]</code> 在 cache 中。</p>
+<h3 id="195-meltdown-"><a class="anchor" href="#195-meltdown-">#</a> 19.5 Meltdown 修复</h3>
+<p>KAISER 或 KPTI 技术：不将内核内存映射到用户 Page Table。</p>
+<h2 id="rcu"><a class="anchor" href="#rcu">#</a> RCU</h2>
+<h3 id="201-"><a class="anchor" href="#201-">#</a> 20.1 使用锁带来的问题</h3>
+<p>spinlock 的工作是当两个线程可能相互影响时阻止它们并行运行。其缺点在于性能较差。</p>
+<p>在只读的场合，我们没有使用锁的必要。但是在读多写少的场合，需要使用锁以避免写对读的影响。但是又回到了 spinlock 带来的性能问题。</p>
+<p>因此我们引入了读写锁，它允许多个读取线程和一个写入线程。</p>
+<h3 id="201--1"><a class="anchor" href="#201--1">#</a> 20.1 读写锁</h3>
+<p>读写锁有 4 个 API：</p>
+<ol>
+<li>r_lock</li>
+<li>r_unlock</li>
+<li>w_lock</li>
+<li>w_unlock</li>
+</ol>
+<p>可以有多个线程获取读锁，从而并行读取数据；或者只有一个线程获取写锁，从而允许其写入数据。</p>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MT_xFtDMMvzMyKjwq8p%2F-MTcIFfqbkS4wTchDzh3%2Fimage.png?alt=media&amp;token=7771b8da-7edc-4685-81d5-3af1931c3be9" alt=""></p>
+<p>读写锁的简易实现如上图所示，它维护了一个字段 n：</p>
+<ol>
+<li>当 n 等于 0 时锁没有被任何人持有</li>
+<li>当 n 等于-1 时，有一个 writer 持有写锁</li>
+<li>当 n 大于 0 时，表明有 n 个 reader 持有读锁</li>
+</ol>
+<p>对 n 的修改依赖于原子指令。</p>
+<h4 id="heading-78"><a class="anchor" href="#heading-78">#</a> 读写锁的弊端</h4>
+<p>读写锁将一个只读操作变成了需要修改锁的计数器的操作，相较原本的只读操作成本高了许多。</p>
+<p>因此我们需要一种更高性能的实现，为此我们引入了 RCU</p>
+<h3 id="rcu-1"><a class="anchor" href="#rcu-1">#</a> RCU</h3>
+<p>RCU（Read-Copy-Update）即是创建一个缓存，将对元素的修改全部作用于这个缓存之上，当 commit 之后写回原数据结构中。</p>
+<p>其具体实现流程如下：</p>
+<p><img src="https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MU6407Adsik_iOQjVW3%2F-MU6JO9tcmErz2Nu3-6U%2Fimage.png?alt=media&amp;token=aea37e6c-64f9-4adb-a4f1-d2c824aff483" alt=""></p>
+<p>RCU 的优点在于其数据读取非常快，对 reader 几乎没有额外负担，而写数据则十分糟糕，因为 synchronize_rcu 操作（确保所有持有旧数据的 CPU 执行了一次上下文切换，从而放弃持有旧数据）耗时严重。</p>
+<h4 id="rcu-"><a class="anchor" href="#rcu-">#</a> RCU 总结</h4>
+<ol>
+<li>RCU 不是通用的，适用于读远远大于写的场合。</li>
+<li>不能在原地更新数据，因此只适用于一些小的数据结构，如树或单链表</li>
+<li>RCU 不保证 reader 读取到的是新的数据。</li>
+</ol>
+<h4 id="heading-79"><a class="anchor" href="#heading-79">#</a> 如何提高写数据的性能</h4>
+<ol>
+<li>重新构造数据结构使其非共享</li>
+<li>分离数据：对于频繁写入单不需跨核同步的数据可以为每个 CPU 创建单独的实例从而避免使用锁</li>
+<li>延迟同步：对于统计计数器，可以为每个 CPU 维护单独的实例，然后读取全部实例并相加。</li>
+</ol>
 </article>
   </div>
 </body>
