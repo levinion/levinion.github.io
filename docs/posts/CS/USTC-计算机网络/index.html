@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+
+<head>
+  
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script> 
+
+
+  <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
+      article {
+        max-width: 90%;
+      }
+
+      h1 {
+        font-size: large;
+      }
+
+      .date {
+        font-size: medium;
+      }
+
+      p,
+      li {
+        font-size: 15px;
+      }
+    }
+
+    p,
+    li {
+      font-size: 16.5px;
+      line-height: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      text-align: center;
+    }
+
+    .date {
+      text-align: center;
+    }
+
+    .toc {
+      position: fixed;
+      float: left;
+      max-width: 50px;
+      max-height: 50px;
+      margin-top: 200px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: x-large;
+      color: peru;
+    }
+
+    h3 {
+      font-size: large;
+      color: rgb(205, 158, 112);
+    }
+
+    h4 {
+      font-size: medium;
+      color: pink;
+    }
+
+    strong {
+      color: rgb(182, 230, 240);
+    }
+  </style>
+  <title>USTC-计算机网络</title>
+</head>
+
+<body onselectstart="return false">
+  
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <div>
+    <div class="meta">
+      <h1>USTC-计算机网络</h1>
+      <p>2023-07-16 13:52:39</p>
+    </div>
+    <article><h2 id="1-"><a class="anchor" href="#1-">#</a> 1 计算机网络概述</h2>
+<h3 id="11-"><a class="anchor" href="#11-">#</a> 1.1 什么是互联网</h3>
+<h4 id="heading"><a class="anchor" href="#heading">#</a> 互联网的组成</h4>
+<p>网络即节点和边，与其大小、形状无关。</p>
+<p>对于因特网，其节点包括主机节点和数据交换节点：</p>
+<ol>
+<li>主机及其上运行的应用程序</li>
+<li>路由器、交换机等网络交换设备</li>
+</ol>
+<p>其边是通信链路，包括：</p>
+<ol>
+<li>接入网链路：主机连接到互联网的链路</li>
+<li>主干链路：路由器间的链路</li>
+</ol>
+<h4 id="heading-1"><a class="anchor" href="#heading-1">#</a> 什么是协议</h4>
+<p>互联网的另一个组成部分是协议。协议控制消息的发送和接收。常见的协议包括：</p>
+<ol>
+<li>TCP/UDP</li>
+<li>IP</li>
+<li>HTTP</li>
+<li>FTP</li>
+<li>PPP</li>
+</ol>
+<p>计算机网络行为受到协议的规范。</p>
+<h3 id="12-"><a class="anchor" href="#12-">#</a> 1.2 网络边缘</h3>
+<p>网络边缘包括主机和所有的应用程序；网络核心包括路由器和网络的网络。</p>
+<p>主机也被称为端系统，其能够运行应用程序，处在网络边缘。</p>
+<p>网络核心的作用是数据交换，所有主机与网络核心相连。</p>
+<h4 id="heading-2"><a class="anchor" href="#heading-2">#</a> 应用程序通信模式</h4>
+<p>应用进程和用户进程之间通信的模式有：</p>
+<ol>
+<li>CS（客户端-服务器模式），客户端向服务器请求、接受消息</li>
+<li>P2P（Peer-Peer）模式，主机之间直接通信，不通过或很少通过服务器</li>
+</ol>
+<h4 id="heading-3"><a class="anchor" href="#heading-3">#</a> 面向连接</h4>
+<p>网络边缘采用网络设施的面向连接的服务，以便在应用程序之间传输数据。它通过 TCP 协议实现，在数据传输之前先握手，为两个主机之间建立连接。</p>
+</article>
+  </div>
+</body>
+
+</html>
