@@ -1,13 +1,16 @@
+[cpu]
+max_processes = 1
+
 [pages]
-contentOnlyPages=["about"]
+contentOnlyPages = ["about"]
 
 [posts]
-excludeDirs=["drafts","latex"]
+excludeDirs = ["drafts", "latex"]
 
 [server]
-addr="localhost:9090"
+addr = "localhost:9090"
 
 [style]
 [style.codeBlock]
-enable=false
-style="xcode-dark"
+enable = false
+style = "xcode-dark"

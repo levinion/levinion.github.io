@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+
+<head>
+  
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script> 
+
+
+  <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
+      article {
+        max-width: 90%;
+      }
+
+      h1 {
+        font-size: large;
+      }
+
+      .date {
+        font-size: medium;
+      }
+
+      p,
+      li {
+        font-size: 15px;
+      }
+    }
+
+    p,
+    li {
+      font-size: 16.5px;
+      line-height: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      text-align: center;
+    }
+
+    .date {
+      text-align: center;
+    }
+
+    .toc {
+      position: fixed;
+      float: left;
+      max-width: 50px;
+      max-height: 50px;
+      margin-top: 200px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: x-large;
+      color: peru;
+    }
+
+    h3 {
+      font-size: large;
+      color: rgb(205, 158, 112);
+    }
+
+    h4 {
+      font-size: medium;
+      color: pink;
+    }
+
+    strong {
+      color: rgb(182, 230, 240);
+    }
+  </style>
+  <title>Windows调教指南</title>
+</head>
+
+<body onselectstart="return false">
+  
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <div>
+    <div class="meta">
+      <h1>Windows调教指南</h1>
+      <p>2024-12-27 20:01:00</p>
+    </div>
+    <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
+<p>凡是接触过 Linux 或是 Macos 等系统的人，大多都会对系统有些洁癖，或是养成一些使用操作系统的习惯。无论是以任何理由再次回到 Windows，这些习惯会则会成为阻碍，因为 Windows 向来不是一个开放的系统。近些年，Windows 的 UI 有所改善，但使用逻辑以及效率却似乎一年不如一年。为了让人能够更加平顺地过渡到 Windows，为了使那些正在使用 Windows 的人能够更舒适地使用 Windows，也就是我撰写本文的意义所在。</p>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 一个整洁的任务栏</h2>
+<p>微软的默认任务栏是臃肿的，包含各种用不到的功能，甚至广告。好在它比较容易整顿，我们需要右键任务栏进入任务栏设置，把能关的选项通通关掉，这包括：</p>
+<ul>
+<li>隐藏搜索框</li>
+<li>关闭小组件</li>
+</ul>
+<h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 输入法设置</h2>
+<p>默认的微软输入法已经具有较好的体验，但对于小鹤双拼用户来说很难说是友好，因为它并没有一个预设的小鹤双拼方案。需要通过修改注册表实现</p>
+<ol>
+<li>Win + R：Regedit（注册表编辑器）</li>
+<li>进入 <code>\HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS</code></li>
+<li>新建字符串值，名称为<code>UserDefinedDoublePinyinScheme0</code>，值为<code>小鹤双拼*2*^*iuvdjhcwfg^xmlnpbksqszxkrltvyovt</code></li>
+</ol>
+<h2 id="wsl"><a class="anchor" href="#wsl">#</a> WSL</h2>
+<p>对于习惯在 Linux 下工作的人来说，WSL 是必要的。</p>
+<p>在安装前，需要确保适用于 Windows 的 Linux 子系统和虚拟机平台已开启。开始菜单进入“启用或关闭 Windows 功能”，勾选 Windows 的 Linux 子系统和虚拟机平台。如果有虚拟机需求，也可以勾选启用 Hyper-V，当然这不是必须的。</p>
+<p>cmd 中运行 <code>wsl --install</code> 即可安装默认的 Ubuntu 发行版，<code>wsl --install -d</code> 可以显式指定要安装的发行版，如 Debian。</p>
+<p>对于不受支持的发行版，如 Arch，可以查看以下项目：<a href="https://wsldl-pg.github.io/ArchW-docs/How-to-Setup/">ArchWSL</a></p>
+<h2 id="heading-3"><a class="anchor" href="#heading-3">#</a> 快捷键</h2>
+<p>Windows 有着一组快捷键的预设值，而且无法修改。特别是 Win 键，其位置较好，非常适合作为 Meta 键使用，但是其绑定的快捷键只有部分会使用到，并且很难重设，因此自定义困难。AutoHotkey 能够重新绑定 Win 键，且功能成熟，但由于其常被用作脚本外挂，因此有被红信的风险。</p>
+<p>好在 Powertoys 提供了 Keyboard Manager 工具，能够实现改键功能，或是执行脚本。基于此，我们可以摆脱讨厌的 Win 键，将其用作 Meta 键以执行自定义指令。但是，这仍有局限。在 Win10 上，一切似乎运行正常；在 24H2 上，即使经过改键，仍然可能会弹出开始菜单。</p>
+<p>那么使用 Alt 又如何呢？一切似乎都很棒，但是如果你使用 blender 或是 ps 等等，alt 绑定其他键就成了一场灾难。目前我的解决措施是使用 <code>Alt+Ctrl+Shift</code> 作为 Meta 键。是的，你没有看错。如何一键发送三个键位？我使用 wooting 的 dks，而你需要一把支持 dks 的磁轴键盘（doge）。</p>
+</article>
+  </div>
+</body>
+
+</html>
