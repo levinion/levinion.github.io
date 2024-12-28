@@ -130,15 +130,29 @@
 <p>默认的微软输入法已经具有较好的体验，但对于小鹤双拼用户来说很难说是友好，因为它并没有一个预设的小鹤双拼方案。需要通过修改注册表实现</p>
 <ol>
 <li>Win + R：Regedit（注册表编辑器）</li>
-<li>进入 <code>\HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS</code></li>
-<li>新建字符串值，名称为<code>UserDefinedDoublePinyinScheme0</code>，值为<code>小鹤双拼*2*^*iuvdjhcwfg^xmlnpbksqszxkrltvyovt</code></li>
+<li>进入 <code>HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS</code></li>
+<li>新建字符串值，名称为 <code>UserDefinedDoublePinyinScheme0</code>，值为 <code>小鹤双拼*2*^*iuvdjhcwfg^xmlnpbksqszxkrltvyovt</code></li>
 </ol>
+<p>或者在 cmd 执行：</p>
+<pre><code class="language-batch">reg add HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS /v UserDefinedDoublePinyinScheme0 /t reg_sz /d &quot;小鹤双拼*2*^*iuvdjhcwfg^xmlnpbksqszxkrltvyovt&quot;
+</code></pre>
+<h2 id="heading-3"><a class="anchor" href="#heading-3">#</a> 原始的右键菜单</h2>
+<p>Win11新的右键菜单虽然优化了ui，但是隐藏了许多内容，导致效率降低，以下命令能够恢复原始的右键菜单：</p>
+<pre><code class="language-batch">reg add &quot;HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32&quot; /f
+taskkill /F /IM explorer.exe
+explorer.exe
+</code></pre>
+<p>如果想要恢复成Win11的右键菜单，执行：</p>
+<pre><code class="language-batch">reg delete &quot;HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32&quot; /f
+taskkill /F /IM explorer.exe
+explorer.exe
+</code></pre>
 <h2 id="wsl"><a class="anchor" href="#wsl">#</a> WSL</h2>
 <p>对于习惯在 Linux 下工作的人来说，WSL 是必要的。</p>
 <p>在安装前，需要确保适用于 Windows 的 Linux 子系统和虚拟机平台已开启。开始菜单进入“启用或关闭 Windows 功能”，勾选 Windows 的 Linux 子系统和虚拟机平台。如果有虚拟机需求，也可以勾选启用 Hyper-V，当然这不是必须的。</p>
 <p>cmd 中运行 <code>wsl --install</code> 即可安装默认的 Ubuntu 发行版，<code>wsl --install -d</code> 可以显式指定要安装的发行版，如 Debian。</p>
 <p>对于不受支持的发行版，如 Arch，可以查看以下项目：<a href="https://wsldl-pg.github.io/ArchW-docs/How-to-Setup/">ArchWSL</a></p>
-<h2 id="heading-3"><a class="anchor" href="#heading-3">#</a> 快捷键</h2>
+<h2 id="heading-4"><a class="anchor" href="#heading-4">#</a> 快捷键</h2>
 <p>Windows 有着一组快捷键的预设值，而且无法修改。特别是 Win 键，其位置较好，非常适合作为 Meta 键使用，但是其绑定的快捷键只有部分会使用到，并且很难重设，因此自定义困难。AutoHotkey 能够重新绑定 Win 键，且功能成熟，但由于其常被用作脚本外挂，因此有被红信的风险。</p>
 <p>好在 Powertoys 提供了 Keyboard Manager 工具，能够实现改键功能，或是执行脚本。基于此，我们可以摆脱讨厌的 Win 键，将其用作 Meta 键以执行自定义指令。但是，这仍有局限。在 Win10 上，一切似乎运行正常；在 24H2 上，即使经过改键，仍然可能会弹出开始菜单。</p>
 <p>那么使用 Alt 又如何呢？一切似乎都很棒，但是如果你使用 blender 或是 ps 等等，alt 绑定其他键就成了一场灾难。目前我的解决措施是使用 <code>Alt+Ctrl+Shift</code> 作为 Meta 键。是的，你没有看错。如何一键发送三个键位？我使用 wooting 的 dks，而你需要一把支持 dks 的磁轴键盘（doge）。</p>
