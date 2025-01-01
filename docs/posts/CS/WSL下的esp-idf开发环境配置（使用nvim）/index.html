@@ -121,7 +121,7 @@
       <p>2025-01-01 19:54:00</p>
     </div>
     <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
-<p>最近想要玩玩吃灰很久的 esp32-s3 单片机，于是着手搭建开发环境。官方的<a href="https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.2/esp32/get-started/">文档</a>几经比较完善，但是由于个人开发习惯，使用 wsl 以及 nvim，踩坑点比较多，因此简单记录下。</p>
+<p>最近想要玩玩吃灰很久的 esp32s3 单片机，于是着手搭建开发环境。官方的<a href="https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.2/esp32/get-started/">文档</a>几经比较完善，但是由于个人开发习惯，使用 wsl 以及 nvim，踩坑点比较多，因此简单记录下。</p>
 <p>写文章时所使用的具体环境如下：</p>
 <ul>
 <li>发行版：Archlinux（ArchWSL）</li>
@@ -246,6 +246,12 @@ return {
     },
   },
 }
+</code></pre>
+<h2 id="heading-6"><a class="anchor" href="#heading-6">#</a> 最后</h2>
+<p>现在你可以使用 nvim 创建、编写甚至编译 esp32 项目，但是你无法通过 wsl2 进行烧录，这是因为 wsl2 不支持 usb 设备连接！幸好我们有 <a href="https://github.com/dorssel/usbipd-win">usbipd-win</a> 项目，具体的操作文档可以参见<a href="https://learn.microsoft.com/zh-cn/windows/wsl/connect-usb">连接 USB 设备</a>。</p>
+<p>但是 <code>usbipd-win</code> 只是一个后端，它无法自动地将 usb 设备共享至 wsl，这时候就有了 <a href="https://gitlab.com/alelec/wsl-usb-gui#wsl-usb-gui">wsl-usb-gui</a>。它为 <code>usbipd-win</code> 提供了一个前端，并且允许我们为 wsl 自动连接 usb 设备。</p>
+<p>一切准备就绪，就可以开始烧录了。</p>
+<pre><code class="language-shell">idf.py flash monitor
 </code></pre>
 </article>
   </div>
