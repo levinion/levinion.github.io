@@ -154,14 +154,18 @@
 <pre><code class="language-shell">alias get_idf &quot;. /opt/esp-idf/export.fish&quot;
 </code></pre>
 <h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 开发前的准备</h2>
-<h3 id="heading-3"><a class="anchor" href="#heading-3">#</a> 创建项目</h3>
-<p>虽然官方文档让我们从模板创建工程，但实际上，<code>idf.py</code> 提供了一个 <code>create-project</code> 命令，可以简单地创建一个项目。</p>
-<pre><code class="language-shell">idf.py create-project &lt;Project Name&gt;
-</code></pre>
-<h3 id="heading-4"><a class="anchor" href="#heading-4">#</a> 引入环境变量</h3>
+<h3 id="heading-3"><a class="anchor" href="#heading-3">#</a> 引入环境变量</h3>
 <p>使用我们上面创建的别名：</p>
 <pre><code class="language-shell">get_idf
 </code></pre>
+<h3 id="heading-4"><a class="anchor" href="#heading-4">#</a> 创建项目</h3>
+<p>虽然官方文档让我们从模板创建工程，但实际上，<code>idf.py</code> 提供了一个 <code>create-project</code> 命令，可以简单地创建一个项目。</p>
+<pre><code class="language-shell">idf.py create-project &lt;Project Name&gt;
+</code></pre>
+<h3 id="-target"><a class="anchor" href="#-target">#</a> 设置 target</h3>
+<pre><code>idf.py set-target esp32s3
+</code></pre>
+<p>默认 target 为 esp32，注意替换成自己的板子型号</p>
 <h3 id="clangd"><a class="anchor" href="#clangd">#</a> .clangd</h3>
 <p>我们需要在项目根目录下创建一个 clangd 配置文件以解决一些头文件错误。</p>
 <pre><code class="language-.clangd">CompileFlags:
@@ -253,6 +257,7 @@ return {
 <p>一切准备就绪，就可以开始烧录了。</p>
 <pre><code class="language-shell">idf.py flash monitor
 </code></pre>
+<p>然后使用 <code>ctrl + ]</code> 退出监视器。</p>
 </article>
   </div>
 </body>
