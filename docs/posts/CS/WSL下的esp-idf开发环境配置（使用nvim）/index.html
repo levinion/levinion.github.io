@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+
+<head>
+  
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script> 
+
+
+  <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
+      article {
+        max-width: 90%;
+      }
+
+      h1 {
+        font-size: large;
+      }
+
+      .date {
+        font-size: medium;
+      }
+
+      p,
+      li {
+        font-size: 15px;
+      }
+    }
+
+    p,
+    li {
+      font-size: 16.5px;
+      line-height: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      text-align: center;
+    }
+
+    .date {
+      text-align: center;
+    }
+
+    .toc {
+      position: fixed;
+      float: left;
+      max-width: 50px;
+      max-height: 50px;
+      margin-top: 200px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: x-large;
+      color: peru;
+    }
+
+    h3 {
+      font-size: large;
+      color: rgb(205, 158, 112);
+    }
+
+    h4 {
+      font-size: medium;
+      color: pink;
+    }
+
+    strong {
+      color: rgb(182, 230, 240);
+    }
+  </style>
+  <title>WSL下的esp-idf开发环境配置（使用nvim）</title>
+</head>
+
+
+
+<body>
+  
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <div>
+    <div class="meta">
+      <h1>WSL下的esp-idf开发环境配置（使用nvim）</h1>
+      <p>2025-01-01 19:54:00</p>
+    </div>
+    <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
+<p>最近想要玩玩吃灰很久的 esp32-s3 单片机，于是着手搭建开发环境。官方的<a href="https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.2/esp32/get-started/">文档</a>几经比较完善，但是由于个人开发习惯，使用 wsl 以及 nvim，踩坑点比较多，因此简单记录下。</p>
+<p>写文章时所使用的具体环境如下：</p>
+<ul>
+<li>发行版：Archlinux（ArchWSL）</li>
+<li>Shell：fish</li>
+<li>单片机：esp32s3</li>
+<li>编辑器：nvim</li>
+<li>LSP：clang（实际需要替换成 esp-clang，下文会讲到）</li>
+</ul>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 安装</h2>
+<p>本人使用的发行版是 Arch，其他发行版可借鉴下，或是直接查阅文档。</p>
+<ol>
+<li>安装必要的依赖：</li>
+</ol>
+<pre><code class="language-shell">sudo pacman -S --needed gcc git make flex bison gperf python cmake ninja ccache dfu-util libusb
+</code></pre>
+<ol start="2">
+<li>安装 esp-idf，由于 aur 已经有打好的包，因此比较轻松：</li>
+</ol>
+<pre><code class="language-shell">sudo paru -S esp-idf
+</code></pre>
+<ol start="3">
+<li>设置工具。aur 安装的工具链路径在 <code>/opt/esp-idf</code> ：</li>
+</ol>
+<pre><code class="language-shell">/opt/esp-idf/install.fish esp32s3
+</code></pre>
+<p>如果使用 bash 或 zsh，将 .fish 替换成 .sh 即可。esp32s3 可根据需要替换成自己的板子型号。</p>
+<ol start="4">
+<li>开发esp32程序前需先导入环境变量，在终端加入类似：</li>
+</ol>
+<pre><code class="language-shell">alias get_idf &quot;. /opt/esp-idf/export.fish&quot;
+</code></pre>
+<h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 开发前的准备</h2>
+<h3 id="heading-3"><a class="anchor" href="#heading-3">#</a> 创建项目</h3>
+<p>虽然官方文档让我们从模板创建工程，但实际上，<code>idf.py</code> 提供了一个 <code>create-project</code> 命令，可以简单地创建一个项目。</p>
+<pre><code class="language-shell">idf.py create-project &lt;Project Name&gt;
+</code></pre>
+<h3 id="heading-4"><a class="anchor" href="#heading-4">#</a> 引入环境变量</h3>
+<p>使用我们上面创建的别名：</p>
+<pre><code class="language-shell">get_idf
+</code></pre>
+<h3 id="clangd"><a class="anchor" href="#clangd">#</a> .clangd</h3>
+<p>我们需要在项目根目录下创建一个 clangd 配置文件以解决一些头文件错误。</p>
+<pre><code class="language-.clangd">CompileFlags:
+  Remove:
+    [
+      -fno-tree-switch-conversion,
+      -fno-shrink-wrap,
+      -mtext-section-literals,
+      -mlongcalls,
+      -fstrict-volatile-bitfields,
+      -march=rv32imac_zicsr_zifencei,
+    ]
+</code></pre>
+<h3 id="heading-5"><a class="anchor" href="#heading-5">#</a> 编辑器</h3>
+<p>如果你使用 VSCode，到这一步大概可以愉快地开发了。</p>
+<pre><code class="language-shell">code .
+</code></pre>
+<p>但是 nvim 则不然，需要一些额外的配置，这就是我们后面的主要工作。</p>
+<h2 id="nvim-"><a class="anchor" href="#nvim-">#</a> nvim 配置</h2>
+<h3 id="compile-commandsjson"><a class="anchor" href="#compile-commandsjson">#</a> compile_commands.json</h3>
+<p>clang 需要一个 <code>compile_commands.json</code> 文件才能正确工作，正常情况下，cmake 会自动在 build 目录下生成该文件。</p>
+<pre><code class="language-shell">mkdir build
+cd build
+cmake ..
+</code></pre>
+<p>nvim 比较不智能的一点是无法处理不在根目录的 <code>compile_commands.json</code> 文件，解决方法大致有三种。一是将 build 目录下的文件复制到根目录，二是建立符号链接，第三种则是修改 nvim 的 clang 配置。</p>
+<pre><code class="language-lua">init_options = {
+  compilationDatabasePath = &quot;./build&quot;,
+},
+</code></pre>
+<p>为了让 nvim 正确识别项目根目录，<code>.git</code> 似乎是必要的。</p>
+<pre><code class="language-shell">git init
+</code></pre>
+<h3 id="-esp-clangclangd--clangd"><a class="anchor" href="#-esp-clangclangd--clangd">#</a> 使用 esp-clang/clangd 而非 clangd</h3>
+<p>即使我们正确引入了环境变量，但是 freertos 等组件的头文件仍无法正确导入，这是因为 esp 工具链不使用标准的 clang。为此，我们需要获取 <code>esp-clang</code>。</p>
+<pre><code class="language-shell">idf_tools.py install esp-clang
+</code></pre>
+<p>下载到的默认路径类似 <code>HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd</code>, 然后我们替换 nvim 使用的 lsp 命令即可：</p>
+<pre><code class="language-lua">cmd = {
+          &quot;$HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd&quot;,
+          &quot;--clang-tidy&quot;,
+          &quot;--all-scopes-completion&quot;,
+          &quot;--completion-style=detailed&quot;,
+          &quot;--header-insertion=iwyu&quot;,
+          &quot;--pch-storage=disk&quot;,
+          &quot;--log=error&quot;,
+          &quot;--j=5&quot;,
+          &quot;--background-index&quot;,
+          &quot;--function-arg-placeholders&quot;,
+          &quot;--fallback-style=llvm&quot;,
+        },
+</code></pre>
+<p>这有个问题，为了只开发 esp 时使用 <code>esp-clang</code>，我们还需要实现按需导入，因此完整配置如下：</p>
+<pre><code class="language-lua">local clangd = &quot;clangd&quot;
+
+if os.getenv(&quot;IDF_PATH&quot;) then
+  clangd = &quot;$HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd&quot;
+end
+
+return {
+  &quot;neovim/nvim-lspconfig&quot;,
+  opts = {
+    servers = {
+      clangd = {
+        cmd = {
+          clangd,
+          &quot;--clang-tidy&quot;,
+          &quot;--all-scopes-completion&quot;,
+          &quot;--completion-style=detailed&quot;,
+          &quot;--header-insertion=iwyu&quot;,
+          &quot;--pch-storage=disk&quot;,
+          &quot;--log=error&quot;,
+          &quot;--j=5&quot;,
+          &quot;--background-index&quot;,
+          &quot;--function-arg-placeholders&quot;,
+          &quot;--fallback-style=llvm&quot;,
+        },
+        init_options = {
+          compilationDatabasePath = &quot;./build&quot;,
+        },
+      },
+    },
+  },
+}
+</code></pre>
+</article>
+  </div>
+</body>
+
+</html>
