@@ -8,7 +8,7 @@ contentOnlyPages = ["about"]
 excludeDirs = ["drafts", "latex"]
 
 [server]
-addr = "localhost:9090"
+addr = "localhost:9000"
 
 [style]
 [style.codeBlock]

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+
+<head>
+  
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script> 
+
+
+  <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
+      article {
+        max-width: 90%;
+      }
+
+      h1 {
+        font-size: large;
+      }
+
+      .date {
+        font-size: medium;
+      }
+
+      p,
+      li {
+        font-size: 15px;
+      }
+    }
+
+    p,
+    li {
+      font-size: 16.5px;
+      line-height: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      text-align: center;
+    }
+
+    .date {
+      text-align: center;
+    }
+
+    .toc {
+      position: fixed;
+      float: left;
+      max-width: 50px;
+      max-height: 50px;
+      margin-top: 200px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: x-large;
+      color: peru;
+    }
+
+    h3 {
+      font-size: large;
+      color: rgb(205, 158, 112);
+    }
+
+    h4 {
+      font-size: medium;
+      color: pink;
+    }
+
+    strong {
+      color: rgb(182, 230, 240);
+    }
+  </style>
+  <title>配置sing-box命令行客户端</title>
+</head>
+
+
+
+<body>
+  
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <div>
+    <div class="meta">
+      <h1>配置sing-box命令行客户端</h1>
+      <p>2025-01-09 23:38:49</p>
+    </div>
+    <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
+<p>很长一段时间都在使用 nekoray/nekobox 作为代理客户端，但是 nekoray 很久没有更新了，而且 sing-box 1.11.0 版本已经支持 hysteria2 的端口转发，因此决定转移到 sing-box 上。因为使用自建节点，而 sing-box 的 gui 都不尽如人意，所以使用 sing-box cli 作为客户端。</p>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 配置文件</h2>
+<p>这里是一个 hysteria2 的配置文件，你可以直接使用，但是注意修改 outbound 的 ip 以及端口等信息。</p>
+<pre><code class="language-yaml">{
+  &quot;dns&quot;:
+    {
+      &quot;servers&quot;:
+        [
+          { &quot;tag&quot;: &quot;cf&quot;, &quot;address&quot;: &quot;https://1.1.1.1/dns-query&quot; },
+          { &quot;tag&quot;: &quot;local&quot;, &quot;address&quot;: &quot;223.5.5.5&quot;, &quot;detour&quot;: &quot;direct&quot; },
+          { &quot;tag&quot;: &quot;block&quot;, &quot;address&quot;: &quot;rcode://success&quot; },
+        ],
+      &quot;rules&quot;:
+        [
+          { &quot;outbound&quot;: &quot;any&quot;, &quot;server&quot;: &quot;local&quot; },
+          { &quot;rule_set&quot;: &quot;geosite-cn&quot;, &quot;server&quot;: &quot;local&quot; },
+        ],
+      &quot;strategy&quot;: &quot;ipv4_only&quot;,
+    },
+  &quot;inbounds&quot;:
+    [
+      {
+        &quot;type&quot;: &quot;tun&quot;,
+        &quot;address&quot;: &quot;172.19.0.1/30&quot;,
+        &quot;auto_route&quot;: true,
+        &quot;strict_route&quot;: false,
+      },
+    ],
+  &quot;outbounds&quot;:
+    [
+      {
+        &quot;type&quot;: &quot;hysteria2&quot;,
+        &quot;tag&quot;: &quot;proxy&quot;,
+        &quot;server&quot;: &quot;&lt;ip.addr&gt;&quot;,
+        &quot;server_port&quot;: 1500,
+        &quot;server_ports&quot;: &quot;20000:50000&quot;,
+        &quot;up_mbps&quot;: 0,
+        &quot;down_mbps&quot;: 0,
+        &quot;password&quot;: &quot;&lt;password&gt;&quot;,
+        &quot;tls&quot;:
+          { &quot;enabled&quot;: true, &quot;server_name&quot;: &quot;www.bing.com&quot;, &quot;insecure&quot;: true },
+      },
+      { &quot;type&quot;: &quot;direct&quot;, &quot;tag&quot;: &quot;direct&quot; },
+    ],
+  &quot;route&quot;:
+    {
+      &quot;rules&quot;:
+        [
+          { &quot;action&quot;: &quot;sniff&quot; },
+          { &quot;protocol&quot;: &quot;dns&quot;, &quot;action&quot;: &quot;hijack-dns&quot; },
+          { &quot;ip_is_private&quot;: true, &quot;outbound&quot;: &quot;direct&quot; },
+          { &quot;rule_set&quot;: [&quot;geoip-cn&quot;, &quot;geosite-cn&quot;], &quot;outbound&quot;: &quot;direct&quot; },
+          {
+            &quot;rule_set&quot;: &quot;geoip-us&quot;,
+            &quot;rule_set_ip_cidr_match_source&quot;: true,
+            &quot;action&quot;: &quot;reject&quot;,
+          },
+        ],
+      &quot;rule_set&quot;:
+        [
+          {
+            &quot;tag&quot;: &quot;geoip-cn&quot;,
+            &quot;type&quot;: &quot;remote&quot;,
+            &quot;format&quot;: &quot;binary&quot;,
+            &quot;url&quot;: &quot;https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs&quot;,
+            &quot;download_detour&quot;: &quot;proxy&quot;,
+          },
+          {
+            &quot;tag&quot;: &quot;geoip-us&quot;,
+            &quot;type&quot;: &quot;remote&quot;,
+            &quot;format&quot;: &quot;binary&quot;,
+            &quot;url&quot;: &quot;https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-us.srs&quot;,
+            &quot;download_detour&quot;: &quot;proxy&quot;,
+          },
+          {
+            &quot;tag&quot;: &quot;geosite-cn&quot;,
+            &quot;type&quot;: &quot;remote&quot;,
+            &quot;format&quot;: &quot;binary&quot;,
+            &quot;url&quot;: &quot;https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs&quot;,
+            &quot;download_detour&quot;: &quot;proxy&quot;,
+          },
+        ],
+      &quot;auto_detect_interface&quot;: true,
+    },
+  &quot;experimental&quot;:
+    {
+      &quot;cache_file&quot;: { &quot;enabled&quot;: true, &quot;store_rdrc&quot;: true },
+      &quot;clash_api&quot;: { &quot;external_controller&quot;: &quot;127.0.0.1:9090&quot; },
+    },
+}
+</code></pre>
+<h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 其他</h2>
+<p>我发现当我使用代理程序时，使用频率比较高的大概是以下几个操作：</p>
+<ul>
+<li>开启代理</li>
+<li>关闭代理</li>
+<li>切换代理</li>
+</ul>
+<h3 id="heading-3"><a class="anchor" href="#heading-3">#</a> 开启代理</h3>
+<p>为了方便地开启代理，在根目录下写了如下脚本：</p>
+<ol>
+<li><code>sing-box.bat</code></li>
+</ol>
+<pre><code class="language-batch">@echo off
+start &quot;&quot; /b &quot;%~dp0sing-box.exe&quot; &quot;run&quot; &quot;-c&quot; &quot;%~dp0config.yaml&quot;
+exit
+</code></pre>
+<ol start="2">
+<li><code>sing-box.vbs</code></li>
+</ol>
+<pre><code class="language-vbs">Dim ws
+Set ws = CreateObject(&quot;Wscript.Shell&quot;)
+ws.run &quot;cmd /c &lt;Your Path&gt;\sing-box.bat&quot;,vbhide
+</code></pre>
+<p>前者负责运行 sing-box，后者负责移除 cmd 窗口。</p>
+<p>然后创建一个快捷方式，这里注意快捷方式的目标（target）需要修改为：<code>C:\Windows\System32\wscript.exe &lt;Your Path&gt;\sing-box.vbs</code>，并且使用管理员权限执行。</p>
+<p>将这个快捷方式加入到环境变量中，然后通过 Powertoys Run 调用。</p>
+<h3 id="heading-4"><a class="anchor" href="#heading-4">#</a> 关闭代理</h3>
+<p>PowerToys Run 有一个非常好用的插件，名叫 ProcessKiller，顾名思义，能够杀掉进程，很像 Linux 下的 pkill 命令，插件的 Github 地址如下：<a href="https://github.com/8LWXpg/PowerToysRun-ProcessKiller">Process Killer</a></p>
+<p>然后将插件的激活命令设置为 <code>kl</code>，唤出 PowerToys Run，输入 <code>kl sing-box&lt;Enter&gt;</code> 即可杀掉代理。</p>
+<h3 id="heading-5"><a class="anchor" href="#heading-5">#</a> 切换代理</h3>
+<p>由于 sing-box 支持 clash api，所以可以通过 api 进行代理的切换，但是目前还没有去做，等后面想出一个比较舒适的方式再进行补充。</p>
+</article>
+  </div>
+</body>
+
+</html>
