@@ -154,12 +154,12 @@
       {
         &quot;type&quot;: &quot;hysteria2&quot;,
         &quot;tag&quot;: &quot;proxy&quot;,
-        &quot;server&quot;: &quot;&lt;ip.addr&gt;&quot;,
-        &quot;server_port&quot;: 1500,
+        &quot;server&quot;: &quot;173.242.112.41&quot;,
+        &quot;server_port&quot;: 1522,
         &quot;server_ports&quot;: &quot;20000:50000&quot;,
         &quot;up_mbps&quot;: 0,
         &quot;down_mbps&quot;: 0,
-        &quot;password&quot;: &quot;&lt;password&gt;&quot;,
+        &quot;password&quot;: &quot;46115268&quot;,
         &quot;tls&quot;:
           { &quot;enabled&quot;: true, &quot;server_name&quot;: &quot;www.bing.com&quot;, &quot;insecure&quot;: true },
       },
@@ -172,6 +172,8 @@
           { &quot;action&quot;: &quot;sniff&quot; },
           { &quot;protocol&quot;: &quot;dns&quot;, &quot;action&quot;: &quot;hijack-dns&quot; },
           { &quot;ip_is_private&quot;: true, &quot;outbound&quot;: &quot;direct&quot; },
+          { &quot;clash_mode&quot;: &quot;Direct&quot;, &quot;outbound&quot;: &quot;direct&quot; },
+          { &quot;clash_mode&quot;: &quot;Global&quot;, &quot;outbound&quot;: &quot;proxy&quot; },
           { &quot;rule_set&quot;: [&quot;geoip-cn&quot;, &quot;geosite-cn&quot;], &quot;outbound&quot;: &quot;direct&quot; },
           {
             &quot;rule_set&quot;: &quot;geoip-us&quot;,
@@ -208,7 +210,8 @@
   &quot;experimental&quot;:
     {
       &quot;cache_file&quot;: { &quot;enabled&quot;: true, &quot;store_rdrc&quot;: true },
-      &quot;clash_api&quot;: { &quot;external_controller&quot;: &quot;127.0.0.1:9090&quot; },
+      &quot;clash_api&quot;:
+        { &quot;external_controller&quot;: &quot;127.0.0.1:9090&quot;, &quot;external_ui&quot;: &quot;ui&quot; },
     },
 }
 </code></pre>
@@ -242,7 +245,12 @@ ws.run &quot;cmd /c &lt;Your Path&gt;\sing-box.bat&quot;,vbhide
 <p>PowerToys Run 有一个非常好用的插件，名叫 ProcessKiller，顾名思义，能够杀掉进程，很像 Linux 下的 pkill 命令，插件的 Github 地址如下：<a href="https://github.com/8LWXpg/PowerToysRun-ProcessKiller">Process Killer</a></p>
 <p>然后将插件的激活命令设置为 <code>kl</code>，唤出 PowerToys Run，输入 <code>kl sing-box&lt;Enter&gt;</code> 即可杀掉代理。</p>
 <h3 id="heading-5"><a class="anchor" href="#heading-5">#</a> 切换代理</h3>
-<p>由于 sing-box 支持 clash api，所以可以通过 api 进行代理的切换，但是目前还没有去做，等后面想出一个比较舒适的方式再进行补充。</p>
+<p>由于 sing-box 支持 clash api，所以可以通过 api 进行代理的切换，而 sing-box 提供了一个 web ui，可以通过该 web ui 进行代理切换。</p>
+<pre><code class="language-json">&quot;clash_api&quot;:
+    { &quot;external_controller&quot;: &quot;127.0.0.1:9090&quot;, &quot;external_ui&quot;: &quot;ui&quot; },
+},
+</code></pre>
+<p>以上配置提供了该功能。</p>
 </article>
   </div>
 </body>
