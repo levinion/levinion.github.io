@@ -5,7 +5,7 @@ max_processes = 1
 contentOnlyPages = ["about"]
 
 [posts]
-excludeDirs = ["drafts", "latex"]
+excludeDirs = ["drafts", "latex", "templates"]
 
 [server]
 addr = "localhost:9000"

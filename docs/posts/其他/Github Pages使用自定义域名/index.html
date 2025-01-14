@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+
+<head>
+  
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script> 
+
+
+  <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
+      article {
+        max-width: 90%;
+      }
+
+      h1 {
+        font-size: large;
+      }
+
+      .date {
+        font-size: medium;
+      }
+
+      p,
+      li {
+        font-size: 15px;
+      }
+    }
+
+    p,
+    li {
+      font-size: 16.5px;
+      line-height: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      text-align: center;
+    }
+
+    .date {
+      text-align: center;
+    }
+
+    .toc {
+      position: fixed;
+      float: left;
+      max-width: 50px;
+      max-height: 50px;
+      margin-top: 200px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: x-large;
+      color: peru;
+    }
+
+    h3 {
+      font-size: large;
+      color: rgb(205, 158, 112);
+    }
+
+    h4 {
+      font-size: medium;
+      color: pink;
+    }
+
+    strong {
+      color: rgb(182, 230, 240);
+    }
+  </style>
+  <title>Github Pages使用自定义域名</title>
+</head>
+
+
+
+<body>
+  
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <div>
+    <div class="meta">
+      <h1>Github Pages使用自定义域名</h1>
+      <p>2025-01-14 21:05:52</p>
+    </div>
+    <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
+<p>有个域名闲置了，放着也是放着，于是想着把博客转到这个域名上，但又想使用 git 进行管理，幸好 Github Pages 提供了自定义域名功能。</p>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 流程</h2>
+<ol>
+<li>增加 DNS 记录</li>
+</ol>
+<p>对于一级域名，需要添加 A 记录指向 Github Pages 的服务器IP；本次使用的是二级域名，二级域名只需要增加一条 CNAME 记录即可。CNAME 记录即是一个主机别名，它指向一个域名，缓存有该域名对应的服务器 IP。像我的情况，只要配置 <code>blog.maruka.top</code> 指向 <code>levinion.github.io</code> 即可。</p>
+<ol start="2">
+<li>CNAME 文件</li>
+</ol>
+<p>在页面根目录（主页 <code>index.html</code> 同级目录）中新建一个 CNAME 文件，内容为新的域名，比如 <code>blog.maruka.top</code>。</p>
+<ol start="3">
+<li>添加自定义域名</li>
+</ol>
+<p>在 Github Pages 页面（repo 的设置界面中）中，添加域名，比如 <code>blog.maruka.top</code>。</p>
+<ol start="4">
+<li>打开 HTTPS</li>
+</ol>
+<p>打开 Enforce HTTPS 功能，Github Pages 会自动配置证书。这可能需要等待 DNS 记录更新才可用。</p>
+</article>
+  </div>
+</body>
+
+</html>
