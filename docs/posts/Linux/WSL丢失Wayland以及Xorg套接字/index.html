@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+
+<head>
+  
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script> 
+
+
+  <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
+      article {
+        max-width: 90%;
+      }
+
+      h1 {
+        font-size: large;
+      }
+
+      .date {
+        font-size: medium;
+      }
+
+      p,
+      li {
+        font-size: 15px;
+      }
+    }
+
+    p,
+    li {
+      font-size: 16.5px;
+      line-height: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      text-align: center;
+    }
+
+    .date {
+      text-align: center;
+    }
+
+    .toc {
+      position: fixed;
+      float: left;
+      max-width: 50px;
+      max-height: 50px;
+      margin-top: 200px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: x-large;
+      color: peru;
+    }
+
+    h3 {
+      font-size: large;
+      color: rgb(205, 158, 112);
+    }
+
+    h4 {
+      font-size: medium;
+      color: pink;
+    }
+
+    strong {
+      color: rgb(182, 230, 240);
+    }
+  </style>
+  <title>WSL丢失Wayland以及Xorg套接字</title>
+</head>
+
+
+
+<body>
+  
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <div>
+    <div class="meta">
+      <h1>WSL丢失Wayland以及Xorg套接字</h1>
+      <p>2025-01-19 17:24:42</p>
+    </div>
+    <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
+<p>WSL 启用 systemd，有时会发生丢失套接字的问题，这导致 wslg 无法正常工作。</p>
+<p>这可以通过建立 wslg 中套接字的软链接实现，但由于每次重启都会发生套接字的丢失，因此最好配置一个 oneshot 服务。</p>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 步骤</h2>
+<ol>
+<li>
+<p>首先确保 wslg 正确启用，并且能在 <code>/mnt/wslg/runtime-dir</code> 以及 <code>/mnt/wslg/.X11-unix</code> 目录下分别找到 <code>Wayland-0</code> 和 <code>X0</code> 套接字。</p>
+</li>
+<li>
+<p>然后在指定位置创建如下脚本和服务，并启用：</p>
+</li>
+</ol>
+<pre><code class="language-shell"># /etc/systemd/user/wslg-patch.sh
+ln -fs /mnt/wslg/runtime-dir/* /run/user/1000/
+ln -fs /mnt/wslg/.X11-unix/* /tmp/.X11-unix/
+
+&gt; sudo chmod +x wslg-patch.sh
+</code></pre>
+<pre><code class="language-shell"># /etc/systemd/user/wslg-patch.service
+[Service]
+Type=oneshot
+ExecStart=sh -c /etc/systemd/user/wslg-patch.sh
+
+[Install]
+WantedBy=default.target
+
+&gt; sudo systemctl --global enable wslg-patch
+</code></pre>
+<ol start="3">
+<li>重启 wsl，并且查看 <code>/run/user/1000</code> 目录下是否存在 <code>Wayland-0</code> 以及 <code>.X11-unix/X0</code>。</li>
+</ol>
+<h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 参考</h2>
+<ol>
+<li><a href="https://github.com/yuk7/ArchWSL/issues/357">Wayland socket is missing when Systemd enabled</a></li>
+<li><a href="https://github.com/microsoft/wslg/issues/558">wslg: Can&rsquo;t open display: :0 + X11 server is not running</a></li>
+</ol>
+</article>
+  </div>
+</body>
+
+</html>
