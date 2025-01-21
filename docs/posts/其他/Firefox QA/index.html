@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+
+<head>
+  
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script> 
+
+
+  <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
+      article {
+        max-width: 90%;
+      }
+
+      h1 {
+        font-size: large;
+      }
+
+      .date {
+        font-size: medium;
+      }
+
+      p,
+      li {
+        font-size: 15px;
+      }
+    }
+
+    p,
+    li {
+      font-size: 16.5px;
+      line-height: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      text-align: center;
+    }
+
+    .date {
+      text-align: center;
+    }
+
+    .toc {
+      position: fixed;
+      float: left;
+      max-width: 50px;
+      max-height: 50px;
+      margin-top: 200px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: x-large;
+      color: peru;
+    }
+
+    h3 {
+      font-size: large;
+      color: rgb(205, 158, 112);
+    }
+
+    h4 {
+      font-size: medium;
+      color: pink;
+    }
+
+    strong {
+      color: rgb(182, 230, 240);
+    }
+  </style>
+  <title>Firefox QA</title>
+</head>
+
+
+
+<body>
+  
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <div>
+    <div class="meta">
+      <h1>Firefox QA</h1>
+      <p>2025-01-20 22:17:34</p>
+    </div>
+    <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
+<p>因为最近 chrome 的 UI 渲染出了些问题，于是瞟了眼火狐。</p>
+<p>以前就想要转移到火狐，但因为没找到比 chrome 更舒服的网页翻译功能，所以被劝退。最近发现了一款名为“沉浸式翻译”的翻译插件，提供了类似chrome页面内翻译的功能，于是终于能够转移到火狐了。</p>
+<p>第一印象是：真的快。当然这也可能是插件比较少的原因。使用了几天，发现了一些相比chrome的不足之处。但火狐可定制性较强，经过一定的配置之后，大多问题都能得到解决。本篇就记录一下发现的问题与解决方式。</p>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 版本</h2>
+<p>Firefox Developer Edition 135.0b6（64位）</p>
+<h2 id="qa"><a class="anchor" href="#qa">#</a> QA</h2>
+<p>以下设置均在<code>about:config</code>中进行。</p>
+<h3 id="1-"><a class="anchor" href="#1-">#</a> 1. 显示语言为中文</h3>
+<p>ED版本默认没有除英文外的其他界面显示语言选项，需要在<code>about:config</code>里面开启以下两个选项。</p>
+<p><code>intl.multilingual.enabled</code></p>
+<p><code>intl.multilingual.downloadEnabled</code></p>
+<p>然后在设置中添加中文，并移动到首位。</p>
+<h3 id="2-"><a class="anchor" href="#2-">#</a> 2. 关闭进入全屏提示</h3>
+<p>视频全屏会有一条横幅提示进入全屏，我认为这是不必要的，因此进行设置以删除。</p>
+<p><code>full-screen-api.warning.timeout</code>设置为0</p>
+<h3 id="3-"><a class="anchor" href="#3-">#</a> 3. 全屏过渡动画太长</h3>
+<p>进入和离开全屏会有一段黑屏渐变动画，如果嫌弃它太过冗长，可以加快播放速度：</p>
+<p><code>full-screen-api.transition-duration.enter</code>设置为<code>30 50</code></p>
+<p><code>full-screen-api.transition-duration.leave</code>设置为<code>30 50</code></p>
+<p>如果想要完全关闭，设置为<code>0 0</code>；不建议这么做，因为屏幕会出现短暂闪烁。</p>
+<h3 id="4-"><a class="anchor" href="#4-">#</a> 4. 媒体音量小</h3>
+<p>火狐的默认音量较其他浏览器更小，这导致同时开启火狐和其他软件时的音量不统一。可以通过安装600%声音增强插件来单独更改页面的声音，但这仍然有些麻烦。因此可以通过以下配置修改全局音量比例：</p>
+<p><code>media.volume_scale</code>设置为1.5或2.0</p>
+<h3 id="5-"><a class="anchor" href="#5-">#</a> 5. 禁止错误恢复</h3>
+<p>当火狐处于运行状态并关机时，再次开机并打开火狐会提示无法恢复之前页面，而个人习惯并不需要恢复，并且也未设置打开以前页面选项。这个问题可以通过设置以下配置解决：</p>
+<p><code>browser.sessionstore.resume_from_crash</code>设置为<code>false</code></p>
+</article>
+  </div>
+</body>
+
+</html>
