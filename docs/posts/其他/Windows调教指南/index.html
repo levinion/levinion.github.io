@@ -149,8 +149,15 @@ explorer.exe
 taskkill /F /IM explorer.exe
 explorer.exe
 </code></pre>
+<h2 id="-utc"><a class="anchor" href="#-utc">#</a> 启用 UTC</h2>
+<p>Windows默认使用RTC（Real-Time Clock），而如果是多系统，则其它系统（Linux）使用UTC（Universal Time Coordinated），可能导致系统时间出现错乱，一般执行以下命令修改注册表以启用 UTC ：</p>
+<pre><code class="language-powershell\">Reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsUniversal /t REG_DWORD /d 1
+</code></pre>
+<h2 id="heading-4"><a class="anchor" href="#heading-4">#</a> 永久关闭快速启动</h2>
+<pre><code class="language-powershell\">Reg add HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System /v HiberbootEnabled /t REG_DWORD /d 0
+</code></pre>
 <h2 id="wsl"><a class="anchor" href="#wsl">#</a> WSL</h2>
-<h3 id="heading-4"><a class="anchor" href="#heading-4">#</a> 安装</h3>
+<h3 id="heading-5"><a class="anchor" href="#heading-5">#</a> 安装</h3>
 <p>对于习惯在 Linux 下工作的人来说，WSL 是必要的。</p>
 <p>在安装前，需要确保适用于 Windows 的 Linux 子系统和虚拟机平台已开启。开始菜单进入“启用或关闭 Windows 功能”，勾选 Windows 的 Linux 子系统和虚拟机平台。如果有虚拟机需求，也可以勾选启用 Hyper-V，当然这不是必须的。</p>
 <p>cmd 中运行 <code>wsl --install</code> 即可安装默认的 Ubuntu 发行版，<code>wsl --install -d</code> 可以显式指定要安装的发行版，如 Debian。</p>
@@ -161,11 +168,11 @@ explorer.exe
 sudo ln -s /mnt/c/Windows/Fonts /usr/share/fonts/font
 fc-cache -fv
 </code></pre>
-<h2 id="heading-5"><a class="anchor" href="#heading-5">#</a> 快捷键</h2>
+<h2 id="heading-6"><a class="anchor" href="#heading-6">#</a> 快捷键</h2>
 <p>Windows 有着一组快捷键的预设值，而且无法修改。特别是 Win 键，其位置较好，非常适合作为 Meta 键使用，但是其绑定的快捷键只有部分会使用到，并且很难重设，因此自定义困难。AutoHotkey 能够重新绑定 Win 键，且功能成熟，但由于其常被用作脚本外挂，因此有被红信的风险。</p>
 <p>好在 Powertoys 提供了 Keyboard Manager 工具，能够实现改键功能，或是执行脚本。基于此，我们可以摆脱讨厌的 Win 键，将其用作 Meta 键以执行自定义指令。但是，这仍有局限。在 Win10 上，一切似乎运行正常；在 24H2 上，即使经过改键，仍然可能会弹出开始菜单。</p>
 <p>那么使用 Alt 又如何呢？一切似乎都很棒，但是如果你使用 blender 或是 ps 等等，alt 绑定其他键就成了一场灾难。目前我的解决措施是使用 <code>Alt+Ctrl+Shift</code> 作为 Meta 键。是的，你没有看错。如何一键发送三个键位？我使用 wooting 的 dks，而你需要一把支持 dks 的磁轴键盘（doge）。</p>
-<h3 id="heading-6"><a class="anchor" href="#heading-6">#</a> 窗口</h3>
+<h3 id="heading-7"><a class="anchor" href="#heading-7">#</a> 窗口</h3>
 <p>Windows 自带的快捷键实现了部分窗口控制能力，如 alt+f4 关闭窗口等，但其他窗口控制，如最大化、最小化并未实现，且 alt+f4 并非对所有窗口都有效。因此我基于 winapi 写了个工具包，实现了一些包括窗口和虚拟桌面控制的基本命令：<a href="https://github.com/levinion/wtools">wtools</a></p>
 </article>
   </div>

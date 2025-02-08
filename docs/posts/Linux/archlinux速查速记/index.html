@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+
+<head>
+  
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script> 
+
+
+  <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
+      article {
+        max-width: 90%;
+      }
+
+      h1 {
+        font-size: large;
+      }
+
+      .date {
+        font-size: medium;
+      }
+
+      p,
+      li {
+        font-size: 15px;
+      }
+    }
+
+    p,
+    li {
+      font-size: 16.5px;
+      line-height: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      text-align: center;
+    }
+
+    .date {
+      text-align: center;
+    }
+
+    .toc {
+      position: fixed;
+      float: left;
+      max-width: 50px;
+      max-height: 50px;
+      margin-top: 200px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: x-large;
+      color: peru;
+    }
+
+    h3 {
+      font-size: large;
+      color: rgb(205, 158, 112);
+    }
+
+    h4 {
+      font-size: medium;
+      color: pink;
+    }
+
+    strong {
+      color: rgb(182, 230, 240);
+    }
+  </style>
+  <title>archlinux速查速记</title>
+</head>
+
+
+
+<body>
+  
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <div>
+    <div class="meta">
+      <h1>archlinux速查速记</h1>
+      <p>2025-02-08 15:54:52</p>
+    </div>
+    <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 中文输入法</h2>
+<p>安装 fcitx5、rime：</p>
+<pre><code class="language-shell">paru -S fcitx5-im fcitx5-rime
+</code></pre>
+<p>设置环境变量</p>
+<pre><code class="language-shell">set -gx QT_IM_MODULE fcitx5
+set -gx GTK_IM_MODULE fcitx5
+set -gx XMODIFIERS &quot;@im=fcitx5&quot;
+set -gx XIM fcitx5
+set -gx XIM_PROGRAM fcitx5
+set -gx SDL_IM_MODULE fcitx5
+set -gx INPUT_METHOD fcitx5
+set -gx GLFW_IM_MODULE ibus
+</code></pre>
+<p>修改fcitx5配置：</p>
+<pre><code class="language-shell">fcitx5-configtool
+</code></pre>
+<p>修改rime配置，默认配置文件夹路径为：</p>
+<pre><code>~/.local/share/fcitx5/rime/
+</code></pre>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 显卡驱动</h2>
+<p>首先查询显卡型号：</p>
+<pre><code class="language-shell">lspci -k -d ::03xx
+</code></pre>
+<p>对于40系之后较新的显卡，建议安装<code>nvidia-open-beta-dkms</code>：</p>
+<pre><code class="language-shell">paru -S nvidia-open-beta-dkms nvidia-utils-beta lib32-nvidia-utils-beta nvidia-settings
+</code></pre>
+<p>修改<code>/etc/mkinitcpio.conf</code>，删除HOOKS数组中的<code>kms</code>，结果如下：</p>
+<pre><code class="language-shell">HOOKS=(base udev autodetect microcode modconf keyboard keymap consolefont block filesystems fsck)
+</code></pre>
+<p>重新生成initramfs</p>
+<pre><code class="language-shell">mkinitcpio -P
+</code></pre>
+<h2 id="hidpi"><a class="anchor" href="#hidpi">#</a> HIDPI</h2>
+<p>对于GDK和QT程序，设置如下环境变量：</p>
+<pre><code class="language-shell">set -gx GDK_DPI_SCALE 0.5
+set -gx GDK_SCALE 2
+set -gx XCURSOR_SIZE 32
+set -gx QT_AUTO_SCREEN_SCALE_FACTOR 2
+set -gx QT_ENABLE_HIGHDPI_SCALING 0
+set -gx QT_SCALE_FACTOR 2
+</code></pre>
+<p>对于火狐，进入about:config界面，修改<code>layout.css.devPixelsPerPx</code>属性，调整到满意为止。</p>
+<p>对于electron；</p>
+<pre><code class="language-shell">echo &quot;--force-device-scale-factor=2&quot; &gt; ~/.config/electron-flags.conf
+</code></pre>
+<h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 更换内核</h2>
+<pre><code class="language-shell">paru -S linux-zen linux-zen-headers
+</code></pre>
+<p>修改<code>/etc/default/grub</code>：</p>
+<pre><code class="language-shell">GRUB_DISABLE_SUBMENU=y
+</code></pre>
+<pre><code class="language-shell">update-grub
+</code></pre>
+<p>重启确保没有错误后可以删除原内核：</p>
+<pre><code class="language-shell">paru -Rsn linux linux-headers
+update-grub
+</code></pre>
+<h2 id="grub"><a class="anchor" href="#grub">#</a> 禁用GRUB倒计时</h2>
+<pre><code class="language-shell">sudoedit /etc/default/grub
+</code></pre>
+<p>修改配置文件：</p>
+<pre><code class="language-shell">GRUB_TIMEOUT=-1
+</code></pre>
+<pre><code class="language-shell">update-grub
+</code></pre>
+<h2 id="steam"><a class="anchor" href="#steam">#</a> steam</h2>
+<pre><code class="language-shell">paru -S steam
+</code></pre>
+<p>如果想要静默启动，执行：</p>
+<pre><code class="language-shell">steam -nochatui -nofriendsui -silent
+</code></pre>
+<p>对于linux，建议使用proton-ge，并在兼容性设置中选择：</p>
+<pre><code class="language-shell">paru -S proton-ge-custom-bin
+</code></pre>
+<h3 id="ntfs"><a class="anchor" href="#ntfs">#</a> 对于ntfs文件系统</h3>
+<p>一般建议使用ext4或btrfs等文件系统存放游戏文件，因为ntfs上的steam库并非开箱即用的。但通过一定设置，它是可以正常使用的。</p>
+<ol>
+<li>安装ntfs-3g</li>
+</ol>
+<pre><code class="language-shell">paru -S ntfs-3g
+</code></pre>
+<ol start="2">
+<li>获取uuid：</li>
+</ol>
+<pre><code class="language-shell">sudo blkid /dev/&lt;your disk&gt; | awk '{print $3}' | awk -F'&quot;' '{print $2}'
+</code></pre>
+<ol start="3">
+<li>写fstab</li>
+</ol>
+<pre><code class="language-shell">sudoedit /etc/fstab
+</code></pre>
+<p>新增以下内容，填写上面获取到的uuid：</p>
+<pre><code class="language-shell">UUID=&lt;your uuid&gt; /media/d lowntfs-3g uid=1000,gid=1000,rw,user,exec,umask=000 0 0
+</code></pre>
+<ol start="4">
+<li>重启；</li>
+</ol>
+<pre><code class="language-shell">reboot
+</code></pre>
+<ol start="5">
+<li>如果不起作用，链接本地的compatdata到库的steamapps文件夹</li>
+</ol>
+<pre><code class="language-shell">ln -s /&lt;local steam path&gt;/steamapps/compatdata /&lt;remote steam path&gt;/steamapps/
+</code></pre>
+<p>其中，本地steam文件夹路径一般为<code>~/.steam/root</code></p>
+</article>
+  </div>
+</body>
+
+</html>
