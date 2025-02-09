@@ -184,6 +184,8 @@ ro.hardware.egl=swiftshader
 <p>重启waydroid-container服务：</p>
 <pre><code class="language-shell">sudo systemctl restart waydroid-container
 </code></pre>
+<p>该文件在执行<code>sudo waydroid-extras</code>后会被覆盖，因此如果出现无法显示ui界面的情况，请第一时间确认该文件配置是否正确。</p>
+<p>修改后如果不起作用，尝试重启。</p>
 <h2 id="heading-5"><a class="anchor" href="#heading-5">#</a> 启动游戏</h2>
 <h3 id="adb"><a class="anchor" href="#adb">#</a> 安装adb</h3>
 <p>我们需要adb来与设备交互，如果你没有安装过adb，执行：</p>
@@ -201,13 +203,45 @@ List of devices attached
 </code></pre>
 <p>然后可以在系统中看到游戏已成功安装，如果ARM翻译库正常作用，这时游戏应当就能运行了。</p>
 <h2 id="heading-8"><a class="anchor" href="#heading-8">#</a> 其他设置</h2>
+<h3 id="waydroid-1"><a class="anchor" href="#waydroid-1">#</a> waydroid</h3>
 <p>使用以下命令以设置设备分辨率（前提是保证waydroid的分辨率小于窗口分辨率）</p>
 <pre><code class="language-shell">waydroid prop set persist.waydroid.width &lt;number&gt;
 waydroid prop set persist.waydroid.height &lt;number&gt;
 </code></pre>
-<p>使用以下命令取消waydroid的自动锁定：</p>
+<p>使用以下命令取消waydroid的睡眠：</p>
 <pre><code class="language-shell">waydroid prop set persist.waydroid.suspend off
 </code></pre>
+<h3 id="weston"><a class="anchor" href="#weston">#</a> weston</h3>
+<p>针对使用weston的用户，可以按照需求修改配置文件：</p>
+<pre><code class="language-shell">[core]
+xwayland=false
+idle-time=0
+
+[keyboard]
+keymap_layout=gb
+
+[output]
+name=screen0
+mode=1024x600
+
+[launcher]
+icon=/usr/share/icons/AdwaitaLegacy/24x24/legacy/utilities-terminal.png
+path=/usr/bin/weston-terminal
+
+[autolaunch]
+path=&lt;脚本的绝对路径&gt;
+watch=false
+</code></pre>
+<p>比较重要的是<code>idle-time</code>，将其设置为0以阻止weston的自动锁定。可以使用autolaunch功能自动执行启动脚本。以下脚本开启weston时自动打开安卓应用程序：</p>
+<pre><code class="language-shell">#!/bin/bash
+waydroid session stop
+waydroid session start &amp;
+waydroid show-full-ui &amp;
+sleep 15
+waydroid app launch com.bilibili.azurlane
+</code></pre>
+<p>weston有个比较坑的点是它不支持相对路径，在配置文件中必须使用绝对路径，甚至不支持<code>～</code>扩展和<code>$HOME</code>环境变量。</p>
+<p>另外，weston默认不读任何位置的配置文件，需要使用<code>-c</code>来指定配置文件路径，这里它支持<code>～</code>和<code>$HOME</code>了，但是仍然不支持相对路径（汗），注意即可。</p>
 </article>
   </div>
 </body>
