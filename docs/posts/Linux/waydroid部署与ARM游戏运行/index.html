@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+
+<head>
+  
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script> 
+
+
+  <style>
+    article {
+      background: rgb(28, 29, 33);
+      max-width: 70%;
+      text-align: left;
+      margin: 0 auto;
+      border-radius: 30px;
+    }
+
+    @media (max-width: 768px) {
+      article {
+        max-width: 90%;
+      }
+
+      h1 {
+        font-size: large;
+      }
+
+      .date {
+        font-size: medium;
+      }
+
+      p,
+      li {
+        font-size: 15px;
+      }
+    }
+
+    p,
+    li {
+      font-size: 16.5px;
+      line-height: 32px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .meta p {
+      text-align: center;
+    }
+
+    .date {
+      text-align: center;
+    }
+
+    .toc {
+      position: fixed;
+      float: left;
+      max-width: 50px;
+      max-height: 50px;
+      margin-top: 200px;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: x-large;
+      color: peru;
+    }
+
+    h3 {
+      font-size: large;
+      color: rgb(205, 158, 112);
+    }
+
+    h4 {
+      font-size: medium;
+      color: pink;
+    }
+
+    strong {
+      color: rgb(182, 230, 240);
+    }
+  </style>
+  <title>waydroid部署与ARM游戏运行</title>
+</head>
+
+
+
+<body>
+  
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+  <div>
+    <div class="meta">
+      <h1>waydroid部署与ARM游戏运行</h1>
+      <p>2025-02-09 20:19:52</p>
+    </div>
+    <article><p>在Linux系统上运行安卓游戏是有困难的，因为大多数安卓模拟器都只支持Windows。目前比较好的方案大概只有Waydroid了。Waydroid是Anbox项目的后继者，提供了在X86架构下运行安卓的方案。至于Arm，就需要依靠Arm转译库了。</p>
+<h2 id="wayland"><a class="anchor" href="#wayland">#</a> 准备Wayland</h2>
+<p>Waydroid只能在Wayland下运行，因此需要一个Wayland环境。如果已经在使用Wayland可以跳过这步。对于那些X11用户，可以安装Weston，它提供了一种在X11上运行Wayland容器的方法。</p>
+<pre><code class="language-shell">paru -S weston
+</code></pre>
+<h2 id="heading"><a class="anchor" href="#heading">#</a> 特定模块的内核</h2>
+<p>你需要具有特定模块（binder）的内核来运行waydroid，最简单的方式是使用<code>linux-zen</code>内核。当然如果你使用其他不包含该模块的内核，可以使用dkms来添加该模块：</p>
+<pre><code class="language-shell">paru -S binder_linux-dkms
+</code></pre>
+<h2 id="waydroid"><a class="anchor" href="#waydroid">#</a> 部署Waydroid</h2>
+<p>首先安装waydroid；</p>
+<pre><code class="language-shell">paru -S waydroid
+</code></pre>
+<p>然后初始化；</p>
+<pre><code class="language-shell">waydroid init
+</code></pre>
+<p>启用waydroid容器：</p>
+<pre><code class="language-shell">sudo systemctl enable waydroid-container --now
+</code></pre>
+<p>打开weston，并在其中运行：</p>
+<pre><code class="language-shell">waydroid session start
+</code></pre>
+<p>以及</p>
+<pre><code class="language-shell">waydroid show-full-ui
+</code></pre>
+<p>如果一切正常，你应该能看到ui界面。</p>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 安装额外组件</h2>
+<p>为求方便，安装：</p>
+<pre><code class="language-shell">paru -S waydroid-script-git
+</code></pre>
+<p>这个包提供了一些方便的脚本来管理waydroid组件。</p>
+<p>运行以下命令，并选择安装gapps和libndk/libhoudini（注意选择Android11）。一般来说，amd cpu选择libndk，intel cpu选择libhoudini会具有更好的性能。</p>
+<pre><code class="language-shell">sudo waydroid-extras
+</code></pre>
+<p>重启waydroid-container服务：</p>
+<pre><code class="language-shell">sudo systemctl restart waydroid-container
+</code></pre>
+<h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 注册设备</h2>
+<p>我们需要注册设备以保证谷歌服务能够正常使用：</p>
+<pre><code class="language-shell">sudo waydroid-extras
+</code></pre>
+<p>选择<code>Get Google Device ID to Get Certified</code>，并根据提示操作以注册设备id。之后等待十分钟左右以等待注册完毕。</p>
+<h2 id="heading-3"><a class="anchor" href="#heading-3">#</a> 问题排查</h2>
+<h3 id="heading-4"><a class="anchor" href="#heading-4">#</a> 日志</h3>
+<p>如果发现问题，首先查看日志：</p>
+<pre><code class="language-shell">cat /var/lib/waydroid/waydroid.log
+</code></pre>
+<h3 id="pulse"><a class="anchor" href="#pulse">#</a> 未找到pulse</h3>
+<pre><code>No such file or directory - Failed to mount &quot;/run/user/1000/pulse/native&quot; onto &quot;/usr/lib/lxc/rootfs/run/xdg/pulse/native&quot;
+</code></pre>
+<p>waydroid依赖libpulse，如果你使用pipewire，需要安装；</p>
+<pre><code class="language-shell">paru -S pipewire-pulse
+</code></pre>
+<h3 id="nvidia"><a class="anchor" href="#nvidia">#</a> Nvidia</h3>
+<p>由于waydroid不支持N卡的硬件加速，因此需要使用软件渲染。</p>
+<pre><code class="language-shell">sudoedit /var/lib/waydroid/waydroid_base.prop
+</code></pre>
+<p>然后修改以下两项：</p>
+<pre><code class="language-shell">ro.hardware.gralloc=default
+ro.hardware.egl=swiftshader
+</code></pre>
+<p>重启waydroid-container服务：</p>
+<pre><code class="language-shell">sudo systemctl restart waydroid-container
+</code></pre>
+<h2 id="heading-5"><a class="anchor" href="#heading-5">#</a> 启动游戏</h2>
+<h3 id="adb"><a class="anchor" href="#adb">#</a> 安装adb</h3>
+<p>我们需要adb来与设备交互，如果你没有安装过adb，执行：</p>
+<pre><code>paru -S android-tools
+</code></pre>
+<p>然后重启。</p>
+<h3 id="heading-6"><a class="anchor" href="#heading-6">#</a> 获取设备</h3>
+<p>如果adb能够正常获取到设备信息，表示waydroid已正常运行：</p>
+<pre><code class="language-shell">&gt; adb devices
+List of devices attached
+192.168.240.112:5555	device
+</code></pre>
+<h3 id="heading-7"><a class="anchor" href="#heading-7">#</a> 安装游戏</h3>
+<pre><code class="language-shell">adb install xxx.apk
+</code></pre>
+<p>然后可以在系统中看到游戏已成功安装，如果ARM翻译库正常作用，这时游戏应当就能运行了。</p>
+<h2 id="heading-8"><a class="anchor" href="#heading-8">#</a> 其他设置</h2>
+<p>使用以下命令以设置设备分辨率（前提是保证waydroid的分辨率小于窗口分辨率）</p>
+<pre><code class="language-shell">waydroid prop set persist.waydroid.width &lt;number&gt;
+waydroid prop set persist.waydroid.height &lt;number&gt;
+</code></pre>
+<p>使用以下命令取消waydroid的自动锁定：</p>
+<pre><code class="language-shell">waydroid prop set persist.waydroid.suspend off
+</code></pre>
+</article>
+  </div>
+</body>
+
+</html>
