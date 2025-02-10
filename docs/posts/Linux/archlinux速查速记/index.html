@@ -166,6 +166,9 @@ set -gx QT_SCALE_FACTOR 2
 <p>对于electron；</p>
 <pre><code class="language-shell">echo &quot;--force-device-scale-factor=2&quot; &gt; ~/.config/electron-flags.conf
 </code></pre>
+<p>但是一些electron应用不会读electron-flags，此时修改<code>.desktop</code>文件，路径一般为：<code>/usr/share/applications/</code>。在Exec中修改：</p>
+<pre><code class="language-shell">Exec=/usr/bin/code --force-device-scale-factor=2 %F
+</code></pre>
 <h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 更换内核</h2>
 <pre><code class="language-shell">paru -S linux-zen linux-zen-headers
 </code></pre>
@@ -226,6 +229,11 @@ update-grub
 <pre><code class="language-shell">ln -s /&lt;local steam path&gt;/steamapps/compatdata /&lt;remote steam path&gt;/steamapps/
 </code></pre>
 <p>其中，本地steam文件夹路径一般为<code>~/.steam/root</code></p>
+<h2 id="heading-3"><a class="anchor" href="#heading-3">#</a> 其他</h2>
+<h3 id="validity-check"><a class="anchor" href="#validity-check">#</a> 跳过validity check</h3>
+<p>对于一些SHA256错误的包，可以使用以下flag跳过验证（保证安全的前提下）：</p>
+<pre><code class="language-shell">paru -S --mflags --skipinteg
+</code></pre>
 </article>
   </div>
 </body>
