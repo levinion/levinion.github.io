@@ -176,16 +176,16 @@ def run(command):
 def main():
     command = &quot; &quot;.join(sys.argv[1:])
     print(command)
-    pid = None
-    try:
-        pid = get_pid_by_name(command)
-    except subprocess.CalledProcessError:
-        run([&quot;bash&quot;, &quot;-c&quot;, command])
-        time.sleep(5)
-        pid = get_pid_by_name(command)
-    assert pid is not None
-    memory = get_memory_by_pid(pid)
     while 1:
+        pid = None
+        try:
+            pid = get_pid_by_name(command)
+        except subprocess.CalledProcessError:
+            run([&quot;bash&quot;, &quot;-c&quot;, command])
+            time.sleep(5)
+            pid = get_pid_by_name(command)
+        assert pid is not None
+        memory = get_memory_by_pid(pid)
         if memory &gt;= 32 * 1024 * 1024:
             os.kill(pid, 9)
             run([&quot;bash&quot;, &quot;-c&quot;, command])
