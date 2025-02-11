@@ -1,103 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html data-theme="dark">
-
-<head>
-  
+  <head>
+    
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/assets/css/pico.css" />
 <link rel="stylesheet" href="/assets/css/custom.css" />
-<link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 <script>
-    hljs.initHighlightingOnLoad();
-</script> 
+  hljs.initHighlightingOnLoad();
+</script>
 
 
-  <style>
-    article {
-      background: rgb(28, 29, 33);
-      max-width: 70%;
-      text-align: left;
-      margin: 0 auto;
-      border-radius: 30px;
-    }
-
-    @media (max-width: 768px) {
+    <style>
       article {
-        max-width: 90%;
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
       }
 
-      h1 {
-        font-size: large;
-      }
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
 
-      .date {
-        font-size: medium;
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
       }
 
       p,
       li {
-        font-size: 15px;
+        font-size: 16.5px;
+        line-height: 32px;
       }
-    }
 
-    p,
-    li {
-      font-size: 16.5px;
-      line-height: 32px;
-    }
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
+      .meta p {
+        text-align: center;
+      }
 
-    .meta p {
-      text-align: center;
-    }
+      .date {
+        text-align: center;
+      }
 
-    .date {
-      text-align: center;
-    }
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
 
-    .toc {
-      position: fixed;
-      float: left;
-      max-width: 50px;
-      max-height: 50px;
-      margin-top: 200px;
-      text-align: center;
-    }
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
 
-    h2 {
-      font-size: x-large;
-      color: peru;
-    }
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
 
-    h3 {
-      font-size: large;
-      color: rgb(205, 158, 112);
-    }
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
 
-    h4 {
-      font-size: medium;
-      color: pink;
-    }
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
+    <title>waydroid部署与ARM游戏运行</title>
+  </head>
 
-    strong {
-      color: rgb(182, 230, 240);
-    }
-  </style>
-  <title>waydroid部署与ARM游戏运行</title>
-</head>
-
-
-
-<body>
   
+  
+  <body>
+    
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
   <div class="breadcrumb">
@@ -115,12 +116,12 @@
   </div>
 </nav>
 
-  <div>
-    <div class="meta">
-      <h1>waydroid部署与ARM游戏运行</h1>
-      <p>2025-02-09 20:19:52</p>
-    </div>
-    <article><p>在Linux系统上运行安卓游戏是有困难的，因为大多数安卓模拟器都只支持Windows。目前比较好的方案大概只有Waydroid了。Waydroid是Anbox项目的后继者，提供了在X86架构下运行安卓的方案。至于Arm，就需要依靠Arm转译库了。</p>
+    <div>
+      <div class="meta">
+        <h1>waydroid部署与ARM游戏运行</h1>
+        <p>2025-02-09 20:19:52</p>
+      </div>
+      <article><p>在Linux系统上运行安卓游戏是有困难的，因为大多数安卓模拟器都只支持Windows。目前比较好的方案大概只有Waydroid了。Waydroid是Anbox项目的后继者，提供了在X86架构下运行安卓的方案。至于Arm，就需要依靠Arm转译库了。</p>
 <h2 id="wayland"><a class="anchor" href="#wayland">#</a> 准备Wayland</h2>
 <p>Waydroid只能在Wayland下运行，因此需要一个Wayland环境。如果已经在使用Wayland可以跳过这步。对于那些X11用户，可以安装Weston，它提供了一种在X11上运行Wayland容器的方法。</p>
 <pre><code class="language-shell">paru -S weston
@@ -243,7 +244,6 @@ waydroid app launch com.bilibili.azurlane
 <p>weston有个比较坑的点是它不支持相对路径，在配置文件中必须使用绝对路径，甚至不支持<code>～</code>扩展和<code>$HOME</code>环境变量。</p>
 <p>另外，weston默认不读任何位置的配置文件，需要使用<code>-c</code>来指定配置文件路径，这里它支持<code>～</code>和<code>$HOME</code>了，但是仍然不支持相对路径（汗），注意即可。</p>
 </article>
-  </div>
-</body>
-
+    </div>
+  </body>
 </html>

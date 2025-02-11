@@ -1,103 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html data-theme="dark">
-
-<head>
-  
+  <head>
+    
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/assets/css/pico.css" />
 <link rel="stylesheet" href="/assets/css/custom.css" />
-<link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 <script>
-    hljs.initHighlightingOnLoad();
-</script> 
+  hljs.initHighlightingOnLoad();
+</script>
 
 
-  <style>
-    article {
-      background: rgb(28, 29, 33);
-      max-width: 70%;
-      text-align: left;
-      margin: 0 auto;
-      border-radius: 30px;
-    }
-
-    @media (max-width: 768px) {
+    <style>
       article {
-        max-width: 90%;
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
       }
 
-      h1 {
-        font-size: large;
-      }
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
 
-      .date {
-        font-size: medium;
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
       }
 
       p,
       li {
-        font-size: 15px;
+        font-size: 16.5px;
+        line-height: 32px;
       }
-    }
 
-    p,
-    li {
-      font-size: 16.5px;
-      line-height: 32px;
-    }
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
+      .meta p {
+        text-align: center;
+      }
 
-    .meta p {
-      text-align: center;
-    }
+      .date {
+        text-align: center;
+      }
 
-    .date {
-      text-align: center;
-    }
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
 
-    .toc {
-      position: fixed;
-      float: left;
-      max-width: 50px;
-      max-height: 50px;
-      margin-top: 200px;
-      text-align: center;
-    }
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
 
-    h2 {
-      font-size: x-large;
-      color: peru;
-    }
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
 
-    h3 {
-      font-size: large;
-      color: rgb(205, 158, 112);
-    }
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
 
-    h4 {
-      font-size: medium;
-      color: pink;
-    }
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
+    <title>WSL丢失Wayland以及Xorg套接字</title>
+  </head>
 
-    strong {
-      color: rgb(182, 230, 240);
-    }
-  </style>
-  <title>WSL丢失Wayland以及Xorg套接字</title>
-</head>
-
-
-
-<body>
   
+  
+  <body>
+    
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
   <div class="breadcrumb">
@@ -115,12 +116,12 @@
   </div>
 </nav>
 
-  <div>
-    <div class="meta">
-      <h1>WSL丢失Wayland以及Xorg套接字</h1>
-      <p>2025-01-19 17:24:42</p>
-    </div>
-    <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
+    <div>
+      <div class="meta">
+        <h1>WSL丢失Wayland以及Xorg套接字</h1>
+        <p>2025-01-19 17:24:42</p>
+      </div>
+      <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
 <p>WSL 启用 systemd，有时会发生丢失套接字的问题，这导致 wslg 无法正常工作。</p>
 <p>这可以通过建立 wslg 中套接字的软链接实现，但由于每次重启都会发生套接字的丢失，因此最好配置一个 oneshot 服务。</p>
 <h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 步骤</h2>
@@ -157,7 +158,6 @@ WantedBy=default.target
 <li><a href="https://github.com/microsoft/wslg/issues/558">wslg: Can&rsquo;t open display: :0 + X11 server is not running</a></li>
 </ol>
 </article>
-  </div>
-</body>
-
+    </div>
+  </body>
 </html>

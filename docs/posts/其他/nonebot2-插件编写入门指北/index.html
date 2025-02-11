@@ -1,103 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html data-theme="dark">
-
-<head>
-  
+  <head>
+    
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/assets/css/pico.css" />
 <link rel="stylesheet" href="/assets/css/custom.css" />
-<link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 <script>
-    hljs.initHighlightingOnLoad();
-</script> 
+  hljs.initHighlightingOnLoad();
+</script>
 
 
-  <style>
-    article {
-      background: rgb(28, 29, 33);
-      max-width: 70%;
-      text-align: left;
-      margin: 0 auto;
-      border-radius: 30px;
-    }
-
-    @media (max-width: 768px) {
+    <style>
       article {
-        max-width: 90%;
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
       }
 
-      h1 {
-        font-size: large;
-      }
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
 
-      .date {
-        font-size: medium;
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
       }
 
       p,
       li {
-        font-size: 15px;
+        font-size: 16.5px;
+        line-height: 32px;
       }
-    }
 
-    p,
-    li {
-      font-size: 16.5px;
-      line-height: 32px;
-    }
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
+      .meta p {
+        text-align: center;
+      }
 
-    .meta p {
-      text-align: center;
-    }
+      .date {
+        text-align: center;
+      }
 
-    .date {
-      text-align: center;
-    }
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
 
-    .toc {
-      position: fixed;
-      float: left;
-      max-width: 50px;
-      max-height: 50px;
-      margin-top: 200px;
-      text-align: center;
-    }
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
 
-    h2 {
-      font-size: x-large;
-      color: peru;
-    }
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
 
-    h3 {
-      font-size: large;
-      color: rgb(205, 158, 112);
-    }
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
 
-    h4 {
-      font-size: medium;
-      color: pink;
-    }
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
+    <title>Nonebot2-插件编写入门指北</title>
+  </head>
 
-    strong {
-      color: rgb(182, 230, 240);
-    }
-  </style>
-  <title>Nonebot2-插件编写入门指北</title>
-</head>
-
-
-
-<body>
   
+  
+  <body>
+    
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
   <div class="breadcrumb">
@@ -115,12 +116,12 @@
   </div>
 </nav>
 
-  <div>
-    <div class="meta">
-      <h1>Nonebot2-插件编写入门指北</h1>
-      <p>2022-11-29 13:37:42</p>
-    </div>
-    <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 指北请注意</h2>
+    <div>
+      <div class="meta">
+        <h1>Nonebot2-插件编写入门指北</h1>
+        <p>2022-11-29 13:37:42</p>
+      </div>
+      <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 指北请注意</h2>
 <p>nonebot2 是一个由 python 编写的跨平台异步机器人框架，对那些想拥有一个自己的机器人的人来说，nonebot2 是一个理想的选择。nonebot2 学习门槛不高——你所需要的只是一些 python 基础。如果你没有学过 python，但有其他编程语言基础，那也没有关系；因为我也将近一年多没有接触过 python 编程，和初学者没有什么两样，因此如果代码稀烂的话还请多多谅解。</p>
 <p>写这篇文章的部分原因是因为官网的教程过于简约（？）或零碎，而且少有代码范例，对想要深入实践编写插件的人造成了一定困难；另一部分也是作为这几天编写插件经验的总结。本文风格偏重实践，并不打算事无巨细地讲清楚内在原理；这其实是我知识不足的原因。因此如果想要同时搞清楚理论的话，我会尽量给出参考的链接。如果正在阅读这篇文章的你能够知道“我写这篇文章的同时也是在和你一同学习”的话，那可就太好了。</p>
 <p>在正文开始前，你应当已经做到了以下几点：</p>
@@ -326,7 +327,6 @@ async def _reply():
 </code></pre>
 <p>给出了这个函数，结合你学到的知识，你应该能够轻松看懂这个程序，因此就程序不做讲解了。与之相比，我想要说的是干扰性的问题。我们通常难以对概率有一个清楚的认知，要知道，一般抽卡手游的概率可是 2%左右，即使是 10%的概率也是天文数字。在一个活跃的群里，10%的概率意味着每隔几秒机器人就会发一次言；但是在一个冷门的群里，大家一天只发一两句话，那么机器人几乎不可能发言。在后一种情况下，这个功能其实可有可无，也不存在干扰的问题；但在前者，我们就需要降低概率，甚至添加冷却时间以防止连续触发。</p>
 </article>
-  </div>
-</body>
-
+    </div>
+  </body>
 </html>

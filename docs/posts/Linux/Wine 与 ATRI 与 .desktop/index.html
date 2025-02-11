@@ -1,103 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html data-theme="dark">
-
-<head>
-  
+  <head>
+    
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/assets/css/pico.css" />
 <link rel="stylesheet" href="/assets/css/custom.css" />
-<link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 <script>
-    hljs.initHighlightingOnLoad();
-</script> 
+  hljs.initHighlightingOnLoad();
+</script>
 
 
-  <style>
-    article {
-      background: rgb(28, 29, 33);
-      max-width: 70%;
-      text-align: left;
-      margin: 0 auto;
-      border-radius: 30px;
-    }
-
-    @media (max-width: 768px) {
+    <style>
       article {
-        max-width: 90%;
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
       }
 
-      h1 {
-        font-size: large;
-      }
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
 
-      .date {
-        font-size: medium;
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
       }
 
       p,
       li {
-        font-size: 15px;
+        font-size: 16.5px;
+        line-height: 32px;
       }
-    }
 
-    p,
-    li {
-      font-size: 16.5px;
-      line-height: 32px;
-    }
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
+      .meta p {
+        text-align: center;
+      }
 
-    .meta p {
-      text-align: center;
-    }
+      .date {
+        text-align: center;
+      }
 
-    .date {
-      text-align: center;
-    }
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
 
-    .toc {
-      position: fixed;
-      float: left;
-      max-width: 50px;
-      max-height: 50px;
-      margin-top: 200px;
-      text-align: center;
-    }
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
 
-    h2 {
-      font-size: x-large;
-      color: peru;
-    }
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
 
-    h3 {
-      font-size: large;
-      color: rgb(205, 158, 112);
-    }
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
 
-    h4 {
-      font-size: medium;
-      color: pink;
-    }
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
+    <title>Wine 与 ATRI 与 .desktop</title>
+  </head>
 
-    strong {
-      color: rgb(182, 230, 240);
-    }
-  </style>
-  <title>Wine 与 ATRI 与 .desktop</title>
-</head>
-
-
-
-<body>
   
+  
+  <body>
+    
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
   <div class="breadcrumb">
@@ -115,12 +116,12 @@
   </div>
 </nav>
 
-  <div>
-    <div class="meta">
-      <h1>Wine 与 ATRI 与 .desktop</h1>
-      <p>2022-09-26 19:29:10</p>
-    </div>
-    <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 引言</h2>
+    <div>
+      <div class="meta">
+        <h1>Wine 与 ATRI 与 .desktop</h1>
+        <p>2022-09-26 19:29:10</p>
+      </div>
+      <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 引言</h2>
 <p>一定是闲得没事的人才会去把 ATRI 放在 Arch 上跑吧😂。平时在 Arch 上面跑 Osu！，而游玩其他游戏只能切换到 Win——这一整套流程想想就头疼。因此试着用 <code>Wine</code> 直接跑 ATRI，不想直接跑通，于是有了这篇文章。</p>
 <p><img src="https://ghproxy.com/github.com/levinion/blog-pic/blob/main/img/ss_47e1f809fa56ab6d48de3c66e3147585b4ee30a2.600x338.jpg" alt="atri"></p>
 <blockquote>
@@ -241,7 +242,6 @@ sudo vim /usr/share/polkit-1/actions/org.freedesktop.UDisks2.policy
 </blockquote>
 <p>算了，继续推阿托莉去。对游戏的感想就留待以后再写。</p>
 </article>
-  </div>
-</body>
-
+    </div>
+  </body>
 </html>

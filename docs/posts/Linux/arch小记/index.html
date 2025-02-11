@@ -1,103 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html data-theme="dark">
-
-<head>
-  
+  <head>
+    
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/assets/css/pico.css" />
 <link rel="stylesheet" href="/assets/css/custom.css" />
-<link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 <script>
-    hljs.initHighlightingOnLoad();
-</script> 
+  hljs.initHighlightingOnLoad();
+</script>
 
 
-  <style>
-    article {
-      background: rgb(28, 29, 33);
-      max-width: 70%;
-      text-align: left;
-      margin: 0 auto;
-      border-radius: 30px;
-    }
-
-    @media (max-width: 768px) {
+    <style>
       article {
-        max-width: 90%;
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
       }
 
-      h1 {
-        font-size: large;
-      }
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
 
-      .date {
-        font-size: medium;
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
       }
 
       p,
       li {
-        font-size: 15px;
+        font-size: 16.5px;
+        line-height: 32px;
       }
-    }
 
-    p,
-    li {
-      font-size: 16.5px;
-      line-height: 32px;
-    }
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
+      .meta p {
+        text-align: center;
+      }
 
-    .meta p {
-      text-align: center;
-    }
+      .date {
+        text-align: center;
+      }
 
-    .date {
-      text-align: center;
-    }
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
 
-    .toc {
-      position: fixed;
-      float: left;
-      max-width: 50px;
-      max-height: 50px;
-      margin-top: 200px;
-      text-align: center;
-    }
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
 
-    h2 {
-      font-size: x-large;
-      color: peru;
-    }
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
 
-    h3 {
-      font-size: large;
-      color: rgb(205, 158, 112);
-    }
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
 
-    h4 {
-      font-size: medium;
-      color: pink;
-    }
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
+    <title>Arch小记</title>
+  </head>
 
-    strong {
-      color: rgb(182, 230, 240);
-    }
-  </style>
-  <title>Arch小记</title>
-</head>
-
-
-
-<body>
   
+  
+  <body>
+    
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
   <div class="breadcrumb">
@@ -115,12 +116,12 @@
   </div>
 </nav>
 
-  <div>
-    <div class="meta">
-      <h1>Arch小记</h1>
-      <p>2022-08-25 13:54:39</p>
-    </div>
-    <article><p>稳定主力使用 arch 也有两个星期，想着也是时候写篇文章记录一下。作为一个沉迷软件配置，特别是出于好奇等原因一直使用最新 beta 系统的人（好奇杀死猫😿），arch 无疑是一个归宿。arch 的滚动更新机制、其优越简单的 AUR 仓库，以及资料丰富到能够普渡其他 Linux 用户的 wiki 社区——其魅力所在尽显于此。</p>
+    <div>
+      <div class="meta">
+        <h1>Arch小记</h1>
+        <p>2022-08-25 13:54:39</p>
+      </div>
+      <article><p>稳定主力使用 arch 也有两个星期，想着也是时候写篇文章记录一下。作为一个沉迷软件配置，特别是出于好奇等原因一直使用最新 beta 系统的人（好奇杀死猫😿），arch 无疑是一个归宿。arch 的滚动更新机制、其优越简单的 AUR 仓库，以及资料丰富到能够普渡其他 Linux 用户的 wiki 社区——其魅力所在尽显于此。</p>
 <h2 id="-"><a class="anchor" href="#-">#</a> 🤢 安装</h2>
 <p>arch 的安装从来说不上简单，或许说得上是最难也说不定——因为你至少需要输入几十行命令，这还是在排除所有输入和其他的状况带来的问题的情况下；虽然近年来存在不少 gui 安装方式，但作为个人所日常使用的桌面系统，这种方式的安装总是会带来不少问题，因此也不多做推荐。因为个人有一定的 linux 基础，在安装 arch 的时候参考了不少资料，试探性质地一遍成功；但也因为混合参阅了各种资料，而有些资料过于陈旧，造成无法识别显卡驱动，最终也是重装了。</p>
 <h3 id="--1"><a class="anchor" href="#--1">#</a> 📖 参考推荐</h3>
@@ -193,7 +194,6 @@ steam		（不是 stream，也不是 speam，更不是 sbeam）
 <h2 id="--6"><a class="anchor" href="#--6">#</a> 🌙 小结</h2>
 <p>至此，arch 下的日常使用算是比较完备了，但是也面临更容易分心的问题——毕竟有意思的东西太多。不说了，用 Wine 打游戏去，哈哈！</p>
 </article>
-  </div>
-</body>
-
+    </div>
+  </body>
 </html>

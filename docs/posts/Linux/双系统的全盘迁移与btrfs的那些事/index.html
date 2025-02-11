@@ -1,103 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html data-theme="dark">
-
-<head>
-  
+  <head>
+    
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/assets/css/pico.css" />
 <link rel="stylesheet" href="/assets/css/custom.css" />
-<link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 <script>
-    hljs.initHighlightingOnLoad();
-</script> 
+  hljs.initHighlightingOnLoad();
+</script>
 
 
-  <style>
-    article {
-      background: rgb(28, 29, 33);
-      max-width: 70%;
-      text-align: left;
-      margin: 0 auto;
-      border-radius: 30px;
-    }
-
-    @media (max-width: 768px) {
+    <style>
       article {
-        max-width: 90%;
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
       }
 
-      h1 {
-        font-size: large;
-      }
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
 
-      .date {
-        font-size: medium;
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
       }
 
       p,
       li {
-        font-size: 15px;
+        font-size: 16.5px;
+        line-height: 32px;
       }
-    }
 
-    p,
-    li {
-      font-size: 16.5px;
-      line-height: 32px;
-    }
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
+      .meta p {
+        text-align: center;
+      }
 
-    .meta p {
-      text-align: center;
-    }
+      .date {
+        text-align: center;
+      }
 
-    .date {
-      text-align: center;
-    }
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
 
-    .toc {
-      position: fixed;
-      float: left;
-      max-width: 50px;
-      max-height: 50px;
-      margin-top: 200px;
-      text-align: center;
-    }
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
 
-    h2 {
-      font-size: x-large;
-      color: peru;
-    }
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
 
-    h3 {
-      font-size: large;
-      color: rgb(205, 158, 112);
-    }
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
 
-    h4 {
-      font-size: medium;
-      color: pink;
-    }
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
+    <title>双系统的全盘迁移与btrfs的那些事</title>
+  </head>
 
-    strong {
-      color: rgb(182, 230, 240);
-    }
-  </style>
-  <title>双系统的全盘迁移与btrfs的那些事</title>
-</head>
-
-
-
-<body>
   
+  
+  <body>
+    
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
   <div class="breadcrumb">
@@ -115,12 +116,12 @@
   </div>
 </nav>
 
-  <div>
-    <div class="meta">
-      <h1>双系统的全盘迁移与btrfs的那些事</h1>
-      <p>2022-10-20 23:36:42</p>
-    </div>
-    <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 起因</h2>
+    <div>
+      <div class="meta">
+        <h1>双系统的全盘迁移与btrfs的那些事</h1>
+        <p>2022-10-20 23:36:42</p>
+      </div>
+      <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 起因</h2>
 <p>这些天固态硬盘价格疯狂跳水，碰巧我的笔记本储存空间又到了临界值；抵不住诱惑的我终于以不到 400 的价格拿下铠侠 rc20。而我的笔记本又是尴尬的单硬盘位，于是连忙购入硬盘盒开始全盘迁移。</p>
 <h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 简单的情况陈述</h2>
 <p>我的情况可能比较特殊：Windows 和 ArchLinux 的双系统，其中 arch 更采用了 btrfs 的文件系统，全部储存在一个硬盘当中。虽然不知道 btrfs 的迁移是否相比传统的 ext4 更加简单，但我这次却因为 btrfs 吃尽苦头。这自然不是 btrfs 的原因，归根到底还是因为我对其并不熟悉（没错我就是小白～哼哒）。虽说如此，我在查阅资料的过程中也确实发现，关于btrfs迁移的教程少得可怜，而我也果然在此过程中踩了无数个坑；为了使有需要对btrfs迁移的读者有资料可以参照，也是写这篇文章的动因之一。</p>
@@ -253,7 +254,6 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 <p><!-- raw HTML omitted -->不过果然在学习面前，这种时候方便才是更重要的！<!-- raw HTML omitted --></p>
 </blockquote>
 </article>
-  </div>
-</body>
-
+    </div>
+  </body>
 </html>

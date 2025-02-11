@@ -1,103 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html data-theme="dark">
-
-<head>
-  
+  <head>
+    
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/assets/css/pico.css" />
 <link rel="stylesheet" href="/assets/css/custom.css" />
-<link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 <script>
-    hljs.initHighlightingOnLoad();
-</script> 
+  hljs.initHighlightingOnLoad();
+</script>
 
 
-  <style>
-    article {
-      background: rgb(28, 29, 33);
-      max-width: 70%;
-      text-align: left;
-      margin: 0 auto;
-      border-radius: 30px;
-    }
-
-    @media (max-width: 768px) {
+    <style>
       article {
-        max-width: 90%;
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
       }
 
-      h1 {
-        font-size: large;
-      }
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
 
-      .date {
-        font-size: medium;
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
       }
 
       p,
       li {
-        font-size: 15px;
+        font-size: 16.5px;
+        line-height: 32px;
       }
-    }
 
-    p,
-    li {
-      font-size: 16.5px;
-      line-height: 32px;
-    }
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
+      .meta p {
+        text-align: center;
+      }
 
-    .meta p {
-      text-align: center;
-    }
+      .date {
+        text-align: center;
+      }
 
-    .date {
-      text-align: center;
-    }
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
 
-    .toc {
-      position: fixed;
-      float: left;
-      max-width: 50px;
-      max-height: 50px;
-      margin-top: 200px;
-      text-align: center;
-    }
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
 
-    h2 {
-      font-size: x-large;
-      color: peru;
-    }
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
 
-    h3 {
-      font-size: large;
-      color: rgb(205, 158, 112);
-    }
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
 
-    h4 {
-      font-size: medium;
-      color: pink;
-    }
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
+    <title>Genymotion无痛指南</title>
+  </head>
 
-    strong {
-      color: rgb(182, 230, 240);
-    }
-  </style>
-  <title>Genymotion无痛指南</title>
-</head>
-
-
-
-<body>
   
+  
+  <body>
+    
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
   <div class="breadcrumb">
@@ -115,12 +116,12 @@
   </div>
 </nav>
 
-  <div>
-    <div class="meta">
-      <h1>Genymotion无痛指南</h1>
-      <p>2025-02-11 11:13:06</p>
-    </div>
-    <article><p>继上文，在Linux上运行安卓游戏最好的方案大概就是Genymotion了。前文也提到过，它对于免费用户，在游戏界面会有一个牛皮癣的横幅；<code>Free for personal use</code>。本文就来解决这个。</p>
+    <div>
+      <div class="meta">
+        <h1>Genymotion无痛指南</h1>
+        <p>2025-02-11 11:13:06</p>
+      </div>
+      <article><p>继上文，在Linux上运行安卓游戏最好的方案大概就是Genymotion了。前文也提到过，它对于免费用户，在游戏界面会有一个牛皮癣的横幅；<code>Free for personal use</code>。本文就来解决这个。</p>
 <h2 id="xvfb"><a class="anchor" href="#xvfb">#</a> Xvfb</h2>
 <p>Xvfb能够在Xorg中创建一个虚拟的显示屏，适合将一切依赖图形界面运行，而我们却一点不想看见的应用放在那里。</p>
 <p>首先我们获取Xvfb：</p>
@@ -128,10 +129,14 @@
 </code></pre>
 <pre><code class="language-shell">Xvfb :3 -nolisten tcp -screen :3 1280x800x24
 </code></pre>
-<p>上条命令在<code>DISPLAY=:3</code>上创建了一个<code>1280x800x24</code>的显示器，其中24是density。</p>
+<p>上条命令在<code>DISPLAY=:3</code>上创建了一个<code>1280x800x24</code>的显示器，其中24是色深。</p>
+<p>有一种更简单的运行方式，即<code>xvfb-run &lt;some command&gt;</code>。如果不附带其他参数，默认会在<code>：99</code>上创建屏幕并运行传入的命令。</p>
 <h2 id="genymotion-player"><a class="anchor" href="#genymotion-player">#</a> genymotion-player</h2>
 <p>然后在创建的虚拟显示器上运行<code>genymotion-player</code>：</p>
 <pre><code class="language-shell">DISPLAY=:3 genymotion-player -n &lt;设备名&gt; -s
+</code></pre>
+<p>或是；</p>
+<pre><code class="language-shell">xvfb-run genymotion-player -n &lt;设备名&gt; -s
 </code></pre>
 <h2 id="scrcpy"><a class="anchor" href="#scrcpy">#</a> scrcpy</h2>
 <p>使用scrcpy进行连接：</p>
@@ -140,8 +145,60 @@
 <p>如果没有，安装：</p>
 <pre><code class="language-shell">paru -S scrcpy
 </code></pre>
-</article>
-  </div>
-</body>
+<h2 id="oom"><a class="anchor" href="#oom">#</a> oom</h2>
+<p>genymotion的最大问题是它存在内存泄漏，即<code>genymotion-player</code>占用的内存会越来大，最终导致整个系统运行缓慢。这似乎没有什么好的方法，我所能想到的方案也就是定时杀掉它并重新运行。下面为此所写的一个内存监控脚本：</p>
+<pre><code class="language-python">#!/bin/python3
+import subprocess
+import os
+import time
+import sys
 
+def get_pid_by_name(name):
+    return int(
+        subprocess.check_output([&quot;bash&quot;, &quot;-c&quot;, f&quot;pidof {name}&quot;]).strip().decode()
+    )
+
+def get_memory_by_pid(pid):
+    return int(
+        subprocess.check_output(
+            [&quot;bash&quot;, &quot;-c&quot;, f&quot;pmap -x {pid} | awk '/total/ {{print $3}}'&quot;]
+        )
+    )
+
+def run(command):
+    with open(os.devnull) as devnull:
+        subprocess.Popen(
+            command,
+            stdout=devnull,
+            stderr=devnull,
+        )
+
+def main():
+    command = &quot; &quot;.join(sys.argv[1:])
+    print(command)
+    pid = None
+    try:
+        pid = get_pid_by_name(command)
+    except subprocess.CalledProcessError:
+        run([&quot;bash&quot;, &quot;-c&quot;, command])
+        time.sleep(5)
+        pid = get_pid_by_name(command)
+    assert pid is not None
+    memory = get_memory_by_pid(pid)
+    while 1:
+        if memory &gt;= 32 * 1024 * 1024:
+            os.kill(pid, 9)
+            run([&quot;bash&quot;, &quot;-c&quot;, command])
+        time.sleep(10)
+
+if __name__ == &quot;__main__&quot;:
+    try:
+        main()
+    except KeyboardInterrupt:
+        exit(0)
+</code></pre>
+<p>通过<code>oom.py xvfb-run genymotion-player -n &lt;device id&gt; -s</code>来运行genymotion，当其内存达到32G（即我主机内存的一半，你可以进行修改）时，自动重新运行该进程。</p>
+</article>
+    </div>
+  </body>
 </html>

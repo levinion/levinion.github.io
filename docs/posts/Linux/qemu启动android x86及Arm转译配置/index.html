@@ -1,103 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html data-theme="dark">
-
-<head>
-  
+  <head>
+    
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/assets/css/pico.css" />
 <link rel="stylesheet" href="/assets/css/custom.css" />
-<link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 <script>
-    hljs.initHighlightingOnLoad();
-</script> 
+  hljs.initHighlightingOnLoad();
+</script>
 
 
-  <style>
-    article {
-      background: rgb(28, 29, 33);
-      max-width: 70%;
-      text-align: left;
-      margin: 0 auto;
-      border-radius: 30px;
-    }
-
-    @media (max-width: 768px) {
+    <style>
       article {
-        max-width: 90%;
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
       }
 
-      h1 {
-        font-size: large;
-      }
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
 
-      .date {
-        font-size: medium;
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
       }
 
       p,
       li {
-        font-size: 15px;
+        font-size: 16.5px;
+        line-height: 32px;
       }
-    }
 
-    p,
-    li {
-      font-size: 16.5px;
-      line-height: 32px;
-    }
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
+      .meta p {
+        text-align: center;
+      }
 
-    .meta p {
-      text-align: center;
-    }
+      .date {
+        text-align: center;
+      }
 
-    .date {
-      text-align: center;
-    }
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
 
-    .toc {
-      position: fixed;
-      float: left;
-      max-width: 50px;
-      max-height: 50px;
-      margin-top: 200px;
-      text-align: center;
-    }
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
 
-    h2 {
-      font-size: x-large;
-      color: peru;
-    }
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
 
-    h3 {
-      font-size: large;
-      color: rgb(205, 158, 112);
-    }
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
 
-    h4 {
-      font-size: medium;
-      color: pink;
-    }
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
+    <title>qemu启动android x86及Arm转译配置</title>
+  </head>
 
-    strong {
-      color: rgb(182, 230, 240);
-    }
-  </style>
-  <title>qemu启动android x86及Arm转译配置</title>
-</head>
-
-
-
-<body>
   
+  
+  <body>
+    
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
   <div class="breadcrumb">
@@ -115,12 +116,12 @@
   </div>
 </nav>
 
-  <div>
-    <div class="meta">
-      <h1>qemu启动android x86及Arm转译配置</h1>
-      <p>2025-02-10 20:13:24</p>
-    </div>
-    <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
+    <div>
+      <div class="meta">
+        <h1>qemu启动android x86及Arm转译配置</h1>
+        <p>2025-02-10 20:13:24</p>
+      </div>
+      <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
 <p>之前安装了Waydroid和libhndk，能够正常进行游戏，但会在游戏中途莫名闪退，于是尝试虚拟机方案。对于x86，linux上有kvm加速，因此安装android x86并配置转译层。但是，可能是显卡问题（我使用n卡），在下载完资源准备进入登录界面时会发生闪退。因此该方案也无效，本文只是记录一下以待后续解决。最终游戏运行方案是使用genymotion，它也是使用虚拟机，有qemu和virtualbox两种后端可选，但游戏能够完美运行，不需要任何额外操作。唯一的缺点大概就是它是个闭源软件，且对于免费用户会在游戏界面中有一个牛皮癣的横幅；<code>Free for personal use</code>。</p>
 <h2 id="qemu"><a class="anchor" href="#qemu">#</a> 安装qemu</h2>
 <p>对于Android X86，我们需要qemu-system-x86，因此需要安装qemu包。而archlinux提供了qemu-base和qemu-desktop，这里推荐后者，因为后者还包括了运行虚拟机需要用到的图形界面。</p>
@@ -189,7 +190,6 @@ vi menu.lst
 <pre><code class="language-shell">adb shell wm size
 </code></pre>
 </article>
-  </div>
-</body>
-
+    </div>
+  </body>
 </html>

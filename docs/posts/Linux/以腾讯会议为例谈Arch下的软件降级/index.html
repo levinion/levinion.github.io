@@ -1,103 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html data-theme="dark">
-
-<head>
-  
+  <head>
+    
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/assets/css/pico.css" />
 <link rel="stylesheet" href="/assets/css/custom.css" />
-<link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 <script>
-    hljs.initHighlightingOnLoad();
-</script> 
+  hljs.initHighlightingOnLoad();
+</script>
 
 
-  <style>
-    article {
-      background: rgb(28, 29, 33);
-      max-width: 70%;
-      text-align: left;
-      margin: 0 auto;
-      border-radius: 30px;
-    }
-
-    @media (max-width: 768px) {
+    <style>
       article {
-        max-width: 90%;
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
       }
 
-      h1 {
-        font-size: large;
-      }
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
 
-      .date {
-        font-size: medium;
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
       }
 
       p,
       li {
-        font-size: 15px;
+        font-size: 16.5px;
+        line-height: 32px;
       }
-    }
 
-    p,
-    li {
-      font-size: 16.5px;
-      line-height: 32px;
-    }
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
+      .meta p {
+        text-align: center;
+      }
 
-    .meta p {
-      text-align: center;
-    }
+      .date {
+        text-align: center;
+      }
 
-    .date {
-      text-align: center;
-    }
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
 
-    .toc {
-      position: fixed;
-      float: left;
-      max-width: 50px;
-      max-height: 50px;
-      margin-top: 200px;
-      text-align: center;
-    }
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
 
-    h2 {
-      font-size: x-large;
-      color: peru;
-    }
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
 
-    h3 {
-      font-size: large;
-      color: rgb(205, 158, 112);
-    }
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
 
-    h4 {
-      font-size: medium;
-      color: pink;
-    }
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
+    <title>以腾讯会议为例谈Arch下的软件降级</title>
+  </head>
 
-    strong {
-      color: rgb(182, 230, 240);
-    }
-  </style>
-  <title>以腾讯会议为例谈Arch下的软件降级</title>
-</head>
-
-
-
-<body>
   
+  
+  <body>
+    
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
   <div class="breadcrumb">
@@ -115,12 +116,12 @@
   </div>
 </nav>
 
-  <div>
-    <div class="meta">
-      <h1>以腾讯会议为例谈Arch下的软件降级</h1>
-      <p>2022-09-15 13:53:18</p>
-    </div>
-    <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 引入</h2>
+    <div>
+      <div class="meta">
+        <h1>以腾讯会议为例谈Arch下的软件降级</h1>
+        <p>2022-09-15 13:53:18</p>
+      </div>
+      <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 引入</h2>
 <p>首先我想谈一谈为什么会有这篇文章。如果所有的软件都能在最新版本平稳运行，那么软件降级就绝非必要之举了。无论是 Bug 或是其他的一些兼容问题，更多的情况是为解决一些旧的缺陷反而导致了新的更大的问题。在 linux 平台下，Bug 的修复可以说是令人欲哭无泪——尤其是 aur 库中的软件。这些软件通常由个人或团队进行维护，在 Bug 产生时，往往需要数个星期甚至数个月才会进行修复；而这些时间对于个人使用者来说是十分煎熬的。</p>
 <p>在 Arch 下的腾讯会议解决方案通常有基于 deepin-wine 的 wemeet，以及腾讯官方的 linux 客户端。参看 aur 库中的数据，前者已经有大半年未更新，更多的使用者转移到了后者上。linux 原生的腾讯会议虽然存在功能缺失（在我的 PC 上无法进行签到），但也能够实现大部分需求。</p>
 <p>在我的腾讯会议升级到 3.10 版本后，出现了页面卡死以及无法点击的情况，经常需要切换应用以重新获取焦点。很多人表示在升级后遇到了同样的情况，因此不得不暂时将其降级。</p>
@@ -169,7 +170,6 @@
 </li>
 </ol>
 </article>
-  </div>
-</body>
-
+    </div>
+  </body>
 </html>

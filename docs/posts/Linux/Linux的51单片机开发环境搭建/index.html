@@ -1,103 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html data-theme="dark">
-
-<head>
-  
+  <head>
+    
 <meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" href="/assets/css/pico.css" />
 <link rel="stylesheet" href="/assets/css/custom.css" />
-<link rel="stylesheet"
-      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css">
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
 <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
 <script>
-    hljs.initHighlightingOnLoad();
-</script> 
+  hljs.initHighlightingOnLoad();
+</script>
 
 
-  <style>
-    article {
-      background: rgb(28, 29, 33);
-      max-width: 70%;
-      text-align: left;
-      margin: 0 auto;
-      border-radius: 30px;
-    }
-
-    @media (max-width: 768px) {
+    <style>
       article {
-        max-width: 90%;
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
       }
 
-      h1 {
-        font-size: large;
-      }
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
 
-      .date {
-        font-size: medium;
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
       }
 
       p,
       li {
-        font-size: 15px;
+        font-size: 16.5px;
+        line-height: 32px;
       }
-    }
 
-    p,
-    li {
-      font-size: 16.5px;
-      line-height: 32px;
-    }
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 10px;
-    }
+      .meta p {
+        text-align: center;
+      }
 
-    .meta p {
-      text-align: center;
-    }
+      .date {
+        text-align: center;
+      }
 
-    .date {
-      text-align: center;
-    }
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
 
-    .toc {
-      position: fixed;
-      float: left;
-      max-width: 50px;
-      max-height: 50px;
-      margin-top: 200px;
-      text-align: center;
-    }
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
 
-    h2 {
-      font-size: x-large;
-      color: peru;
-    }
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
 
-    h3 {
-      font-size: large;
-      color: rgb(205, 158, 112);
-    }
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
 
-    h4 {
-      font-size: medium;
-      color: pink;
-    }
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
+    <title>Linux的51单片机开发环境搭建</title>
+  </head>
 
-    strong {
-      color: rgb(182, 230, 240);
-    }
-  </style>
-  <title>Linux的51单片机开发环境搭建</title>
-</head>
-
-
-
-<body>
   
+  
+  <body>
+    
 <nav>
   <a href="/" class="logo">Maruka's Blog</a>
   <div class="breadcrumb">
@@ -115,12 +116,12 @@
   </div>
 </nav>
 
-  <div>
-    <div class="meta">
-      <h1>Linux的51单片机开发环境搭建</h1>
-      <p>2022-11-27 23:21:39</p>
-    </div>
-    <article><p>因为最近新开了一门 51 单片机课程，所以搞了台单片机开发板来玩。传统的单片机开发环境基本上都是 Windows+Keil，而 Keil 的编辑器又显得落后。如果你也想要脱离 Windows 和 Keil 那种传统的开发生态，拥抱 Linux 的开发环境的话，不妨尝试 PlatformIO。</p>
+    <div>
+      <div class="meta">
+        <h1>Linux的51单片机开发环境搭建</h1>
+        <p>2022-11-27 23:21:39</p>
+      </div>
+      <article><p>因为最近新开了一门 51 单片机课程，所以搞了台单片机开发板来玩。传统的单片机开发环境基本上都是 Windows+Keil，而 Keil 的编辑器又显得落后。如果你也想要脱离 Windows 和 Keil 那种传统的开发生态，拥抱 Linux 的开发环境的话，不妨尝试 PlatformIO。</p>
 <h2 id="1-platformio"><a class="anchor" href="#1-platformio">#</a> 1 PlatformIO</h2>
 <p>PlatformIO 是一个物联网开发的开源生态系统，支持跨平台的开发和调试。我平时使用 VSCode 作为主力编辑器；PlatformIO 插件对 VSCode 的支持很好。当然，如果你使用其他编辑器或 ide，那也当然没问题；PlatfromIO 在 Clion、QT、Vim 等主流软件中均由相关插件支持。这里以 VSCode 为例：</p>
 <ol>
@@ -191,7 +192,6 @@ void main(){
 <li><a href="https://blog.csdn.net/Narukara/article/details/120623921#:~:text=%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95">关于 stcgal 烧写 STC89C52 的问题</a></li>
 </ol>
 </article>
-  </div>
-</body>
-
+    </div>
+  </body>
 </html>
