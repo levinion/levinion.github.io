@@ -1,0 +1,165 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
+    <title>Linux之安卓模拟器总集篇</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>Linux之安卓模拟器总集篇</h1>
+        <p>2025-02-12 19:36:51</p>
+      </div>
+      <article><p>Linux下安卓模拟器并不如Windows下方便选择，多数都有其痛点，经过几天的折腾终于有了稳定的方案，下面就来讲下折腾的经过。</p>
+<h2 id="waydroid"><a class="anchor" href="#waydroid">#</a> waydroid</h2>
+<p>waydroid是第一个选择的方案。在英文社区中，说到Linux下的安卓模拟器，waydroid基本都会被推荐。说是模拟器，其实是一个容器，因此相较传统模拟器具有比较好的性能。但是其缺点在于，它只能在Wayland下运行；这点虽说对于Wayland用户来说很难算是个缺点，但是对我这种还在X11的用户，就只能跑在Weston中。而在实际运行过程中，游戏会经常发生闪退，并且没有任何报错日志，因此最终放弃。这点不知是不是weston引起的，由于我不使用Wayland，也就无从验证。</p>
+<p>另外，由于waydroid对N卡支持不好，因此只能使用软件渲染，从而导致很大的CPU占用（对9950X整体30%的占用）。</p>
+<p>对于详细的安装过程，可以查看我前面的文章：<a href="https://blog.maruka.top/posts/Linux/waydroid%E9%83%A8%E7%BD%B2%E4%B8%8EARM%E6%B8%B8%E6%88%8F%E8%BF%90%E8%A1%8C/">waydroid部署与ARM游戏运行</a></p>
+<h2 id="qemu--android-x86"><a class="anchor" href="#qemu--android-x86">#</a> Qemu + Android X86</h2>
+<p>由于容器方案行不通（只是我以为），这次就换用模拟器。由于Qemu直接模拟ARM架构的安卓会无法使用kvm加速从而导致较大的性能损失，于是继续采用Android X86 + 转译库的方案。最终的结果见前文：<a href="https://blog.maruka.top/posts/Linux/qemu%E5%90%AF%E5%8A%A8android%20x86%E5%8F%8AArm%E8%BD%AC%E8%AF%91%E9%85%8D%E7%BD%AE/">qemu启动android x86及Arm转译配置</a></p>
+<p>经过配置转译库，游戏能够成功进入和下载资源，但总是在登录界面发生闪退，即使更换BlissOS镜像仍有同样情况，因此放弃。</p>
+<p>通过Qemu，可以对虚拟机进行kvm加速，虽然似乎无法使用virtio-gpu，但能启用OpenGL，因此运行效率似乎还行，但既然无法工作，那性能也就无从说起。</p>
+<h2 id="genymotion"><a class="anchor" href="#genymotion">#</a> genymotion</h2>
+<p>genymotion也是一个很老牌的安卓模拟器解决方案了，在Linux上它有两个后端：qemu和virtualbox。值得一提的是，它也是采用了虚拟机 + Android X86 + Arm转译方案。但是与之前自行配置的安卓X86虚拟机不同，它运行得很好。详细部署方案可以查看我上一篇文章：<a href="https://blog.maruka.top/posts/Linux/Genymotion%E6%97%A0%E7%97%9B%E6%8C%87%E5%8D%97/">Genymotion无痛指南</a>。</p>
+<p>当我刚开始发现游戏能够正常运行时，一切都感觉很好；但事实证明，Genymotion并非无痛：安卓模拟器本身运行得很好，但是它自带的genymotion-player会导致严重的内存泄漏，导致不到一个小时就会吃满我的64G内存（在这之前似乎从来没有不够用过！）。如果我想要脱离genymotion-player，使用它调用的原始命令启动虚拟机，它会停在bios页面且完全无法boot，大概是genymotion-player除了调用qemu之外还做了其他工作。由于它不开源所以也无从深挖，这个方案最终也是放弃了。</p>
+<h2 id="redroid"><a class="anchor" href="#redroid">#</a> redroid</h2>
+<p>在浏览无头waydroid话题时，偶尔发现有人提到了redroid，这就是今天的主角了。</p>
+<p>redroid是一个基于docker的安卓容器，没有UI界面，但提供了adb连接；其中内置了libnhk，从而能够开箱即用地支持ARM应用程序。并且不知道它做了什么，似乎对nvidia gpu有着相当好的支持，因此cpu占用终于下来了，只有个位数的水平。对于以60HZ运行的游戏来说，GPU占用率平均维持在30%左右，这算是一个比较正常的水平；另外，核显也开始工作。</p>
+<p>redroid的配置很简单，直接修改docker运行命令即可。</p>
+<pre><code class="language-shell">  docker run -itd --rm --privileged \
+    -v ~/docker/redroid/data:/data \
+    -p 5555:5555 \
+    --name redroid13 \
+    redroid/redroid:13.0.0-latest \
+    androidboot.redroid_width=1280 \
+    androidboot.redroid_height=720 \
+    androidboot.redroid_fps=60 \
+    androidboot.redroid_gpu_mode=host
+</code></pre>
+<p>然后使用adb连接到本地的5555端口：</p>
+<pre><code class="language-shell">adb connect localhost:5555
+</code></pre>
+<p>然后按照以前的方式使用adb安装应用：</p>
+<pre><code class="language-shell">adb install xxx.apk
+</code></pre>
+<p>容器中所有的数据均能够被同步到本地目录进行持久化<code>~/docker/redroid/data</code>，因此只需要安装一遍就行，即使更换镜像也不用重新安装。</p>
+<p>对于没用过docker的人，按照以下步骤安装docker，然后运行上述命令即可：</p>
+<pre><code class="language-shell">paru -S docker
+sudo systemctl enable docker --now
+sudo usermod -a -G docker &lt;username&gt;
+</code></pre>
+</article>
+    </div>
+  </body>
+</html>
