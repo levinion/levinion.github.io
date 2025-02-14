@@ -148,6 +148,9 @@
 <h3 id="5-"><a class="anchor" href="#5-">#</a> 5. 禁止错误恢复</h3>
 <p>当火狐处于运行状态并关机时，再次开机并打开火狐会提示无法恢复之前页面，而个人习惯并不需要恢复，并且也未设置打开以前页面选项。这个问题可以通过设置以下配置解决：</p>
 <p><code>browser.sessionstore.resume_from_crash</code>设置为<code>false</code></p>
+<h3 id="6-"><a class="anchor" href="#6-">#</a> 6. 跳过可执行文件检查</h3>
+<p>默认情况下当一个pdf下载完毕后，打开前会触发这个告警，禁用它。</p>
+<p>将<code>browser.download.skipConfirmLaunchExecutable</code>设为True（布尔值），如果不存在则创建。</p>
 </article>
     </div>
   </body>
