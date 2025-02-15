@@ -33,11 +33,11 @@
   <body>
     {{{template "nav"}}}
     <div class="main">
-      {{range .}}
+      {{{range .}}}
       <article>
         <a href="/posts/{{{.}}}">{{{.}}}</a>
       </article>
-      {{end}}
+      {{{end}}}
     </div>
   </body>
 </html>
