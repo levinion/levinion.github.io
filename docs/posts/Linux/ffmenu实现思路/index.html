@@ -148,7 +148,7 @@ subprocess.call(
         -e fish -c \
         \&quot;fzf \
         --bind 'start,change:reload:python {path} picker {{q}}' \
-        --bind 'enter:become(nohup python {path} run {{}} 2&gt;&amp;1 &amp;)'\&quot; \
+        --bind 'enter:become(nohup python {path} run {{}} &gt; /dev/null 2&gt;&amp;1 &amp;)'\&quot; \
         &quot;,
     ]
 )
