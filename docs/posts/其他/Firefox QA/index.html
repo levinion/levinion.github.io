@@ -153,6 +153,29 @@
 <p>将<code>browser.download.skipConfirmLaunchExecutable</code>设为True（布尔值），如果不存在则创建。</p>
 <h3 id="7-"><a class="anchor" href="#7-">#</a> 7. 允许音视频自动播放</h3>
 <p>设置界面 &gt; 隐私 &gt; 默认选项 &gt; 选择允许自动播放</p>
+<h3 id="8-"><a class="anchor" href="#8-">#</a> 8. 调整缩放</h3>
+<p>对于火狐，进入about:config界面，修改<code>layout.css.devPixelsPerPx</code>属性。</p>
+<h3 id="9-"><a class="anchor" href="#9-">#</a> 9. 允许拓展运行在受保护页面</h3>
+<p>清除<code>extensions.webextensions.restrictedDomains</code>中的相应页面</p>
+<p>设置<code>privacy.resistFingerprinting.block_mozAddonManager</code>为<code>true</code></p>
+<h3 id="10-userchromecss"><a class="anchor" href="#10-userchromecss">#</a> 10. userChrome.css</h3>
+<p>将<code>toolkit.legacyUserProfileCustomizations.stylesheets</code>设为<code>true</code></p>
+<p>创建<code>~/.mozilla/firefox/&lt;profile-id&gt;/chrome</code>文件夹，<code>profile-id</code>可以在<code>about:profiles</code>页面中找到</p>
+<p>在目录下创建<code>userChrome.css</code>文件，并使用<code>@import</code>引用自定义css文件。类似：</p>
+<pre><code class="language-css">@import &quot;./css/tabs_below_content_v2.css&quot;;
+</code></pre>
+<p>然后在指定位置编写css文件。对于一些常用的css，推荐这个repo：<a href="https://github.com/MrOtherGuy/firefox-csshacks">https://github.com/MrOtherGuy/firefox-csshacks</a>，或是它提供的搜索界面：<a href="https://mrotherguy.github.io/firefox-csshacks/">https://mrotherguy.github.io/firefox-csshacks/</a></p>
+<h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 其他</h2>
+<h3 id="heading-3"><a class="anchor" href="#heading-3">#</a> 一些插件</h3>
+<ul>
+<li>ublock origin</li>
+<li>bitwarden</li>
+<li>dark reader</li>
+<li>600% sound volume</li>
+<li>vimium</li>
+<li>new tab overide</li>
+<li>immersive translate</li>
+</ul>
 </article>
     </div>
   </body>

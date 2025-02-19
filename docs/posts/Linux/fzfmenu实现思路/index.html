@@ -155,7 +155,7 @@ subprocess.call(
 </code></pre>
 <p>在这里，我们规定了alacritty的窗口类型，以在i3中设置它的窗口样式。</p>
 <p><code>--bind 'start,change:reload:python {path} picker {{q}}'</code>设置了在fzf启动和输入发生改变时重新运行该命令。其中<code>{path}</code>是该脚本的路径，此处可忽略。该脚本的标准输出即为fzf上显示的选项。</p>
-<p><code>--bind 'enter:become(nohup python {path} run {{}} 2&gt;&amp;1 &amp;)'</code>设置了在选择项目后运行的命令。由于脚本运行结束后alacritty终端窗口自动关闭，因此需要使用nohup，并将标准输出重定向到<code>/devnull</code>当中。此处的<code>{}</code>即为选中项目的字符串结果，将其传入脚本中以运行。</p>
+<p><code>--bind 'enter:become(nohup python {path} run {{}} &gt; /dev/null 2&gt;&amp;1 &amp;)'</code>设置了在选择项目后运行的命令。由于脚本运行结束后alacritty终端窗口自动关闭，因此需要使用nohup，并将标准输出重定向到<code>/devnull</code>当中。此处的<code>{}</code>即为选中项目的字符串结果，将其传入脚本中以运行。</p>
 <p>由于这只是个简单的脚本，不想分成太多的文件，因此按照如下方式做判断，从而进行递归调用：</p>
 <pre><code class="language-python">def main():
     argv = sys.argv
