@@ -1,0 +1,158 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
+    <title>网页驱动设备的udev规则设置</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>网页驱动设备的udev规则设置</h1>
+        <p>2025-02-23 22:37:18</p>
+      </div>
+      <article><h2 id="idvendor"><a class="anchor" href="#idvendor">#</a> 获取idVendor</h2>
+<p>Linux默认是禁止USB访问的，需要创建udev规则才能使用网页驱动进行配置。第一步，需要找到设备的idVendor。</p>
+<pre><code class="language-shell">lsusb
+</code></pre>
+<p>如果没有<code>lsusb</code>，安装<code>usbutils</code>：</p>
+<pre><code class="language-shell">sudo pacman -S usbutils
+</code></pre>
+<p>根据名称找到对应设备：</p>
+<pre><code class="language-shell">Bus 001 Device 006: ID 1915:ae8c Nordic Semiconductor ASA Ninjutso Sora V2 8K
+</code></pre>
+<p>其中<code>1915</code>即为设备的idVendor。</p>
+<p>你也可以通过该ID获取更多设备信息（可选）：</p>
+<pre><code class="language-shell">lsusb -d 1915:ae8c -v
+</code></pre>
+<h2 id="udev"><a class="anchor" href="#udev">#</a> 创建udev规则</h2>
+<p>接着创建udev规则：</p>
+<pre><code class="language-shell">sudoedit /etc/udev/rules.d/70-sorav2.rules
+</code></pre>
+<p>填入以下内容：</p>
+<pre><code class="language-shell">SUBSYSTEM==&quot;hidraw&quot;, ATTRS{idVendor}==&quot;1915&quot;, TAG+=&quot;uaccess&quot;
+SUBSYSTEM==&quot;usb&quot;, ATTRS{idVendor}==&quot;1915&quot;, TAG+=&quot;uaccess&quot;
+</code></pre>
+<h2 id="heading"><a class="anchor" href="#heading">#</a> 应用规则</h2>
+<p>然后重启，或是运行以下命令：</p>
+<pre><code class="language-shell">sudo udevadm control --reload-rules &amp;&amp; sudo udevadm trigger
+</code></pre>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 参考</h2>
+<ol>
+<li><a href="https://help.wooting.io/article/147-configuring-device-access-for-wootility-under-linux-udev-rules">https://help.wooting.io/article/147-configuring-device-access-for-wootility-under-linux-udev-rules</a></li>
+<li><a href="https://wiki.archlinux.org/title/Udev#About_udev_rules">https://wiki.archlinux.org/title/Udev#About_udev_rules</a></li>
+</ol>
+</article>
+    </div>
+  </body>
+</html>
