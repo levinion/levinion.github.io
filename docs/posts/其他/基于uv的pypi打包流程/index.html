@@ -1,0 +1,153 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+    </style>
+    <title>基于uv的pypi打包流程</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>基于uv的pypi打包流程</h1>
+        <p>2025-03-05 22:33:45</p>
+      </div>
+      <article><p>python包打包大致分为两步：构建和发布。而一些包管理器，如<code>poetry</code>或是<code>uv</code>，都提供有打包的快捷操作，让发布pypi变得十分容易。</p>
+<h2 id="heading"><a class="anchor" href="#heading">#</a> 构建</h2>
+<p>对于使用<code>uv init</code>创建的python项目，一般已经有了一个合法的项目结构，此时需要修改<code>pyproject.toml</code>，填写一些必要信息：</p>
+<pre><code class="language-shell">[project]
+name = &quot;ffmpegx&quot;
+version = &quot;0.1.0&quot;
+description = &quot;A wrapper of ffmpeg&quot;
+readme = &quot;README.md&quot;
+authors = [{ name = &quot;levinion&quot;, email = &quot;levinnion@gmail.com&quot; }]
+requires-python = &quot;&gt;=3.13&quot;
+dependencies = []
+
+[build-system]
+requires = [&quot;hatchling&quot;]
+build-backend = &quot;hatchling.build&quot;
+</code></pre>
+<p>可以看到这里的<code>hatchling</code>就是uv当前所使用的构建系统后端。开始构建：</p>
+<pre><code class="language-shell">uv build
+</code></pre>
+<p>目标文件会放在<code>dist</code>目录下。</p>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 发布</h2>
+<p>在<a href="https://pypi.org/">pypi</a>上注册一个帐号，并且创建API TOKEN。</p>
+<p>然后进行发布：</p>
+<pre><code class="language-shell">uv publish
+</code></pre>
+<p>用户名填写<code>__token__</code>，密码填写上面生成的token即可。</p>
+</article>
+    </div>
+  </body>
+</html>
