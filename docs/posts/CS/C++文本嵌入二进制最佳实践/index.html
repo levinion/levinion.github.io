@@ -140,14 +140,14 @@
     &quot;   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n&quot;
     &quot;}&quot;;
 </code></pre>
-<p>这是最传统的方式，在运行时中初始化字符串。缺点很明显，性能较低，且修改困难。</p>
+<p>这是最传统的方式，运行时初始化字符串。缺点很明显，性能较低，且修改困难。</p>
 <h2 id="embed"><a class="anchor" href="#embed">#</a> embed</h2>
 <p>embed是C的提案，但在C++中也得到支持：</p>
 <pre><code class="language-cpp">const char vertex_shader_code[] = {
     #embed &quot;path_to_file/file&quot;
 };
 </code></pre>
-<p>缺点在于目前只有clang得到支持，并且在编译时会显示警告：<code>#embed is an extension of clang</code>。并且我不太会用，在打印时，通过这种方式嵌入的字符会在末尾打印出未知字符（乱码），可能和填<code>\0</code>有关。</p>
+<p>缺点在于目前只有clang得到支持，并且在编译时会显示警告：<code>#embed is an extension of clang</code>。在打印时，通过这种方式嵌入的字符会在末尾打印出未知字符（乱码），可以猜到以上数组并不包括字符串末尾的<code>\0</code>。但我目前没找到好的填<code>\0</code>方法。</p>
 <p>另外，C++的<code>std::embed</code>还在日程中……</p>
 <h2 id="xxd"><a class="anchor" href="#xxd">#</a> xxd</h2>
 <p>在Linux下，有<code>xxd</code>命令，它提供了将一个文件转换为C语言头文件的功能，使用方法如下：</p>
@@ -171,6 +171,9 @@
   0x7d, 0x0a
 };
 unsigned int _vertex_shader_code_len = 122;
+</code></pre>
+<p>可以注意到上面的数组并不是以<code>\0</code>结尾，如果需要转换到C字符串，则需要手动填<code>\0</code>。或是使用<code>sed</code>进行替换：</p>
+<pre><code class="language-shell">xxd -n _vertex_shader_code -i ./assets/shader/vertex.glsl | sed &quot;s/}/,\'\\\0\'}/&quot; &gt; ./include/shader/vertex.h 
 </code></pre>
 <p>然后在代码中include对应头文件：</p>
 <pre><code class="language-cpp">#include &quot;shader/vertex.h&quot;
