@@ -1,0 +1,184 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>C&#43;&#43;文本嵌入二进制最佳实践</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>C&#43;&#43;文本嵌入二进制最佳实践</h1>
+        <p>2025-03-07 23:57:42</p>
+      </div>
+      <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
+<p>文本嵌入在编写着色器时特别有用。它能够使我们将着色器代码从项目代码中剥离出来，从而能够利用相应的lsp进行提示、高亮以及格式化，并且进一步降低代码耦合度。</p>
+<p>对于Rust而言，嵌入一段字符串十分简单：</p>
+<pre><code class="language-rust">include!(&quot;path_to_file/file&quot;)
+</code></pre>
+<p>对于C++，一般以下有几种方法：</p>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 字符串</h2>
+<pre><code class="language-cpp">const char* vertex_shader_code =
+    &quot;#version 330 core\n&quot;
+    &quot;layout (location = 0) in vec3 aPos;\n&quot;
+    &quot;void main()\n&quot;
+    &quot;{\n&quot;
+    &quot;   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n&quot;
+    &quot;}&quot;;
+</code></pre>
+<p>这是最传统的方式，在运行时中初始化字符串。缺点很明显，性能较低，且修改困难。</p>
+<h2 id="embed"><a class="anchor" href="#embed">#</a> embed</h2>
+<p>embed是C的提案，但在C++中也得到支持：</p>
+<pre><code class="language-cpp">const char vertex_shader_code[] = {
+    #embed &quot;path_to_file/file&quot;
+};
+</code></pre>
+<p>缺点在于目前只有clang得到支持，并且在编译时会显示警告：<code>#embed is an extension of clang</code>。并且我不太会用，在打印时，通过这种方式嵌入的字符会在末尾打印出未知字符（乱码），可能和填<code>\0</code>有关。</p>
+<p>另外，C++的<code>std::embed</code>还在日程中……</p>
+<h2 id="xxd"><a class="anchor" href="#xxd">#</a> xxd</h2>
+<p>在Linux下，有<code>xxd</code>命令，它提供了将一个文件转换为C语言头文件的功能，使用方法如下：</p>
+<pre><code class="language-shell">xxd -n variable_name -i input.glsl &gt; output.h 
+</code></pre>
+<p>对于上面的例子，有：</p>
+<pre><code class="language-shell">xxd -n _vertex_shader_code -i ./assets/shader/vertex.glsl &gt; ./include/shader/vertex.h 
+</code></pre>
+<p>它在对应位置生成如下的文件：</p>
+<pre><code class="language-c">unsigned char _vertex_shader_code[] = {
+  0x23, 0x76, 0x65, 0x72, 0x73, 0x69, 0x6f, 0x6e, 0x20, 0x33, 0x33, 0x30,
+  0x20, 0x63, 0x6f, 0x72, 0x65, 0x0a, 0x6c, 0x61, 0x79, 0x6f, 0x75, 0x74,
+  0x28, 0x6c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x20, 0x3d, 0x20,
+  0x30, 0x29, 0x20, 0x69, 0x6e, 0x20, 0x76, 0x65, 0x63, 0x33, 0x20, 0x61,
+  0x50, 0x6f, 0x73, 0x3b, 0x0a, 0x76, 0x6f, 0x69, 0x64, 0x20, 0x6d, 0x61,
+  0x69, 0x6e, 0x28, 0x29, 0x0a, 0x7b, 0x0a, 0x20, 0x20, 0x20, 0x20, 0x67,
+  0x6c, 0x5f, 0x50, 0x6f, 0x73, 0x69, 0x74, 0x69, 0x6f, 0x6e, 0x20, 0x3d,
+  0x20, 0x76, 0x65, 0x63, 0x34, 0x28, 0x61, 0x50, 0x6f, 0x73, 0x2e, 0x78,
+  0x2c, 0x20, 0x61, 0x50, 0x6f, 0x73, 0x2e, 0x79, 0x2c, 0x20, 0x61, 0x50,
+  0x6f, 0x73, 0x2e, 0x7a, 0x2c, 0x20, 0x31, 0x2e, 0x30, 0x29, 0x3b, 0x0a,
+  0x7d, 0x0a
+};
+unsigned int _vertex_shader_code_len = 122;
+</code></pre>
+<p>然后在代码中include对应头文件：</p>
+<pre><code class="language-cpp">#include &quot;shader/vertex.h&quot;
+</code></pre>
+<p>调用变量：</p>
+<pre><code class="language-cpp">auto vertex_shader_code = (const char*)_vertex_shader_code;
+</code></pre>
+</article>
+    </div>
+  </body>
+</html>
