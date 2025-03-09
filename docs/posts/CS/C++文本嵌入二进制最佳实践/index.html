@@ -175,8 +175,11 @@ unsigned int _vertex_shader_code_len = 122;
 <p>可以注意到上面的数组并不是以<code>\0</code>结尾，如果需要转换到C字符串，则需要手动填<code>\0</code>。或是使用<code>sed</code>进行替换：</p>
 <pre><code class="language-shell">xxd -n _vertex_shader_code -i ./assets/shader/vertex.glsl | sed &quot;s/}/,\'\\\0\'}/&quot; &gt; ./include/shader/vertex.h 
 </code></pre>
+<p>如果对代码格式化有强迫症，使用<code>clang-format</code>进行后处理格式化：</p>
+<pre><code class="language-shell">clang-format -i ./include/hierro/shader/*
+</code></pre>
 <p>然后在代码中include对应头文件：</p>
-<pre><code class="language-cpp">#include &quot;shader/vertex.h&quot;
+<pre><code class="language-cpp">#include &quot;hierro/shader/vertex.h&quot;
 </code></pre>
 <p>调用变量：</p>
 <pre><code class="language-cpp">auto vertex_shader_code = (const char*)_vertex_shader_code;
