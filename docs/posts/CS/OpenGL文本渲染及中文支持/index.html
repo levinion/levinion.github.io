@@ -1,0 +1,337 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>OpenGL文本渲染及中文支持</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>OpenGL文本渲染及中文支持</h1>
+        <p>2025-03-11 21:47:28</p>
+      </div>
+      <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 文本渲染流程</h2>
+<p>对于文本渲染，首先我们需要引入<code>freetype</code>库。它主要实现了从字形文件生成位图的功能，从而方便生成材质以供文本渲染。</p>
+<pre><code class="language-cpp">#include &lt;ft2build.h&gt;
+#include &lt;freetype/freetype.h&gt;
+#include FT_FREETYPE_H
+</code></pre>
+<p>总共涉及的初始化包括三部分，分别是freetype、shader和vao、vbo的初始化：</p>
+<pre><code class="language-cpp">void init(std::string font) {
+  this-&gt;init_freetype(font);
+  this-&gt;init_shader();
+  this-&gt;init_buffer();
+}
+</code></pre>
+<p>对freetype进行一些初始化工作：</p>
+<pre><code class="language-cpp">// 初始化freetype
+FT_Library ft;
+FT_Init_FreeType(&amp;ft)
+
+FT_Face face;
+FT_New_Face(ft, font.c_str(), 0, &amp;face)
+
+// 设置字体尺寸
+FT_Set_Pixel_Sizes(this-&gt;face, 0, 48);
+// 禁用字节对齐限制
+glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+</code></pre>
+<p>初始化shader：</p>
+<pre><code class="language-cpp">void init_shader() {
+  // 导入shader代码，生成和使用program
+  auto vertex = (const char*)_text_vertex_shader_code;
+  auto fragment = (const char*)_text_fragment_shader_code;
+  auto shader = Shader(vertex, fragment);
+  this-&gt;shader = shader;
+  shader.use();
+  
+  // 设置投影矩阵
+  auto app = Application::get_instance();
+  auto size = app-&gt;window_size();
+  glm::mat4 projection = glm::ortho(
+    0.0f,
+    static_cast&lt;float&gt;(size.first),
+    0.0f,
+    static_cast&lt;float&gt;(size.second)
+  );
+  glUniformMatrix4fv(
+    glGetUniformLocation(shader.id(), &quot;projection&quot;),
+    1,
+    GL_FALSE,
+    glm::value_ptr(projection)
+  );
+}
+</code></pre>
+<p>shader代码如下：</p>
+<pre><code class="language-glsl">// vertex.glsl
+#version 330 core
+layout(location = 0) in vec4 vertex; // &lt;vec2 pos, vec2 tex&gt;
+out vec2 TexCoords;
+
+uniform mat4 projection;
+
+void main()
+{
+    gl_Position = projection * vec4(vertex.xy, 0.0, 1.0);
+    TexCoords = vertex.zw;
+}
+
+// fragment.glsl
+#version 330 core
+in vec2 TexCoords;
+out vec4 color;
+
+uniform sampler2D text;
+uniform vec3 textColor;
+
+void main()
+{
+    vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);
+    color = vec4(textColor, 1.0) * sampled;
+}
+</code></pre>
+<p>进行vao和vbo初始化：</p>
+<pre><code class="language-cpp">void init_buffer() {
+  // init vao
+  unsigned int vao;
+  glGenVertexArrays(1, &amp;vao);
+  // init vbo
+  unsigned int vbo;
+  glGenBuffers(1, &amp;vbo);
+  glBindVertexArray(vao);
+  glBindBuffer(GL_ARRAY_BUFFER, vbo);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+  glEnableVertexAttribArray(0);
+  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindVertexArray(0);
+}
+</code></pre>
+<p>为每个字符生成一个材质，并且存储该字符到材质的映射以供后续使用：</p>
+<pre><code class="language-cpp">void TextGenerater::add_character(char32_t c) {
+  FT_Load_Char(this-&gt;face, c, FT_LOAD_RENDER)
+  // 创建材质
+  unsigned int texture;
+  glGenTextures(1, &amp;texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+  glTexImage2D(
+    GL_TEXTURE_2D,
+    0,
+    GL_RED,
+    face-&gt;glyph-&gt;bitmap.width,
+    face-&gt;glyph-&gt;bitmap.rows,
+    0,
+    GL_RED,
+    GL_UNSIGNED_BYTE,
+    face-&gt;glyph-&gt;bitmap.buffer
+  );
+  // 材质参数
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  // 保存字符参数
+  Character character = {
+    texture,
+    glm::ivec2(face-&gt;glyph-&gt;bitmap.width, face-&gt;glyph-&gt;bitmap.rows),
+    glm::ivec2(face-&gt;glyph-&gt;bitmap_left, face-&gt;glyph-&gt;bitmap_top),
+    (unsigned int)face-&gt;glyph-&gt;advance.x
+  };
+  // 创建字符到材质映射
+  this-&gt;character_table.insert(std::pair&lt;char32_t, Character&gt;(c, character));
+}
+</code></pre>
+<p>最后就可以进行字体渲染：</p>
+<pre><code class="language-cpp">void draw_text(
+  std::string text,
+  float x,
+  float y,
+  float scale,
+  Color color
+) {
+  this-&gt;shader.use();
+  // 字体颜色
+  glUniform3f(
+    glGetUniformLocation(this-&gt;shader.id(), &quot;textColor&quot;),
+    color.r,
+    color.g,
+    color.b
+  );
+  // 启用材质
+  glActiveTexture(GL_TEXTURE0);
+  glBindVertexArray(vao);
+
+  // 将utf8转换为utf32字符串，即unicode
+  std::wstring_convert&lt;std::codecvt_utf8&lt;char32_t&gt;, char32_t&gt; utf32conv;
+  auto s = utf32conv.from_bytes(text);
+
+  // 遍历渲染字符
+  for (auto c = s.begin(); c != s.end(); c++) {
+    // 如果未找到字符则动态载入
+    if (!this-&gt;character_table.contains(*c)) {
+      this-&gt;add_character(*c);
+    }
+    auto ch = this-&gt;character_table[*c];
+
+    float xpos = x + ch.bearing.x * scale;
+    float ypos = y - (ch.size.y - ch.bearing.y) * scale;
+
+    float w = ch.size.x * scale;
+    float h = ch.size.y * scale;
+    // 字体渲染的位置
+    float vertices[6][4] = { { xpos, ypos + h, 0.0f, 0.0f },
+                             { xpos, ypos, 0.0f, 1.0f },
+                             { xpos + w, ypos, 1.0f, 1.0f },
+
+                             { xpos, ypos + h, 0.0f, 0.0f },
+                             { xpos + w, ypos, 1.0f, 1.0f },
+                             { xpos + w, ypos + h, 1.0f, 0.0f } };
+    // 绑定字符材质
+    glBindTexture(GL_TEXTURE_2D, ch.texture_id);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    // 水平移动，以渲染下一个字符
+    x += (ch.advance &gt;&gt; 6)
+      * scale;
+  }
+  glBindVertexArray(0);
+  glBindTexture(GL_TEXTURE_2D, 0);
+}
+</code></pre>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 中文渲染</h2>
+<p>对于中文渲染，主要需要修改的地方在于：</p>
+<ol>
+<li>英文只需要128个字符，与之相对中文（cjk）则需要更多，因此需要使用<code>char32_t</code>或<code>wchar_t</code>替换<code>char</code>。</li>
+<li>同理，需要使用<code>std::wstring</code>替换<code>std::string</code>，或是使用以下方法进行格式转换：</li>
+</ol>
+<pre><code class="language-cpp">std::wstring_convert&lt;std::codecvt_utf8&lt;char32_t&gt;, char32_t&gt; utf32conv;
+auto s = utf32conv.from_bytes(text);
+</code></pre>
+<ol start="3">
+<li>另外，由于unicode字符非常多，因此无法一次性完成材质创建，需要进行动态载入。在绘制实际字符时进行判断：</li>
+</ol>
+<pre><code class="language-cpp">if (!this-&gt;character_table.contains(*c)) {
+    this-&gt;add_character(*c);
+}
+</code></pre>
+</article>
+    </div>
+  </body>
+</html>
