@@ -163,6 +163,32 @@
 sudo systemctl enable docker --now
 sudo usermod -a -G docker &lt;username&gt;
 </code></pre>
+<h3 id="podman"><a class="anchor" href="#podman">#</a> podman</h3>
+<p>对于<code>podman</code>用户，目前无法使用<code>rootless</code>模式来运行redroid，如果试图这样做，容器会立即退出且没有任何错误消息。</p>
+<p>因此需要使用以下方式来运行<code>podman</code>（即使用<code>sudo pacman</code>替换上面的<code>docker</code>）：</p>
+<pre><code class="language-shelll">  sudo podman run -itd --rm --privileged \
+    -v ~/docker/redroid/data:/data \
+    -p 5555:5555 \
+    --name redroid13 \
+    redroid/redroid:13.0.0-latest \
+    androidboot.redroid_width=1280 \
+    androidboot.redroid_height=720 \
+    androidboot.redroid_fps=60 \
+    androidboot.redroid_gpu_mode=host
+</code></pre>
+<p>如果提示未找到镜像，将以下内容加入到<code>/etc/containers/registries.conf</code>（对于<code>rootless</code>则是<code>~/.config/containers/registries.conf</code>）</p>
+<pre><code class="language-toml">[registries.search]
+registries = ['docker.io']
+</code></pre>
+<p>现在应该能够正常运行，使用<code>sudo podman ps</code>查看当前容器运行状态。</p>
+<p>如果本地未安装docker，可以使用<code>alias docker &quot;sudo podman&quot;</code>的方式来以<code>rootfull</code>方式运行<code>podman</code>（就像以前运行docker一样）。</p>
+<p>另外，如果不想总是输入密码来允许提权（虽然是个好习惯）：</p>
+<pre><code class="language-shell">sudo visudo
+
+# 然后在文件末新增：
+
+%wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/podman
+</code></pre>
 </article>
     </div>
   </body>

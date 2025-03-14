@@ -169,6 +169,12 @@
 <pre><code class="language-css">@import &quot;./css/tabs_below_content_v2.css&quot;;
 </code></pre>
 <p>然后在指定位置编写css文件。对于一些常用的css，推荐这个repo：<a href="https://github.com/MrOtherGuy/firefox-csshacks">https://github.com/MrOtherGuy/firefox-csshacks</a>，或是它提供的搜索界面：<a href="https://mrotherguy.github.io/firefox-csshacks/">https://mrotherguy.github.io/firefox-csshacks/</a></p>
+<h3 id="11-"><a class="anchor" href="#11-">#</a> 11. 强制启用硬件解码</h3>
+<p>如果使用N卡，安装驱动以支持libva：</p>
+<pre><code class="language-shell">paru -S libva-nvidia-driver
+</code></pre>
+<p>当然，也可以安装<code>libva-utils</code>以检测当前显卡的支持情况。</p>
+<p>为了在火狐中强制启用硬件解码，将<code>gfx.webrender.all</code>设为<code>true</code></p>
 <h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 其他</h2>
 <h3 id="heading-3"><a class="anchor" href="#heading-3">#</a> 一些插件</h3>
 <ul>
