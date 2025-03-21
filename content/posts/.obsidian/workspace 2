@@ -1,0 +1,102 @@
+{
+  "main": {
+    "id": "dc7ee44846c63317",
+    "type": "split",
+    "children": [
+      {
+        "id": "0138a42083bb06cf",
+        "type": "leaf",
+        "state": {
+          "type": "empty",
+          "state": {}
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "3cf993781c45f1b1",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "024acfb18220ed09",
+        "type": "leaf",
+        "state": {
+          "type": "file-explorer",
+          "state": {}
+        }
+      },
+      {
+        "id": "cd7731abf27e73aa",
+        "type": "leaf",
+        "state": {
+          "type": "search",
+          "state": {
+            "query": "",
+            "matchingCase": false,
+            "explainSearch": false,
+            "collapseAll": false,
+            "extraContext": false,
+            "sortOrder": "alphabetical"
+          }
+        }
+      },
+      {
+        "id": "649ade30b0ae6a3e",
+        "type": "leaf",
+        "state": {
+          "type": "tag",
+          "state": {
+            "sortOrder": "frequency",
+            "useHierarchy": true
+          }
+        }
+      }
+    ],
+    "currentTab": 0
+  },
+  "right": {
+    "id": "9f645b8306050ba6",
+    "type": "mobile-drawer",
+    "children": [
+      {
+        "id": "75b729a8b7b41364",
+        "type": "leaf",
+        "state": {
+          "type": "backlink",
+          "state": {
+            "collapseAll": false,
+            "extraContext": false,
+            "sortOrder": "alphabetical",
+            "showSearch": false,
+            "searchQuery": "",
+            "backlinkCollapsed": false,
+            "unlinkedCollapsed": true
+          }
+        }
+      },
+      {
+        "id": "0a8e0b01603a8748",
+        "type": "leaf",
+        "state": {
+          "type": "outline",
+          "state": {}
+        }
+      }
+    ],
+    "currentTab": 0
+  },
+  "active": "0138a42083bb06cf",
+  "lastOpenFiles": [
+    "文学/开放场地.md",
+    "文学/Parts/Part 3.md",
+    "文学/Parts/Part 4.md",
+    "文学/Parts/Part 2.md",
+    "文学/Parts/Part 1.md",
+    "翻译/游戏人生zero特典.md",
+    "翻译/NO GAME NO LIFE 游戏人生11 游戏玩家兄妹似乎必须成为情侣才能离开.md",
+    "翻译/ノゲノラ１１.md",
+    "碎片/时间.md",
+    "碎片/机器.md"
+  ]
+}

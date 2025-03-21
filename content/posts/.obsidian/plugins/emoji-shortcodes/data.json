@@ -1,0 +1,19 @@
+{
+  "immediateReplace": true,
+  "suggester": true,
+  "historyPriority": true,
+  "historyLimit": 100,
+  "history": [
+    ":crescent_moon:",
+    ":apple:",
+    ":wine_glass:",
+    ":1st_place_medal:",
+    ":desktop_computer:",
+    ":fireworks:",
+    ":anguished:",
+    ":fountain_pen:",
+    ":book:",
+    ":nauseated_face:",
+    ":crying_cat_face:"
+  ]
+}

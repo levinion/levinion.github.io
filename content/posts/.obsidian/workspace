@@ -1,0 +1,139 @@
+{
+  "main": {
+    "id": "800351c880ffbbc3",
+    "type": "split",
+    "children": [
+      {
+        "id": "eb55e3128ea5cc49",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "mysql笔记.md",
+            "mode": "source",
+            "source": false
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "0aa4edcbc0f6b4c2",
+    "type": "split",
+    "children": [
+      {
+        "id": "78dcce6af659b8ec",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1984143e1e9e9377",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "d8088dddad033240",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "right": {
+    "id": "f40c712d4ca5c941",
+    "type": "split",
+    "children": [
+      {
+        "id": "c3aac4c9825b0b23",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "64dccfec5978fe22",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "mysql笔记.md",
+                "collapseAll": true,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "01ed2d56a8e8d49c",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "mysql笔记.md"
+              }
+            }
+          },
+          {
+            "id": "194b17d69c7f7583",
+            "type": "leaf",
+            "state": {
+              "type": "calendar",
+              "state": {}
+            }
+          },
+          {
+            "id": "9192b08acfc600aa",
+            "type": "leaf",
+            "state": {
+              "type": "todo",
+              "state": {}
+            }
+          },
+          {
+            "id": "ee9732fe88909193",
+            "type": "leaf",
+            "state": {
+              "type": "advanced-tables-toolbar",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "eb55e3128ea5cc49",
+  "lastOpenFiles": [
+    "理性与物化.md",
+    "相对真实.md",
+    "认知主义.md",
+    "Wine 与 ATRI 与 .desktop.md",
+    "二叉链表.md",
+    "parts.md",
+    "grub引导恢复历险.md",
+    "arch小记.md",
+    "死亡恐惧.md",
+    "以腾讯会议为例谈Arch下的软件降级.md"
+  ]
+}

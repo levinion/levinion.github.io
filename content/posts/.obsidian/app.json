@@ -1,0 +1,15 @@
+{
+  "promptDelete": false,
+  "legacyEditor": false,
+  "newFileLocation": "current",
+  "attachmentFolderPath": "./素材库",
+  "communityPluginSortOrder": "download",
+  "vimMode": false,
+  "useTab": false,
+  "strictLineBreaks": true,
+  "showUnsupportedFiles": true,
+  "livePreview": true,
+  "spellcheck": false,
+  "alwaysUpdateLinks": true,
+  "autoPairMarkdown": false
+}

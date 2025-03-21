@@ -1,0 +1,12 @@
+{
+  "cssTheme": "Iterm",
+  "enabledCssSnippets": [
+    "hr",
+    "custom-admonitions.44e366"
+  ],
+  "baseFontSize": 16,
+  "accentColor": "",
+  "theme": "obsidian",
+  "textFontFamily": "LXGW WenKai",
+  "interfaceFontFamily": "LXGW WenKai"
+}
