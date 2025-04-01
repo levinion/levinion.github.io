@@ -130,12 +130,12 @@ git init
 idf_tools.py install esp-clang
 ```
 
-下载到的默认路径类似 `HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd`, 然后我们替换 nvim 使用的 lsp 命令即可：
+下载到的默认路径类似 `HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd`(注意这里的路径可能有变), 然后替换 nvim 使用的 lsp 命令即可：
 
 
 ```lua
 cmd = {
-          "$HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd",
+          vim.fn.expand("$HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd"),
           "--clang-tidy",
           "--all-scopes-completion",
           "--completion-style=detailed",
@@ -155,7 +155,7 @@ cmd = {
 local clangd = "clangd"
 
 if os.getenv("IDF_PATH") then
-  clangd = "$HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd"
+  clangd = vim.fn.expand("$HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd")
 end
 
 return {
@@ -198,3 +198,11 @@ idf.py flash monitor
 ```
 
 然后使用 `ctrl + ]` 退出监视器。
+
+如果你使用 Linux ，并遇到权限问题，将用户加入dialout（大多数发行版）或uucp（ArchLinux）组当中：
+
+```shell
+sudo usermod -aG dialout $USER
+# 或
+sudo usermod -aG uucp $USER
+```

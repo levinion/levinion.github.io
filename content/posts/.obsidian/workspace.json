@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux/Linux之安卓模拟器总集篇.md",
+                "file": "CS/platformio与arduino环境.md",
                 "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "Linux之安卓模拟器总集篇"
+              "title": "platformio与arduino环境"
             }
           }
         ]
@@ -146,15 +146,20 @@
       "command-palette:打开命令面板": false,
       "markdown-importer:打开 Markdown 格式转换器": false,
       "table-editor-obsidian:Advanced Tables Toolbar": false,
-      "quickadd:QuickAdd": false,
-      "open-vscode:VSCode": false
+      "quickadd:QuickAdd": false
     }
   },
   "active": "1e6a690c48fe3a72",
   "lastOpenFiles": [
-    "drafts/一个好的包管理的特征.md",
-    "Linux/Linux之安卓模拟器总集篇.md",
+    "CS/SDF实现圆角矩形.md",
+    "CS/platformio与arduino环境.md",
+    "CS/WSL下的esp-idf开发环境配置（使用nvim）.md",
     "CS/OpenGL文本渲染及中文支持.md",
+    "CS/Games101-计算机图形学.md",
+    "CS/二叉链表.md",
+    "CS/一次力扣爬虫的尝试.md",
+    "Linux/Linux之安卓模拟器总集篇.md",
+    "drafts/一个好的包管理的特征.md",
     "其他/Firefox QA.md",
     "CS/C++项目结构优化.md",
     "CS/C++文本嵌入二进制最佳实践.md",
@@ -172,12 +177,6 @@
     "Linux/网页驱动设备的udev规则设置.md",
     "Linux/使用QEMU运行存在于物理磁盘上的系统.md",
     "Linux/fzfmenu实现思路.md",
-    "Linux/archlinux速查速记.md",
-    "Linux/waydroid部署与ARM游戏运行.md",
-    "Linux/qemu启动android x86及Arm转译配置.md",
-    "Linux/使用just创建一个cli？！.md",
-    "Linux/Genymotion无痛指南.md",
-    "Linux/Linux的51单片机开发环境搭建.md",
     "templates/new_draft.md~",
     "templates/4913",
     "templates",

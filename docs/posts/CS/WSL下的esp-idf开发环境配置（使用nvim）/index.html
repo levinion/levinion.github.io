@@ -208,9 +208,9 @@ cmake ..
 <p>即使我们正确引入了环境变量，但是 freertos 等组件的头文件仍无法正确导入，这是因为 esp 工具链不使用标准的 clang。为此，我们需要获取 <code>esp-clang</code>。</p>
 <pre><code class="language-shell">idf_tools.py install esp-clang
 </code></pre>
-<p>下载到的默认路径类似 <code>HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd</code>, 然后我们替换 nvim 使用的 lsp 命令即可：</p>
+<p>下载到的默认路径类似 <code>HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd</code>(注意这里的路径可能有变), 然后替换 nvim 使用的 lsp 命令即可：</p>
 <pre><code class="language-lua">cmd = {
-          &quot;$HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd&quot;,
+          vim.fn.expand(&quot;$HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd&quot;),
           &quot;--clang-tidy&quot;,
           &quot;--all-scopes-completion&quot;,
           &quot;--completion-style=detailed&quot;,
@@ -227,7 +227,7 @@ cmake ..
 <pre><code class="language-lua">local clangd = &quot;clangd&quot;
 
 if os.getenv(&quot;IDF_PATH&quot;) then
-  clangd = &quot;$HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd&quot;
+  clangd = vim.fn.expand(&quot;$HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd&quot;)
 end
 
 return {
@@ -263,6 +263,11 @@ return {
 <pre><code class="language-shell">idf.py flash monitor
 </code></pre>
 <p>然后使用 <code>ctrl + ]</code> 退出监视器。</p>
+<p>如果你使用 Linux ，并遇到权限问题，将用户加入dialout（大多数发行版）或uucp（ArchLinux）组当中：</p>
+<pre><code class="language-shell">sudo usermod -aG dialout $USER
+# 或
+sudo usermod -aG uucp $USER
+</code></pre>
 </article>
     </div>
   </body>
