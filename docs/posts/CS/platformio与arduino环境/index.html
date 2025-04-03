@@ -208,9 +208,9 @@ env.Replace(COMPILATIONDB_PATH=&quot;build/compile_commands.json&quot;)
     -fstrict-volatile-bitfields,
   ]
 Diagnostics:
-  Suppress: &quot;*&quot;
+  Suppress: &quot;no_member&quot;
 </code></pre>
-<p>当我们选择忽略一些编译选项后，会提示<code>too many errors</code>，这时我们添加<code>-ferror-limit=0</code>以禁用错误数量限制，也就不会报错了。</p>
+<p>当我们选择忽略一些编译选项后，会提示<code>too many errors</code>，这时我们添加<code>-ferror-limit=0</code>以禁用错误数量限制，也就不会报错了。对于其他一些诊断问题，在<code>Suppress</code>中添加禁用就好。</p>
 <p>clangd默认参数可以参考；</p>
 <pre><code class="language-shell">&quot;clangd&quot;,
 &quot;--clang-tidy&quot;,

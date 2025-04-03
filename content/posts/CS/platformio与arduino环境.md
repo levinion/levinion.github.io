@@ -132,10 +132,10 @@ CompileFlags:
     -fstrict-volatile-bitfields,
   ]
 Diagnostics:
-  Suppress: "*"
+  Suppress: "no_member"
 ```
 
-当我们选择忽略一些编译选项后，会提示`too many errors`，这时我们添加`-ferror-limit=0`以禁用错误数量限制，也就不会报错了。
+当我们选择忽略一些编译选项后，会提示`too many errors`，这时我们添加`-ferror-limit=0`以禁用错误数量限制，也就不会报错了。对于其他一些诊断问题，在`Suppress`中添加禁用就好。
 
 clangd默认参数可以参考；
 
