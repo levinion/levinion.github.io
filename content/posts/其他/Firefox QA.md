@@ -111,7 +111,13 @@ paru -S libva-nvidia-driver
 - ublock origin
 - bitwarden
 - dark reader
-- 600% sound volume
+- 600% sound volume / SoundFixer
 - vimium
 - new tab overide
 - immersive translate
+
+### 设置为默认浏览器（xdg-open）
+
+```shell
+xdg-settings set default-web-browser firefox-developer-edition.desktop
+```

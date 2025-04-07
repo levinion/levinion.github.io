@@ -1,0 +1,162 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>一个简单的磁轴键盘</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>一个简单的磁轴键盘</h1>
+        <p>2025-04-07 14:15:36</p>
+      </div>
+      <article><image src="https://i.imgur.com/ZbXbY8p.jpg" alt="keyboard-pic" style="transform:rotate(-90deg);height:600px;display:flex;margin:auto"/>
+<pre><code class="language-cpp">#include &lt;Arduino.h&gt;
+#include &lt;USBHIDKeyboard.h&gt;
+#include &lt;USB.h&gt;
+
+#define LED1 GPIO_NUM_10
+
+#define KEY1 GPIO_NUM_16
+#define KEY2 GPIO_NUM_17
+
+USBHIDKeyboard keyboard;
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(LED1, OUTPUT);
+  keyboard.begin();
+  USB.begin();
+}
+
+void loop() {
+  auto hal = analogRead(KEY1);
+  if (hal &lt; 1800) {
+    digitalWrite(LED1, HIGH);
+    keyboard.press('z');
+  } else {
+    digitalWrite(LED1, LOW);
+    keyboard.releaseAll();
+  }
+  delay(1);
+}
+</code></pre>
+</article>
+    </div>
+  </body>
+</html>

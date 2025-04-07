@@ -155,7 +155,7 @@ Device              Start        End   Sectors   Size Ty
 /dev/nvme0n1p7 1951477760 1953525134   2047375 999.7M Windows rec
 </code></pre>
 <blockquote>
-<p>这里出于演示，只展示了一个硬盘（<!-- raw HTML omitted -->因为我只连了一个硬盘<!-- raw HTML omitted -->）。需要格外注意硬盘的标识，以免出现不小心把需要迁移的硬盘给格了的惨况。</p>
+<p>这里出于演示，只展示了一个硬盘（<s>因为我只连了一个硬盘</s>）。需要格外注意硬盘的标识，以免出现不小心把需要迁移的硬盘给格了的惨况。</p>
 </blockquote>
 <h4 id="heading-4"><a class="anchor" href="#heading-4">#</a> 分区</h4>
 <p>我所采用的分区方式参照 <a href="https://arch.icekylin.online/">archlinux 简明指南</a> ，采取了上面所展示的分区方式。也就是说，分了内存的 60% 给 swap，其余全部分给根目录。分区操作使用 <code>sudo cfdisk /dev/nvme0n1p2</code> 。</p>
@@ -255,7 +255,7 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 <h2 id="heading-10"><a class="anchor" href="#heading-10">#</a> 小结</h2>
 <p>至此全部工作告一段落。Linux 能够使用 rsync 进行迁移的根本原因在于 Unix “一切皆文件” 的理念；虽说如此，Linux 的正确迁移需要对其文件系统的结构有一个全局性的认识，相比 Windows 借助第三方工具进行一键迁移确实略显复杂。但是，正是通过这种复杂我们才能从中学到有价值的东西；Windows 那种黑盒一般的迁移方式除了让人感到方便，又能让人从中学到什么呢？</p>
 <blockquote>
-<p><!-- raw HTML omitted -->不过果然在学习面前，这种时候方便才是更重要的！<!-- raw HTML omitted --></p>
+<p><s>不过果然在学习面前，这种时候方便才是更重要的！</s></p>
 </blockquote>
 </article>
     </div>

@@ -857,7 +857,7 @@ void bezier(const std::vector&lt;cv::Point2f&gt; &amp;control_points, cv::Mat &a
 <p>此时，进入时间等于 max{t_min}，离开时间等于 min{t_max}</p>
 <p>当且仅当 t_enter &lt; t_exit &amp;&amp; t_exit &gt;= 0 时，光线与包围盒有交</p>
 <h6 id="heading-85"><a class="anchor" href="#heading-85">#</a> 均匀空间划分</h6>
-<!-- raw HTML omitted -->
+<img src="https://picdl.sunbangyan.cn/2023/06/21/111qjjh.png" />
 <p>对大包围盒进行平均划分成多个小包围盒。我们认为光线与包围盒求交要远快于与物体或三角形面求交。因此，将光线与小包围盒求交，如果通过的某个包围盒中存储有物体，则光线可能通过物体，此时做光线与格子中存在的物体求交。</p>
 <p>对包围盒的划分数量，划分太少则加速效果不明显，太多则可能拖累计算</p>
 <h6 id="heading-86"><a class="anchor" href="#heading-86">#</a> 其他空间划分</h6>
