@@ -1,0 +1,161 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>Firefox启用视频硬件加速解码（Nvidia）</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>Firefox启用视频硬件加速解码（Nvidia）</h1>
+        <p>2025-04-09 14:24:43</p>
+      </div>
+      <article><h2 id="1-"><a class="anchor" href="#1-">#</a> 1. 安装驱动</h2>
+<p>安装<code>libva-nvidia-driver</code>：</p>
+<pre><code class="language-shell">sudo pacman -S libva-nvidia-driver
+</code></pre>
+<p>查看vaapi支持（可选）：</p>
+<pre><code class="language-shell">sudo pacman -S libva-utils
+vainfo
+</code></pre>
+<h2 id="2-"><a class="anchor" href="#2-">#</a> 2. 修改内核参数</h2>
+<p>编辑grub配置。</p>
+<p>编辑<code>/etc/default/grub</code>，在<code>GRUB_CMDLINE_LINUX_DEFAULT</code>中新增：</p>
+<pre><code>nvidia-drm.modeset=1
+</code></pre>
+<p>更新grub配置：</p>
+<pre><code class="language-shell">sudo grub-mkconfig -o /boot/grub/grub.cfg
+</code></pre>
+<h2 id="3-firefox"><a class="anchor" href="#3-firefox">#</a> 3. firefox配置</h2>
+<ul>
+<li>修改<code>media.ffmpeg.vaapi.enabled</code>为<code>true</code></li>
+<li>修改<code>media.rdd-ffmpeg.enabled</code>为<code>true</code></li>
+<li>修改<code>gfx.x11-egl.force-enabled</code>为<code>true</code></li>
+<li>修改<code>widget.dmabuf.force-enabled</code>为<code>true</code></li>
+</ul>
+<h2 id="4-"><a class="anchor" href="#4-">#</a> 4. 环境变量</h2>
+<pre><code class="language-shell">set -gx MOZ_DISABLE_RDD_SANDBOX 1
+set -gx LIBVA_DRIVER_NAME nvidia
+set -gx __EGL_VENDOR_LIBRARY_FILENAMES /usr/share/glvnd/egl_vendor.d/10_nvidia.json
+</code></pre>
+<h2 id="5-"><a class="anchor" href="#5-">#</a> 5. 检查</h2>
+<p>完成以上步骤后重启。在火狐中打开<code>about:support</code>，查看当前硬件解码支持。</p>
+</article>
+    </div>
+  </body>
+</html>
