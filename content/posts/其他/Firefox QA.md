@@ -102,6 +102,8 @@ paru -S libva-nvidia-driver
 
 当然，也可以安装`libva-utils`以检测当前显卡的支持情况。
 
+详情可查看：[Firefox启用视频硬件加速解码（Nvidia）](https://blog.maruka.top/posts/%E5%85%B6%E4%BB%96/Firefox%E5%90%AF%E7%94%A8%E8%A7%86%E9%A2%91%E7%A1%AC%E4%BB%B6%E5%8A%A0%E9%80%9F%E8%A7%A3%E7%A0%81%EF%BC%88Nvidia%EF%BC%89/)
+
 为了在火狐中强制启用硬件解码，将`gfx.webrender.all`设为`true`
 
 ## 其他
