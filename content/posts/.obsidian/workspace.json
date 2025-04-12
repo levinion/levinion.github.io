@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux/迁移btrfs磁盘.md",
+                "file": "Linux/使用virtiofs共享宿主机文件夹.md",
                 "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "迁移btrfs磁盘"
+              "title": "使用virtiofs共享宿主机文件夹"
             }
           }
         ]
@@ -151,8 +151,9 @@
   },
   "active": "1e6a690c48fe3a72",
   "lastOpenFiles": [
-    "其他/Firefox QA.md",
     "Linux/迁移btrfs磁盘.md",
+    "Linux/使用virtiofs共享宿主机文件夹.md",
+    "其他/Firefox QA.md",
     "其他/Firefox启用视频硬件加速解码（Nvidia）.md",
     "CS/一个简单的磁轴键盘.md",
     "drafts/docker与容器化基础.md",
@@ -176,7 +177,6 @@
     "文学/诗年编（二）.md",
     "文学/parts.md",
     "其他/基于uv的pypi打包流程.md",
-    "drafts/技嘉B650风扇转速调节.md",
     "templates/new_draft.md~",
     "templates/4913",
     "templates",
