@@ -1,0 +1,213 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>X11捕获屏幕方法</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>X11捕获屏幕方法</h1>
+        <p>2025-04-28 12:37:52</p>
+      </div>
+      <article><h2 id="1-xgetimage"><a class="anchor" href="#1-xgetimage">#</a> 1. XGetImage</h2>
+<p>XGetImage是最简单的获取窗口图像的方法。</p>
+<pre><code class="language-cpp">  return XGetImage(
+    display,
+    window,
+    0,
+    0,
+    width,
+    height,
+    AllPlanes,
+    ZPixmap
+  );
+</code></pre>
+<h3 id="display"><a class="anchor" href="#display">#</a> DISPLAY</h3>
+<p>display是X11中显示器的抽象概念，不一定指一个物理显示器，也可能是一个由Xvfb创建的虚拟显示器。它可以由以下API获取：</p>
+<pre><code class="language-cpp">return XOpenDisplay(display.c_str());
+</code></pre>
+<p>其中，<code>display</code>是一个屏幕的标识符，它可以是类似<code>:99</code>的形式（Xvfb创建的默认DISPLAY），或是NULL，表示当前DISPLAY。</p>
+<h3 id="window"><a class="anchor" href="#window">#</a> Window</h3>
+<p>Window即窗口，标识着一个应用程序窗口。因为X11是C/S架构，所以窗口的数据也分别存放在服务端和客户端两部分。在客户端这边的图像叫做XImage，在服务端那边则叫做Pixmap。X11中Window对象只是一个标识，它可以使用以下方式获得：</p>
+<pre><code class="language-cpp">RootWindow(display, DefaultScreen(display));
+</code></pre>
+<p>上面是获取当前显示器的根窗口，也可以通过<code>XGetInputFocus</code>获取当前焦点所在的窗口：</p>
+<pre><code class="language-cpp">XGetInputFocus(display, &amp;focused, &amp;unknown);
+</code></pre>
+<p>还可以通过<code>XGetWindowAttributes</code>获取窗口的一些信息：</p>
+<pre><code class="language-cpp">XWindowAttributes window_attributes;
+XGetWindowAttributes(display, window, &amp;window_attributes);
+</code></pre>
+<h3 id="ximage"><a class="anchor" href="#ximage">#</a> XImage</h3>
+<p>从<code>XGetImage</code>可以获取XImage对象，这个对象中包含着窗口/屏幕（根窗口）的像素、尺寸、对齐格式等信息。</p>
+<p>对于XImage，我们可以调用<code>XGetPixel</code>函数来获取某个像素的信息。但是这种方式需要进行额外拷贝，因此CPU占用率较高。比较常见的方式还是直接读取它的<code>data</code>属性。这是<code>char*</code>类型数据，包含着全部的图片像素信息，对齐格式为BGRA，即使用四个u8存储一个像素信息。尺寸可以使用如下方式计算获得：</p>
+<pre><code class="language-cpp">im.height * im.width * 4
+</code></pre>
+<p>另外，它的顺序是从左上到右下，与OpenGL纹理Y轴相反，因此在使用OpenGL时需要提前处理图像反转Y轴，或在创建纹理时修改纹理坐标。</p>
+<h2 id="2-xshm"><a class="anchor" href="#2-xshm">#</a> 2. XShm</h2>
+<p>正是因为XGetImage每次从服务端申请图像资源，因此需要经过多次分配和拷贝，性能较低，因此很多程序会选择使用XShmGetImage的方法进行替代。XShm是一个X11扩展，提供了通过共享内存获取图像的方法。它可以做到一次分配多次使用，从而减少了内存分配和拷贝次数。</p>
+<pre><code class="language-cpp">void XwrapWindow::begin_get_image() {
+  int screen = DefaultScreen(display);
+  auto attr = this-&gt;get_attributes();
+
+  auto image = XShmCreateImage(
+    display,
+    attr.visual,
+    attr.depth,
+    ZPixmap,
+    NULL,
+    &amp;shminfo,
+    attr.width,
+    attr.height
+  );
+
+  shminfo.shmid = shmget(
+    IPC_PRIVATE,
+    image-&gt;bytes_per_line * image-&gt;height,
+    IPC_CREAT | 0777
+  );
+
+  shminfo.shmaddr = image-&gt;data = (char*)shmat(shminfo.shmid, 0, 0);
+  shminfo.readOnly = False;
+
+  XShmAttach(display, &amp;shminfo);
+  this-&gt;image = image;
+}
+</code></pre>
+<p>使用XShm需要先进行初始化，这包括共享内存区的申请和图像内存分配。</p>
+<pre><code class="language-cpp">void XwrapWindow::get_xshm_image() {
+  XShmGetImage(display, window, image, 0, 0, AllPlanes);
+}
+</code></pre>
+<p>获取图像方式与<code>XGetImage</code>基本一致，只是无需指定要获取的图片尺寸，这些信息包括在了已经分配好了的image对象中。这个函数可以在程序中多次调用。</p>
+<pre><code class="language-cpp">void XwrapWindow::end_get_image() {
+  XShmDetach(display, &amp;shminfo);
+  shmdt(shminfo.shmaddr);
+  shmctl(shminfo.shmid, IPC_RMID, 0);
+  XDestroyImage(image);
+}
+</code></pre>
+<p>在析构阶段，首先释放共享内存区，然后销毁图片。</p>
+<h2 id="heading"><a class="anchor" href="#heading">#</a> 后话</h2>
+<p>除了这两种方式，还可以利用<code>XComposite</code>扩展。具体思路大概是重定向窗口，然后获取窗口的Pixmap，从中获取图像。可惜几经尝试无法成功。</p>
+<p>另外，通过X11 API无法获取最小化或在其他虚拟桌面的窗口。当然，具体还要看窗口管理器策略。有些窗口管理器会创建一个相当大的屏幕，然后将不需要的窗口移出当前视图，这样窗口仍然被认为在当前屏幕上，是可以进行捕获的。但类似i3这种使用MAP和UNMAP管理窗口的就不行了，因为窗口被UNMAP之后就不会进行更新，也无法获取Pixmap，此时调用XGetImage大概率会获得一个全黑图像。</p>
+</article>
+    </div>
+  </body>
+</html>
