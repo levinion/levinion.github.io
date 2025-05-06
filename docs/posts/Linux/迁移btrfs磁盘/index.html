@@ -234,6 +234,13 @@ grub-mkconfig -o /boot/grub/grub.cfg
 <pre><code class="language-shell"># /dev/nvme1n1
 UUID=9c012ac6-ba03-4831-88a7-3128df7b828e /media/d ext4 rw,relatime 0 2
 </code></pre>
+<h2 id="heading-5"><a class="anchor" href="#heading-5">#</a> 其他</h2>
+<p>据仙子所言，可以使用一种非常简便的方式进行磁盘迁移：</p>
+<pre><code class="language-shell">btrfs device add &lt;新磁盘&gt;
+btrfs device delete &lt;旧磁盘&gt;
+</code></pre>
+<p>通过这种方式可以在不进入到archiso的前提下完成磁盘迁移，并且无需改动fstab和grub，因为磁盘的uuid没有发生改变。</p>
+<p>虽然我还没有验证这种方式，但应当是可行的。</p>
 </article>
     </div>
   </body>

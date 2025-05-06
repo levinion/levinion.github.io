@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CS/X11捕获屏幕方法.md",
+                "file": "Linux/为Linux启用BBR.md",
                 "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "X11捕获屏幕方法"
+              "title": "为Linux启用BBR"
             }
           }
         ]
@@ -151,10 +151,13 @@
   },
   "active": "1e6a690c48fe3a72",
   "lastOpenFiles": [
-    "drafts/配合使用git submodule和软链接.md",
-    "CS/X11捕获屏幕方法.md",
+    "Linux/tmux工作流配置.md",
+    "Linux/Linux之安卓模拟器总集篇.md",
     "Linux/使用virtiofs共享宿主机文件夹.md",
+    "Linux/为Linux启用BBR.md",
     "Linux/迁移btrfs磁盘.md",
+    "CS/X11捕获屏幕方法.md",
+    "drafts/配合使用git submodule和软链接.md",
     "其他/Firefox QA.md",
     "其他/Firefox启用视频硬件加速解码（Nvidia）.md",
     "CS/一个简单的磁轴键盘.md",
@@ -166,17 +169,14 @@
     "CS/Games101-计算机图形学.md",
     "CS/二叉链表.md",
     "CS/一次力扣爬虫的尝试.md",
-    "Linux/Linux之安卓模拟器总集篇.md",
     "drafts/一个好的包管理的特征.md",
     "CS/C++项目结构优化.md",
     "CS/C++文本嵌入二进制最佳实践.md",
     "CS/C++项目结构及交叉编译.md",
-    "Linux/tmux工作流配置.md",
     "哲学/穿越者悖论.md",
     "哲学/存在论基本问题.md",
     "文学/诗年编（三）.md",
     "文学/诗年编（一）.md",
-    "文学/诗年编（二）.md",
     "templates/new_draft.md~",
     "templates/4913",
     "templates",

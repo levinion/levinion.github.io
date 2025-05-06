@@ -182,3 +182,16 @@ sudo chown 1000:1000 /media/d/
 # /dev/nvme1n1
 UUID=9c012ac6-ba03-4831-88a7-3128df7b828e /media/d ext4 rw,relatime 0 2
 ```
+
+## 其他
+
+据仙子所言，可以使用一种非常简便的方式进行磁盘迁移：
+
+```shell
+btrfs device add <新磁盘>
+btrfs device delete <旧磁盘>
+```
+
+通过这种方式可以在不进入到archiso的前提下完成磁盘迁移，并且无需改动fstab和grub，因为磁盘的uuid没有发生改变。
+
+虽然我还没有验证这种方式，但应当是可行的。
