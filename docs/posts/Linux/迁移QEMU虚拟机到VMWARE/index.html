@@ -1,0 +1,154 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>迁移QEMU虚拟机到VMWARE</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>迁移QEMU虚拟机到VMWARE</h1>
+        <p>2025-05-10 21:51:13</p>
+      </div>
+      <article><p>由于qemu/kvm暂不支持Windows虚拟机的硬件加速，因此使用vmware（对于Windows虚拟机）是一个更好的选择。同时，vmware的GUI做得很不错（毕竟是一个商业软件）。</p>
+<h2 id="heading"><a class="anchor" href="#heading">#</a> 转换磁盘格式</h2>
+<p>首先转换虚拟磁盘文件格式。<code>qemu-img</code>支持从qcow2到vmware使用的vmdk文件格式的转换：</p>
+<pre><code class="language-shell">sudo qemu-img convert -f qcow2 -O vmdk /var/lib/libvirt/images/win10.qcow2 win10.vmdk
+</code></pre>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 安装虚拟机</h2>
+<p>这步按照引导完成虚拟机安装即可。其中，如果原先虚拟机未使用UEFI安装，可选择使用BIOS，否则无法引导。</p>
+<p>在创建磁盘界面选择已有的磁盘，然后填入vmdk文件的路径。</p>
+<h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 启用内核模块</h2>
+<p>在启动虚拟机是，可能提示缺少内核模块，按照需求补全即可。</p>
+<pre><code class="language-shell">sudo modprobe vmmon
+sudo modprobe vmw_vmci
+</code></pre>
+<p>在<code>/etc/modules-load.d/</code>中创建一个<code>vmware.conf</code>文件以自动加载模块：</p>
+<pre><code class="language-shell">vmmon
+vmw_vmci
+</code></pre>
+<p>或</p>
+<pre><code class="language-shell">printf &quot;vmmon\nvmw_vmci\n&quot; | sudo tee -a /etc/modules-load.d/vmware.conf
+</code></pre>
+<h2 id="nat"><a class="anchor" href="#nat">#</a> 启用NAT</h2>
+<pre><code class="language-shell">sudo systemctl enable --now vmware-networks.service
+</code></pre>
+</article>
+    </div>
+  </body>
+</html>
