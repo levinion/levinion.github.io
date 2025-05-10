@@ -35,7 +35,9 @@ echo "tcp_bbr" | sudo tee /etc/modules-load.d/bbr.conf
 net.ipv4.tcp_available_congestion_control = reno cubic bbr
 ```
 
-然后修改内核参数。在`/etc/sysctl.conf`中添加如下配置：
+然后修改内核参数。在`/etc/sysctl.d/99-sysctl.conf`中添加如下配置：
+
+> 有些地方可能会将配置写在/etc/sysctl.conf，这对于大多数发行版来说没有问题，但对于archlinux来说无效，因为archlinux已于2013年弃用了这个配置文件
 
 ```shell
 net.ipv4.tcp_congestion_control = bbr
@@ -44,10 +46,14 @@ net.core.default_qdisc = cake
 
 执行`sudo sysctl -p`以应用。这应该输出：
 
+> 对于archlinux用户来说应该是`sudo sysctl -p /etc/sysctl.d/99-sysctl.conf`
+
 ```shell
 net.ipv4.tcp_congestion_control = bbr
 net.core.default_qdisc = cake
 ```
+
+如果提示找不到`net.core.default_qdisc`，尝试重启。
 
 对于队列使用cake还是fq好有一些争议，但在日常使用场景下，应该不会有太大差别，因此可以随意选择一个你喜欢的。
 

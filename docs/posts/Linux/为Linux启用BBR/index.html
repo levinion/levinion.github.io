@@ -142,14 +142,21 @@ net.ipv4.tcp_congestion_control = cubic
 <pre><code class="language-shell">&gt; sysctl net.ipv4.tcp_available_congestion_control
 net.ipv4.tcp_available_congestion_control = reno cubic bbr
 </code></pre>
-<p>然后修改内核参数。在<code>/etc/sysctl.conf</code>中添加如下配置：</p>
+<p>然后修改内核参数。在<code>/etc/sysctl.d/99-sysctl.conf</code>中添加如下配置：</p>
+<blockquote>
+<p>有些地方可能会将配置写在/etc/sysctl.conf，这对于大多数发行版来说没有问题，但对于archlinux来说无效，因为archlinux已于2013年弃用了这个配置文件</p>
+</blockquote>
 <pre><code class="language-shell">net.ipv4.tcp_congestion_control = bbr
 net.core.default_qdisc = cake
 </code></pre>
 <p>执行<code>sudo sysctl -p</code>以应用。这应该输出：</p>
+<blockquote>
+<p>对于archlinux用户来说应该是<code>sudo sysctl -p /etc/sysctl.d/99-sysctl.conf</code></p>
+</blockquote>
 <pre><code class="language-shell">net.ipv4.tcp_congestion_control = bbr
 net.core.default_qdisc = cake
 </code></pre>
+<p>如果提示找不到<code>net.core.default_qdisc</code>，尝试重启。</p>
 <p>对于队列使用cake还是fq好有一些争议，但在日常使用场景下，应该不会有太大差别，因此可以随意选择一个你喜欢的。</p>
 <h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 参考</h2>
 <ol>
