@@ -125,7 +125,7 @@
         <h1>X11捕获屏幕方法</h1>
         <p>2025-04-28 12:37:52</p>
       </div>
-      <article><h2 id="1-xgetimage"><a class="anchor" href="#1-xgetimage">#</a> 1. XGetImage</h2>
+      <article><h2 id="xgetimage"><a class="anchor" href="#xgetimage">#</a> XGetImage</h2>
 <p>XGetImage是最简单的获取窗口图像的方法。</p>
 <pre><code class="language-cpp">  return XGetImage(
     display,
@@ -160,7 +160,7 @@ XGetWindowAttributes(display, window, &amp;window_attributes);
 <pre><code class="language-cpp">im.height * im.width * 4
 </code></pre>
 <p>另外，它的顺序是从左上到右下，与OpenGL纹理Y轴相反，因此在使用OpenGL时需要提前处理图像反转Y轴，或在创建纹理时修改纹理坐标。</p>
-<h2 id="2-xshm"><a class="anchor" href="#2-xshm">#</a> 2. XShm</h2>
+<h2 id="xshm"><a class="anchor" href="#xshm">#</a> XShm</h2>
 <p>正是因为XGetImage每次从服务端申请图像资源，因此需要经过多次分配和拷贝，性能较低，因此很多程序会选择使用XShmGetImage的方法进行替代。XShm是一个X11扩展，提供了通过共享内存获取图像的方法。它可以做到一次分配多次使用，从而减少了内存分配和拷贝次数。</p>
 <pre><code class="language-cpp">void XwrapWindow::begin_get_image() {
   int screen = DefaultScreen(display);
