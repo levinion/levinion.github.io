@@ -1,0 +1,232 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>git速查</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>git速查</h1>
+        <p>2025-05-18 16:49:17</p>
+      </div>
+      <article><h2 id="config"><a class="anchor" href="#config">#</a> config</h2>
+<pre><code class="language-shell">git config --global user.email &quot;your email&quot;
+git config --global user.name &quot;your name&quot;
+git config --global credential.helper store
+git config --global init.defaultBranch main
+</code></pre>
+<h2 id="basic"><a class="anchor" href="#basic">#</a> basic</h2>
+<p>初始化git：</p>
+<pre><code class="language-shell">git init
+</code></pre>
+<p>克隆：</p>
+<pre><code class="language-shell">git clone https://github.com/user/repo.git
+</code></pre>
+<p>添加文件到暂存区：</p>
+<pre><code class="language-shell">git add &lt;file&gt;
+</code></pre>
+<p>查看日志：</p>
+<pre><code class="language-shell">git log
+</code></pre>
+<h2 id="commit"><a class="anchor" href="#commit">#</a> commit</h2>
+<p>提交修改：</p>
+<pre><code class="language-shell">git commit -m &quot;some comment&quot;
+</code></pre>
+<p>修补上次提交（常用于添加遗漏的文件）：</p>
+<pre><code class="language-shell">git add forgotten_file
+git commit --amend
+</code></pre>
+<p>从暂存区移除文件（用于已跟踪，但想要添加到.gitignore的情况）：</p>
+<pre><code class="language-shell">git rm --cached &lt;path&gt;
+git commit -m &quot;some comment&quot;
+</code></pre>
+<h2 id="remote"><a class="anchor" href="#remote">#</a> remote</h2>
+<p>添加远程仓库：</p>
+<pre><code class="language-shell">git remote add origin https://github.com/user/repo.git
+</code></pre>
+<p>推送提交到远程：</p>
+<pre><code class="language-shell">git push origin main
+</code></pre>
+<p>从远程拉取：</p>
+<pre><code class="language-shell">git pull origin main [--merge/--rebase]
+</code></pre>
+<h2 id="submodule"><a class="anchor" href="#submodule">#</a> submodule</h2>
+<p>克隆（包括子模块）：</p>
+<pre><code class="language-shell">git clone --recursive https://github.com/user/repo.git
+</code></pre>
+<p>添加子模块到目标路径：</p>
+<pre><code class="language-shell">git submodule add https://github.com/user/repo.git ./target_dir/
+</code></pre>
+<p>更新子模块：</p>
+<pre><code class="language-shell">git submodule update --recursive --remote --init
+</code></pre>
+<h2 id="undo"><a class="anchor" href="#undo">#</a> undo</h2>
+<p>尚未提交时执行，丢弃本地所做的更改，回到上次提交之后的状态。</p>
+<pre><code class="language-shell">git checkout . (or filename)
+</code></pre>
+<p>执行<code>git add</code>，但未提交时执行，可撤回<code>git add</code></p>
+<pre><code class="language-shell">git reset
+</code></pre>
+<p>回到上一次提交前的状态，所做的更改不会被丢弃。<code>HEAD^</code>表示（第一个）父节点。也可以使用<code>HEAD^2</code>指定第二个父节点（如果存在的话）：</p>
+<pre><code class="language-shell">git reset HEAD^
+</code></pre>
+<p>回到上一次提交前的状态，所做的更改会被丢弃：</p>
+<pre><code class="language-shell">git reset --hard HEAD^
+</code></pre>
+<p>回退前两条提交，并且丢弃所有更改。<code>~N</code>表示代数，因此<code>HEAD~2</code>表示上面两代的祖先节点：</p>
+<pre><code class="language-shell">git reset --hard HEAD~2
+</code></pre>
+<p>回到上一次提交前的状态，但保存工作区和暂存区：</p>
+<pre><code class="language-shell">git reset --soft HEAD^
+</code></pre>
+<h2 id="branch"><a class="anchor" href="#branch">#</a> branch</h2>
+<p>新建分支：</p>
+<pre><code class="language-shell">git branch &lt;branch&gt;
+</code></pre>
+<p>删除分支：</p>
+<pre><code class="language-shell">git branch -d &lt;branch&gt;
+git branch -D &lt;branch&gt; # 强制删除
+</code></pre>
+<p>移动/重命名分支：</p>
+<pre><code class="language-shell">git branch -m &lt;old&gt; &lt;new&gt;
+git branch -M &lt;old&gt; &lt;new&gt; # 强制移动
+</code></pre>
+<p>切换分支：</p>
+<pre><code class="language-shell">git checkout &lt;branch&gt;
+</code></pre>
+<p>合并分支：</p>
+<pre><code class="language-shell"># 现在在主线分支上
+git merge/rebase &lt;branch&gt;
+</code></pre>
+<p>合并分支的某个提交：</p>
+<pre><code class="language-shell"># 现在在主线分支上
+git log &lt;branch&gt; # 找到待合并提交的哈希
+git cherry-pick &lt;hash&gt;
+</code></pre>
+<h2 id="update-index"><a class="anchor" href="#update-index">#</a> update-index</h2>
+<p>假定所传入路径文件不会发生更改，即git不再跟踪该文件/文件夹的变更情况：</p>
+<pre><code class="language-shell">git update-index --assume-unchanged &lt;file/folder path&gt;
+</code></pre>
+<p>还原：</p>
+<pre><code class="language-shell">git update-index --no-assume-unchanged &lt;file/folder path&gt;
+</code></pre>
+</article>
+    </div>
+  </body>
+</html>

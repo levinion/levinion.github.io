@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CS/libmpv实现推帧.md",
+                "file": "CS/一个简单的磁轴键盘.md",
                 "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "libmpv实现推帧"
+              "title": "一个简单的磁轴键盘"
             }
           }
         ]
@@ -151,8 +151,16 @@
   },
   "active": "1e6a690c48fe3a72",
   "lastOpenFiles": [
-    "CS/X11捕获屏幕方法.md",
+    "CS/git速查.md",
     "CS/libmpv实现推帧.md",
+    "CS/X11捕获屏幕方法.md",
+    "CS/一个简单的磁轴键盘.md",
+    "CS/platformio与arduino环境.md",
+    "CS/SDF实现圆角矩形.md",
+    "CS/WSL下的esp-idf开发环境配置（使用nvim）.md",
+    "CS/OpenGL文本渲染及中文支持.md",
+    "templates/new_draft.md",
+    "drafts/配合使用git submodule和软链接.md",
     "Linux/为Linux启用BBR.md",
     "Linux/迁移btrfs磁盘.md",
     "Linux/迁移QEMU虚拟机到VMWARE.md",
@@ -160,23 +168,15 @@
     "Linux/tmux工作流配置.md",
     "Linux/Linux之安卓模拟器总集篇.md",
     "Linux/使用virtiofs共享宿主机文件夹.md",
-    "drafts/配合使用git submodule和软链接.md",
     "其他/Firefox QA.md",
     "其他/Firefox启用视频硬件加速解码（Nvidia）.md",
-    "CS/一个简单的磁轴键盘.md",
     "drafts/docker与容器化基础.md",
-    "CS/platformio与arduino环境.md",
-    "CS/SDF实现圆角矩形.md",
-    "CS/WSL下的esp-idf开发环境配置（使用nvim）.md",
-    "CS/OpenGL文本渲染及中文支持.md",
     "CS/Games101-计算机图形学.md",
     "CS/二叉链表.md",
     "CS/一次力扣爬虫的尝试.md",
     "drafts/一个好的包管理的特征.md",
     "CS/C++项目结构优化.md",
     "CS/C++文本嵌入二进制最佳实践.md",
-    "CS/C++项目结构及交叉编译.md",
-    "哲学/穿越者悖论.md",
     "templates/new_draft.md~",
     "templates/4913",
     "templates",
