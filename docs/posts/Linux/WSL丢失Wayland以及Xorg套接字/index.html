@@ -130,12 +130,8 @@
 <p>这可以通过建立 wslg 中套接字的软链接实现，但由于每次重启都会发生套接字的丢失，因此最好配置一个 oneshot 服务。</p>
 <h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 步骤</h2>
 <ol>
-<li>
-<p>首先确保 wslg 正确启用，并且能在 <code>/mnt/wslg/runtime-dir</code> 以及 <code>/mnt/wslg/.X11-unix</code> 目录下分别找到 <code>Wayland-0</code> 和 <code>X0</code> 套接字。</p>
-</li>
-<li>
-<p>然后在指定位置创建如下脚本和服务，并启用：</p>
-</li>
+<li>首先确保 wslg 正确启用，并且能在 <code>/mnt/wslg/runtime-dir</code> 以及 <code>/mnt/wslg/.X11-unix</code> 目录下分别找到 <code>Wayland-0</code> 和 <code>X0</code> 套接字。</li>
+<li>然后在指定位置创建如下脚本和服务，并启用：</li>
 </ol>
 <pre><code class="language-shell"># /etc/systemd/user/wslg-patch.sh
 ln -fs /mnt/wslg/runtime-dir/* /run/user/1000/

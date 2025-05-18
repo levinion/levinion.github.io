@@ -126,19 +126,19 @@
         <p>2025-03-11 21:47:28</p>
       </div>
       <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 文本渲染流程</h2>
-<p>对于文本渲染，首先我们需要引入<code>freetype</code>库。它主要实现了从字形文件生成位图的功能，从而方便生成材质以供文本渲染。</p>
+<p>对于文本渲染，首先我们需要引入 <code>freetype</code> 库。它主要实现了从字形文件生成位图的功能，从而方便生成材质以供文本渲染。</p>
 <pre><code class="language-cpp">#include &lt;ft2build.h&gt;
 #include &lt;freetype/freetype.h&gt;
 #include FT_FREETYPE_H
 </code></pre>
-<p>总共涉及的初始化包括三部分，分别是freetype、shader和vao、vbo的初始化：</p>
+<p>总共涉及的初始化包括三部分，分别是 freetype、shader 和 vao、vbo 的初始化：</p>
 <pre><code class="language-cpp">void init(std::string font) {
   this-&gt;init_freetype(font);
   this-&gt;init_shader();
   this-&gt;init_buffer();
 }
 </code></pre>
-<p>对freetype进行一些初始化工作：</p>
+<p>对 freetype 进行一些初始化工作：</p>
 <pre><code class="language-cpp">// 初始化freetype
 FT_Library ft;
 FT_Init_FreeType(&amp;ft)
@@ -151,7 +151,7 @@ FT_Set_Pixel_Sizes(this-&gt;face, 0, 48);
 // 禁用字节对齐限制
 glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 </code></pre>
-<p>初始化shader：</p>
+<p>初始化 shader：</p>
 <pre><code class="language-cpp">void init_shader() {
   // 导入shader代码，生成和使用program
   auto vertex = (const char*)_text_vertex_shader_code;
@@ -177,7 +177,7 @@ glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   );
 }
 </code></pre>
-<p>shader代码如下：</p>
+<p>shader 代码如下：</p>
 <pre><code class="language-glsl">// vertex.glsl
 #version 330 core
 layout(location = 0) in vec4 vertex; // &lt;vec2 pos, vec2 tex&gt;
@@ -205,7 +205,7 @@ void main()
     color = vec4(textColor, 1.0) * sampled;
 }
 </code></pre>
-<p>进行vao和vbo初始化：</p>
+<p>进行 vao 和 vbo 初始化：</p>
 <pre><code class="language-cpp">void init_buffer() {
   // init vao
   unsigned int vao;
@@ -318,14 +318,14 @@ void main()
 <h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 中文渲染</h2>
 <p>对于中文渲染，主要需要修改的地方在于：</p>
 <ol>
-<li>英文只需要128个字符，与之相对中文（cjk）则需要更多，因此需要使用<code>char32_t</code>或<code>wchar_t</code>替换<code>char</code>。</li>
-<li>同理，需要使用<code>std::wstring</code>替换<code>std::string</code>，或是使用以下方法进行格式转换：</li>
+<li>英文只需要 128 个字符，与之相对中文（cjk）则需要更多，因此需要使用 <code>char32_t</code> 或 <code>wchar_t</code> 替换 <code>char</code>。</li>
+<li>同理，需要使用 <code>std::wstring</code> 替换 <code>std::string</code>，或是使用以下方法进行格式转换：</li>
 </ol>
 <pre><code class="language-cpp">std::wstring_convert&lt;std::codecvt_utf8&lt;char32_t&gt;, char32_t&gt; utf32conv;
 auto s = utf32conv.from_bytes(text);
 </code></pre>
 <ol start="3">
-<li>另外，由于unicode字符非常多，因此无法一次性完成材质创建，需要进行动态载入。在绘制实际字符时进行判断：</li>
+<li>另外，由于 unicode 字符非常多，因此无法一次性完成材质创建，需要进行动态载入。在绘制实际字符时进行判断：</li>
 </ol>
 <pre><code class="language-cpp">if (!this-&gt;character_table.contains(*c)) {
     this-&gt;add_character(*c);

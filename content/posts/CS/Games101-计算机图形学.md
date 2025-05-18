@@ -2,19 +2,21 @@
 title: Games101-计算机图形学
 created: 2023-06-10 13:48:15
 ---
-
 ## 计算机图形学
 
 ### 应用
+
 - 电影、动画特效、设计（CAD）、CG（Computer Graphics）
 - 可视化、虚拟现实、仿真/模拟
 - 图形界面、字体...
 
 ### 挑战
+
 真实世界的理解、计算方法、显示方法
 
 ### 内容
-数学理论、着色、形体、仿真动画，不包括OpenGL、DirectX、Vulcan等（图形学api）
+
+数学理论、着色、形体、仿真动画，不包括 OpenGL、DirectX、Vulcan 等（图形学 API）
 
 - 光栅化：广泛应用在实时图形学(>30fps)
 - 几何（曲线和曲面）
@@ -24,83 +26,88 @@ created: 2023-06-10 13:48:15
 > 图形学（模型渲染图片）!=计算机视觉（图片提取信息：分析、猜测、理解、推理）
 
 ## 线性代数
+
 坐标、平移、旋转 ==> 矩阵计算
 
 ### 向量
-![](https://www.zhihu.com/equation?tex=\bbox[white]{\vec{AB}=\vec{B}-\vec{A}})
+
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cvec%7BAB%7D=%5Cvec%7BB%7D-%5Cvec%7BA%7D%7D)
 
 - 向量加法（三角形法则）
-![](https://www.zhihu.com/equation?tex=\bbox[white]{\vec{AB}=\vec{AO}%2B\vec{OB}})
-
+  ![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cvec%7BAB%7D=%5Cvec%7BAO%7D%2B%5Cvec%7BOB%7D%7D)
 - 向量点乘（Dot）: 表示方向性
-![](https://www.zhihu.com/equation?tex=\bbox[white]{\vec{a}\cdot\vec{b}=|\vec{a}||\vec{b}|\cdot\cos(\theta)})
-
+  ![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cvec%7Ba%7D%5Ccdot%5Cvec%7Bb%7D=%7C%5Cvec%7Ba%7D%7C%7C%5Cvec%7Bb%7D%7C%5Ccdot%5Ccos(%5Ctheta)%7D)
 - 投影
-b在a上的投影：![](https://www.zhihu.com/equation?tex=\bbox[white]{k=|\vec{b}|\cos\theta})
-
+  b 在 a 上的投影：![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bk=%7C%5Cvec%7Bb%7D%7C%5Ccos%5Ctheta%7D)
 - 叉乘（方向根据右手定则）：已知两个坐标系得到另一个坐标系
-![](https://www.zhihu.com/equation?tex=\bbox[white]{|\vec{a}\times\vec{b}|=|\vec{a}||\vec{b}|\sin\phi})
-
+  ![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%7C%5Cvec%7Ba%7D%5Ctimes%5Cvec%7Bb%7D%7C=%7C%5Cvec%7Ba%7D%7C%7C%5Cvec%7Bb%7D%7C%5Csin%5Cphi%7D)
 
 ### 矩阵
-- 矩阵乘法（矩阵X矩阵、矩阵X向量）
+
+- 矩阵乘法（矩阵 X 矩阵、矩阵 X 向量）
 - 结合律、分配律、无交换律
 - 单位矩阵
 - 逆矩阵
 
 ## 变换
+
 变换即是对目标的每一个点进行变换，以得到整体的改变。复杂变换可由简单变换得到，和变换的顺序有关。
 
 ### 二维变换
 
 #### 缩放变换
-![](https://www.zhihu.com/equation?tex=\bbox[white]{x^{'}=sx~~or~~y^{'}=sy})
+
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bx%5E%7B'%7D=sx~~or~~y%5E%7B'%7D=sy%7D)
 
 #### 反转
-![](https://www.zhihu.com/equation?tex=\bbox[white]{x^{'}=-x~~or~~y^{'}=-y})
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%5Cbegin%7Bbmatrix%7D%0Ax%5E%7B%27%7D+%5C%5C+y%5E%7B%27%7D%0A%5Cend%7Bbmatrix%7D%0A%3D%0A%5Cbegin%7Bbmatrix%7D%0A-1+%26+0+%5C%5C+0+%26+1+%0A%5Cend%7Bbmatrix%7D%0A%5Cbegin%7Bbmatrix%7D%0Ax+%5C%5C+y%0A%5Cend%7Bbmatrix%7D%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bx%5E%7B'%7D=-x~~or~~y%5E%7B'%7D=-y%7D)
+
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cbegin%7Bbmatrix%7D%0Ax%5E%7B%27%7D+%5C%5C+y%5E%7B%27%7D%0A%5Cend%7Bbmatrix%7D%0A%3D%0A%5Cbegin%7Bbmatrix%7D%0A-1+%26+0+%5C%5C+0+%26+1+%0A%5Cend%7Bbmatrix%7D%0A%5Cbegin%7Bbmatrix%7D%0Ax+%5C%5C+y%0A%5Cend%7Bbmatrix%7D%0A%7D)
 
 #### 切变
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%5Cbegin%7Bbmatrix%7D%0Ax%5E%7B%27%7D+%5C%5C+y%5E%7B%27%7D%0A%5Cend%7Bbmatrix%7D%0A%3D%0A%5Cbegin%7Bbmatrix%7D%0A1+%26+a+%5C%5C+0+%26+1+%0A%5Cend%7Bbmatrix%7D%0A%5Cbegin%7Bbmatrix%7D%0Ax+%5C%5C+y%0A%5Cend%7Bbmatrix%7D%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cbegin%7Bbmatrix%7D%0Ax%5E%7B%27%7D+%5C%5C+y%5E%7B%27%7D%0A%5Cend%7Bbmatrix%7D%0A%3D%0A%5Cbegin%7Bbmatrix%7D%0A1+%26+a+%5C%5C+0+%26+1+%0A%5Cend%7Bbmatrix%7D%0A%5Cbegin%7Bbmatrix%7D%0Ax+%5C%5C+y%0A%5Cend%7Bbmatrix%7D%0A%7D)
 
 #### 旋转
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{R_%5Ctheta%3D%5Cbegin%7Bbmatrix%7D%0A%5Ccos%5Ctheta+%26+-%5Csin%5Ctheta%5C%5C%0A%5Csin%5Ctheta+%26+%5Ccos%5Ctheta+%0A%5Cend%7Bbmatrix%7D%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7BR_%5Ctheta%3D%5Cbegin%7Bbmatrix%7D%0A%5Ccos%5Ctheta+%26+-%5Csin%5Ctheta%5C%5C%0A%5Csin%5Ctheta+%26+%5Ccos%5Ctheta+%0A%5Cend%7Bbmatrix%7D%0A%7D)
 
 #### 线性变换
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%5Cbegin%7Bbmatrix%7D%0Ax%5E%7B%27%7D%5C%5C+y%5E%7B%27%7D%0A%5Cend%7Bbmatrix%7D%0A%3D%0A%5Cbegin%7Bbmatrix%7D%0Aa%26b%5C%5C+c%26d%0A%5Cend%7Bbmatrix%7D%0A%5Cbegin%7Bbmatrix%7D%0Ax%5C%5C+y%0A%5Cend%7Bbmatrix%7D})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cbegin%7Bbmatrix%7D%0Ax%5E%7B%27%7D%5C%5C+y%5E%7B%27%7D%0A%5Cend%7Bbmatrix%7D%0A%3D%0A%5Cbegin%7Bbmatrix%7D%0Aa%26b%5C%5C+c%26d%0A%5Cend%7Bbmatrix%7D%0A%5Cbegin%7Bbmatrix%7D%0Ax%5C%5C+y%0A%5Cend%7Bbmatrix%7D%7D)
 
 即
-![](https://www.zhihu.com/equation?tex=\bbox[white]{x%5E%7B%27%7D%3Dax%2Bby})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bx%5E%7B%27%7D%3Dax%2Bby%7D)
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{y%5E%7B%27%7D%3Dcx%2Bdy})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7By%5E%7B%27%7D%3Dcx%2Bdy%7D)
 
 即
-![](https://www.zhihu.com/equation?tex=\bbox[white]{x%5E%7B%27%7D%3DMx})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bx%5E%7B%27%7D%3DMx%7D)
 
 称为线性变换。以上均属于线性变换。
 
 #### 平移
+
 平移是一种特殊的二维变换，它不属于线性变换，因为：
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0A%5Cbegin%7Bbmatrix%7D%0Ax%5E%7B%27%7D%5C%5C+y%5E%7B%27%7D%0A%5Cend%7Bbmatrix%7D%3D%0A%5Cbegin%7Bbmatrix%7D%0Aa+%26+b+%5C%5C+c%26d%0A%5Cend%7Bbmatrix%7D%0A%5Cbegin%7Bbmatrix%7D%0Ax+%5C%5C+y%0A%5Cend%7Bbmatrix%7D%0A%2B%0A%5Cbegin%7Bbmatrix%7D%0At_x+%5C%5C+t_y%0A%5Cend%7Bbmatrix%7D})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0A%5Cbegin%7Bbmatrix%7D%0Ax%5E%7B%27%7D%5C%5C+y%5E%7B%27%7D%0A%5Cend%7Bbmatrix%7D%3D%0A%5Cbegin%7Bbmatrix%7D%0Aa+%26+b+%5C%5C+c%26d%0A%5Cend%7Bbmatrix%7D%0A%5Cbegin%7Bbmatrix%7D%0Ax+%5C%5C+y%0A%5Cend%7Bbmatrix%7D%0A%2B%0A%5Cbegin%7Bbmatrix%7D%0At_x+%5C%5C+t_y%0A%5Cend%7Bbmatrix%7D%7D)
 
 为了解决其特殊性，引入齐次坐标。
 
 #### 引入齐次坐标
+
 为二维的点或向量增加一个维度，得到仿射变换的通式。
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%5Cbegin%7Bbmatrix%7D%0Ax%5E%7B%27%7D%5C%5C+y%5E%7B%27%7D+%5C%5C+w%5E%7B%27%7D%0A%5Cend%7Bbmatrix%7D%0A%3D%0A%5Cbegin%7Bbmatrix%7D%0A1%260%26t_x%5C%5C+0%261%26t_y%5C%5C+0%26+0+%261%0A%5Cend%7Bbmatrix%7D%0A%5Cbegin%7Bbmatrix%7D%0Ax%5C%5C+y%5C%5C+1%0A%5Cend%7Bbmatrix%7D%0A%3D%5Cbegin%7Bbmatrix%7D%0Ax%2Bt_x+%5C%5C+y%2Bt_y%5C%5C+1%0A%5Cend%7Bbmatrix%7D})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cbegin%7Bbmatrix%7D%0Ax%5E%7B%27%7D%5C%5C+y%5E%7B%27%7D+%5C%5C+w%5E%7B%27%7D%0A%5Cend%7Bbmatrix%7D%0A%3D%0A%5Cbegin%7Bbmatrix%7D%0A1%260%26t_x%5C%5C+0%261%26t_y%5C%5C+0%26+0+%261%0A%5Cend%7Bbmatrix%7D%0A%5Cbegin%7Bbmatrix%7D%0Ax%5C%5C+y%5C%5C+1%0A%5Cend%7Bbmatrix%7D%0A%3D%5Cbegin%7Bbmatrix%7D%0Ax%2Bt_x+%5C%5C+y%2Bt_y%5C%5C+1%0A%5Cend%7Bbmatrix%7D%7D)
 
 w 为 0 或 1，以满足平移变换后的向量或点的不变性。其中 0 表示向量，1 表示点。
 
 因此：
+
 - 点-点=向量
-- 向量+-向量=向量
-- 点+-向量=点
-- 点+点=2？=>点，若w!=0，w=w/w，x=x/w，其他同理
+- 向量 +-向量=向量
+- 点 +-向量=点
+- 点 + 点=2？=> 点，若 w!=0，w=w/w，x=x/w，其他同理
 
 代价即是引入了一个额外的坐标，但是可省略仿射变换，只保留左上角矩阵，因此代价不高。
 
@@ -108,32 +115,34 @@ w 为 0 或 1，以满足平移变换后的向量或点的不变性。其中 0 �
 
 #### 变换的组合性
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{R%3DA_1%2AA_2%2A...%2AS})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7BR%3DA_1%2AA_2%2A...%2AS%7D)
 
 复杂变换可由简单变换组合而成，其顺序相关，同时变换矩阵维数相同（3\*3）
 
 ### 三维变换
+
 同二维变换，用四个坐标描述一个三维坐标中的点：一个四维矩阵
 
 #### 旋转
 
 有旋转矩阵：
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0AR_%7Bx%7D%28%5Calpha%29%3D%0A%5Cbegin%7Bbmatrix%7D%0A1%260%260%260+%5C%5C%0A0%26%5Ccos+%5Calpha+%26+-%5Csin+%5Calpha+%260+%5C%5C%0A0+%26%5Csin+%5Calpha+%26%5Ccos+%5Calpha+%260+%5C%5C%0A0%260%260%261%0A%5Cend%7Bbmatrix%7D%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AR_%7Bx%7D%28%5Calpha%29%3D%0A%5Cbegin%7Bbmatrix%7D%0A1%260%260%260+%5C%5C%0A0%26%5Ccos+%5Calpha+%26+-%5Csin+%5Calpha+%260+%5C%5C%0A0+%26%5Csin+%5Calpha+%26%5Ccos+%5Calpha+%260+%5C%5C%0A0%260%260%261%0A%5Cend%7Bbmatrix%7D%0A%7D)
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0AR_%7By%7D%28%5Calpha%29%3D%0A%5Cbegin%7Bbmatrix%7D%0A%5Ccos+%5Calpha%260%26%5Csin+%5Calpha%260+%5C%5C%0A0%261+%26+0+%260+%5C%5C%0A-+%5Csin+%5Calpha%260+%26%5Ccos+%5Calpha+%260+%5C%5C%0A0%260%260%261%0A%5Cend%7Bbmatrix%7D%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AR_%7By%7D%28%5Calpha%29%3D%0A%5Cbegin%7Bbmatrix%7D%0A%5Ccos+%5Calpha%260%26%5Csin+%5Calpha%260+%5C%5C%0A0%261+%26+0+%260+%5C%5C%0A-+%5Csin+%5Calpha%260+%26%5Ccos+%5Calpha+%260+%5C%5C%0A0%260%260%261%0A%5Cend%7Bbmatrix%7D%0A%7D)
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0AR_%7Bz%7D%28%5Calpha%29%3D%0A%5Cbegin%7Bbmatrix%7D%0A%5Ccos+%5Calpha%26-%5Csin+%5Calpha%260+%260%5C%5C%0A%5Csin+%5Calpha%26%5Ccos+%5Calpha+%26+0+%260+%5C%5C%0A0+%260+%260%260+%5C%5C%0A0%260%260%261%0A%5Cend%7Bbmatrix%7D%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AR_%7Bz%7D%28%5Calpha%29%3D%0A%5Cbegin%7Bbmatrix%7D%0A%5Ccos+%5Calpha%26-%5Csin+%5Calpha%260+%260%5C%5C%0A%5Csin+%5Calpha%26%5Ccos+%5Calpha+%26+0+%260+%5C%5C%0A0+%260+%260%260+%5C%5C%0A0%260%260%261%0A%5Cend%7Bbmatrix%7D%0A%7D)
 
 三维旋转可由三个独立二维旋转行为描述，用欧拉角描述，分为横滚角、俯仰角、航向角
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{R_%7Bxyz%7D%28%5Calpha%2C%5Cbeta%2C%5Cgamma%29%3DR_x%28%5Calpha%29R_y%28%5Cbeta%29R_z%28%5Cgamma%29})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7BR_%7Bxyz%7D%28%5Calpha%2C%5Cbeta%2C%5Cgamma%29%3DR_x%28%5Calpha%29R_y%28%5Cbeta%29R_z%28%5Cgamma%29%7D)
 
 > 罗德里格斯旋转公式：
-> ![](https://www.zhihu.com/equation?tex=\bbox[white]{R+%3D+I+%2B+%5Csin%5Ctheta+%2A+A+%2B+%281-%5Ccos%5Ctheta%29+%2A+A%5E2})
+> ![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7BR+%3D+I+%2B+%5Csin%5Ctheta+%2A+A+%2B+%281-%5Ccos%5Ctheta%29+%2A+A%5E2%7D)
 > 可计算出任意轴和任意角度的旋转变换矩阵
 
-### MVP变换
+### MVP 变换
+
 M - Model 变换: 将物体从对象空间转换到世界空间。它包含物体的缩放、旋转和位置变换。
 
 V - View 变换: 将世界空间转换到视图空间。它决定摄像机的位置和方向。
@@ -143,51 +152,56 @@ P - Projection 变换: 将视图空间转换到裁剪空间。它实现透视效
 这三个变换的综合结果是将三维物体最终投影到二维屏幕上的效果。它们的作用顺序是: 物体空间 → 世界空间 → 视图空间 → 裁剪空间 → 屏幕空间。
 
 ### 投影
+
 投影分为正交投影和透视投影，正交投影能够更好地反映比例，透视投影更加贴近真实。
 
 方法是定义近和远两个平面，从一个平面投影向另一个平面。正交投影和透视投影的区别在于投影线是否平行，也就是投影面是否等大。
 
 正交的计算方法形同平移，投影的坐标计算依赖于相似三角形。
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{y%5E%7B%27%7D%3D%5Cfrac%7Bn%7D%7Bz%7Dy})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7By%5E%7B%27%7D%3D%5Cfrac%7Bn%7D%7Bz%7Dy%7D)
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{x%5E%7B%27%7D%3D%5Cfrac%7Bn%7D%7Bz%7Dx})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bx%5E%7B%27%7D%3D%5Cfrac%7Bn%7D%7Bz%7Dx%7D)
 
 n 和 z 分别是远平面和近平面到延长线和水平面交点的距离。
 
 一个很好的资料是：[（超详细！）计算机图形学 入门篇 2. 视图变换（Viewing Transformations）](https://zhuanlan.zhihu.com/p/448547679)
 
 #### 正交投影
+
 正交投影的工作是将空间的长方体移动到原点并压缩成一个正方体。
 
 有
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0AM_%7Bortho%7D%3D%5Cbegin%7Bbmatrix%7D%0A%5Cfrac%7B2%7D%7Br-l%7D%260%260%260+%5C%5C%0A0+%26+%5Cfrac%7B2%7D%7Bt-b%7D+%260%260%5C%5C+%0A0%260%26+%5Cfrac%7B2%7D%7Bn-f%7D+%260+%5C%5C%0A0%260%260%261%0A%5Cend%7Bbmatrix%7D%0A%5Cbegin%7Bbmatrix%7D%0A1%260%260%26-+%5Cfrac%7Br%2Bl%7D%7B2%7D+%5C%5C%0A0%261%260%26-+%5Cfrac%7Bt%2Bb%7D%7B2%7D+%5C%5C%0A0%260%261%26-+%5Cfrac%7Bn%2Bf%7D%7B2%7D%5C%5C%0A0%260%260%261+%5C%5C%0A%5Cend%7Bbmatrix%7D%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AM_%7Bortho%7D%3D%5Cbegin%7Bbmatrix%7D%0A%5Cfrac%7B2%7D%7Br-l%7D%260%260%260+%5C%5C%0A0+%26+%5Cfrac%7B2%7D%7Bt-b%7D+%260%260%5C%5C+%0A0%260%26+%5Cfrac%7B2%7D%7Bn-f%7D+%260+%5C%5C%0A0%260%260%261%0A%5Cend%7Bbmatrix%7D%0A%5Cbegin%7Bbmatrix%7D%0A1%260%260%26-+%5Cfrac%7Br%2Bl%7D%7B2%7D+%5C%5C%0A0%261%260%26-+%5Cfrac%7Bt%2Bb%7D%7B2%7D+%5C%5C%0A0%260%261%26-+%5Cfrac%7Bn%2Bf%7D%7B2%7D%5C%5C%0A0%260%260%261+%5C%5C%0A%5Cend%7Bbmatrix%7D%0A%7D)
 
 其中，(l,r)(b,t)(f,n)定义一个长方体，代表左右、上下、前后。
 
 #### 透视投影
+
 透视投影的工作是将远平面压缩成近平面等大，即将一个梯台变换为一个长方体。之后再进行正交投影就称为透视变换。
 
 有
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0AM_%7Bpersp%7D%3D%5Cbegin%7Bbmatrix%7D%0An%260%260%260+%5C%5C%0A0%26n%260%260+%5C%5C%0A0%260%26n%2Bf%26-fn+%5C%5C%0A0%260%261%260%0A%5Cend%7Bbmatrix%7D%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AM_%7Bpersp%7D%3D%5Cbegin%7Bbmatrix%7D%0An%260%260%260+%5C%5C%0A0%26n%260%260+%5C%5C%0A0%260%26n%2Bf%26-fn+%5C%5C%0A0%260%261%260%0A%5Cend%7Bbmatrix%7D%0A%7D)
 
 #### 总变换矩阵
+
 先后进行透视投影和正交投影，得到总变换矩阵：
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0AM_%7Bper%7D%3DM_%7Bortho%7DM_%7Bpersp%7D%3D%5Cbegin%7Bbmatrix%7D%0A%5Cfrac%7B2n%7D%7Br-l%7D%260%26+%5Cfrac%7Bl%2Br%7D%7Bl-r%7D%260+%5C%5C%0A0%26+%5Cfrac%7B2n%7D%7Bt-b%7D+%26+%5Cfrac%7Bb%2Bt%7D%7Bb-t%7D%260+%5C%5C%0A0%260%26+%5Cfrac%7Bf%2Bn%7D%7Bn-f%7D+%26+%5Cfrac%7B2fn%7D%7Bf-n%7D+%5C%5C%0A0%260%261%260+%5C%5C%0A%5Cend%7Bbmatrix%7D%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AM_%7Bper%7D%3DM_%7Bortho%7DM_%7Bpersp%7D%3D%5Cbegin%7Bbmatrix%7D%0A%5Cfrac%7B2n%7D%7Br-l%7D%260%26+%5Cfrac%7Bl%2Br%7D%7Bl-r%7D%260+%5C%5C%0A0%26+%5Cfrac%7B2n%7D%7Bt-b%7D+%26+%5Cfrac%7Bb%2Bt%7D%7Bb-t%7D%260+%5C%5C%0A0%260%26+%5Cfrac%7Bf%2Bn%7D%7Bn-f%7D+%26+%5Cfrac%7B2fn%7D%7Bf-n%7D+%5C%5C%0A0%260%261%260+%5C%5C%0A%5Cend%7Bbmatrix%7D%0A%7D)
 
 #### 另一种表述
-有时我们偏向使用eye_fovy（垂向视角）和aspect_ratio（宽高比进行表述）。其中，
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%5Cfrac%7Bt%7D%7Bn%7D%3D%5Ctan%7B%5Cfrac%7Bfovy%7D%7B2%7D%7D})
+有时我们偏向使用 eye_fovy（垂向视角）和 aspect_ratio（宽高比进行表述）。其中，
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{aspect%3D%5Cfrac%7Bt%7D%7Br%7D})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cfrac%7Bt%7D%7Bn%7D%3D%5Ctan%7B%5Cfrac%7Bfovy%7D%7B2%7D%7D%7D)
 
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Baspect%3D%5Cfrac%7Bt%7D%7Br%7D%7D)
 
 ### PA0
-P点坐标（2，1），逆时针旋转45度，再平移（2，1），利用齐次坐标计算变换后的坐标。
+
+P 点坐标（2，1），逆时针旋转 45 度，再平移（2，1），利用齐次坐标计算变换后的坐标。
 
 ```cpp
 #include <cmath>
@@ -217,6 +231,7 @@ int main() {
 ```
 
 输出如下：
+
 ```sh
 Print R: 
  0.707107 -0.707107         2
@@ -227,17 +242,20 @@ result print here
 ```
 
 PA0 很容易，这里借 PA0 大致说一下环境配置问题：
+
 1. 需要 eigen 和 opencv 两个库，推荐使用系统的包管理器下载: `paru -S eigen opencv`
 2. opencv 可能由于路径问题（多出一个 opencv4 目录）无法找到库，建立一个软链接：`sudo ln -s /usr/include/opencv4/opencv2 /usr/include/`
 3. 推荐使用 xmake 管理项目（当然你用 vs 或 cmake 也行），需要在 xmake. lua 中添加依赖 `set_requires("opencv")` 以及 `set_packages("opencv")`
-4. 然后使用xmake编译和运行
+4. 然后使用 xmake 编译和运行
 
 ### PA1
+
 填写一个旋转矩阵和一个透视投影矩阵。给定三维下三个点 v0 (2.0, 0.0, −2.0), v1 (0.0, 2.0, −2.0), v2 (−2.0, 0.0, −2.0), 你需要将这三个点的坐标变换为屏幕坐标并在屏幕上绘制出对应的线框三角形。
 
-> PS: 大概是我太弱，PA1 做得异常艰难，好不容易才弄懂。重要的大概就是几个变换矩阵，知道怎么推出来直接拿来用就好。再次鸣谢 [keanu大佬的笔记](https://zhuanlan.zhihu.com/p/448547679)！
+> PS: 大概是我太弱，PA1 做得异常艰难，好不容易才弄懂。重要的大概就是几个变换矩阵，知道怎么推出来直接拿来用就好。再次鸣谢 [keanu 大佬的笔记](https://zhuanlan.zhihu.com/p/448547679)！
 
 模型变换代码如下：
+
 ```cpp
 Eigen::Matrix4f get_model_matrix(float rotation_angle) {
   // 创建一个单位阵
@@ -256,6 +274,7 @@ Eigen::Matrix4f get_model_matrix(float rotation_angle) {
 ```
 
 投影变换代码如下：
+
 ```cpp
 // 给出的参数包括眼角和宽高比，近平面和远平面
 Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
@@ -287,38 +306,51 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
 ```
 
 ## 光栅化
+
 ### 一些定义
+
 #### 屏幕
+
 二维数组，表示屏幕大小（像素多少），称为分辨率；典型的光栅（Raster，德语的 Screen）成像设备。
 
 #### 像素（Pixel）
+
 带有颜色的方块，屏幕的最小组成单位；rgb 的组合；内部不会发生颜色变化；
 
 #### 屏幕空间
+
 屏幕坐标系，将像素的坐标用 (x, y) 表示；(2, 1) 表示左 3 下 2 的像素（下标从 0 开始）。
 
 #### 光栅化（Rasteriza）
+
 将多边形绘画在屏幕空间上。
 
 ### 光栅成像设备
+
 #### CRT 显示器
+
 阴极射线管的缩写，电子偏移并打在屏幕上成像。利用隔行扫描技术，会造成画面撕裂，产生鬼影。
 
 #### LCD 显示器
+
 液晶显示器。通过液晶扭曲调整光的方向。
 
 #### LED 显示器
+
 LED 即发光二极管，与以上显示设备原理不同。使用小的发光二极管分别成像。
 
 ### 几何基础
+
 三角形：多边形的基础，几乎所有实体都可以拆解成三角形；可以方便地利用叉积分别内外...
 
 ### 采样
+
 函数的离散化。基本的采样过程是判断一个像素的中心是否在三角形内。在边界上，一些软件（OpenGL 等）规定上边和左边上的点在三角形内，下边和右边上的点在三角形外。
 
 #### 采样理论
 
 ##### 走样
+
 Artifacts，即采样产生的瑕疵、不准确和错误。常见的 artifacts 包括锯齿、摩尔纹、车轮效应，其中前两个是空间采样问题，后者是时间采样问题。**走样的原因是信号变化太快导致采样无法跟上（采样频率过低）。**
 
 我们使用频率定义信号的变化速度，频率的倒数称为周期。
@@ -326,6 +358,7 @@ Artifacts，即采样产生的瑕疵、不准确和错误。常见的 artifacts 
 使用傅立叶级数展开可以将任何函数展开为一系列正弦/余弦函数和常数项的和。这里引出采样频率的概念，若采样频率太低，导致无法区分两个不同的函数，就导致走样。
 
 ##### 滤波
+
 一个行之有效的反走样手段是 pre-fliter，即提前模糊处理，也称为**滤波**，然后进行采样。
 
 傅里叶变换使时域转换为频域。中间表示低频信息（模糊图像），四周表示高频信息（表示边界）。
@@ -333,15 +366,18 @@ Artifacts，即采样产生的瑕疵、不准确和错误。常见的 artifacts 
 筛选信息的工具是滤波器。
 
 ##### 卷积
+
 滤波等同于平均，等同于卷积操作。
 
 卷积操作比较简单，滤波器在信号窗口上滑动，与对应位置求点积，记录中心位置结果。最终结果是一个像素自身及其周围像素的平均，从而达到模糊效果。时域卷积等于频域乘积（也就是低通滤波效果）。
 
 一些结论：
+
 1. 卷积核之和为 1
 2. 卷积和越大越模糊
 
 ##### 采样
+
 在时域上，相当于，原始连续函数乘以多个冲击函数（只在固定位置上有值，其他位置无值），从而得到一系列离散的点。
 
 在频域上，相当于这两个函数的卷积。采样相当于重复原始频谱的过程。
@@ -349,6 +385,7 @@ Artifacts，即采样产生的瑕疵、不准确和错误。常见的 artifacts 
 采样越稀疏，在频域上越密集，频谱在搬移的情况下发生混叠，此即发生走样的原因。
 
 #### 反走样
+
 1. 增加采样率
 2. 反走样：先模糊后采样，即先做高通滤波再采样（在频域上减少信号频谱宽度），方法是使用低通滤波器进行卷积操作
 
@@ -357,15 +394,18 @@ Artifacts，即采样产生的瑕疵、不准确和错误。常见的 artifacts 
 另外一个概念是超分辨率。提高分辨率，实际还是为了解决样本不足的问题。常用 DLSS，用深度学习进行超采样。
 
 ### 可见性
+
 可见性问题即解决多个物体遮挡的问题
 
 #### 画家算法
+
 依序从远到近作画，近处的物体覆盖远处的物体，从而解决遮挡问题。
 
 但是无法处理存在互相遮挡关系的物体之间的深度关系，故不采用。
 
 #### Z-Buffer
-即深度缓存。通过遍历每个几何体，记录其每个像素的深度，在 buffer 中保留最浅深度。算法复杂度为 O (n)。伪代码如下，其中frameBuffer保存颜色信息，zbuffer保存深度信息。
+
+即深度缓存。通过遍历每个几何体，记录其每个像素的深度，在 buffer 中保留最浅深度。算法复杂度为 O (n)。伪代码如下，其中 frameBuffer 保存颜色信息，zbuffer 保存深度信息。
 
 ```cpp
 //初始化深度为正无穷
@@ -385,7 +425,8 @@ for each Triangle T{
 
 ### PA2
 
-1. 实现三角形栅格化算法；实现zbuffer算法
+1. 实现三角形栅格化算法；实现 zbuffer 算法
+
 ```cpp
 // Screen space rasterization
 void rst::rasterizer::rasterize_triangle(const Triangle &t) {
@@ -430,7 +471,9 @@ void rst::rasterizer::rasterize_triangle(const Triangle &t) {
     }
 }
 ```
+
 2. 测试点是否在三角形内
+
 ```cpp
 // 用以判断点是否在三角形内
 static bool insideTriangle(int x, int y, const Vector3f *_v) {
@@ -448,48 +491,55 @@ static bool insideTriangle(int x, int y, const Vector3f *_v) {
   return (v1 > 0 && v2 > 0 && v3 > 0) || (v1 < 0 && v2 < 0 && v3 < 0);
 }
 ```
+
 3. 映射变换继承 PA1
 
 ## 着色
 
 ### 定义
+
 Shading，引入颜色和明暗。在图形学上指材质作用于物体。
 
 ### Blinn-Phong 反射模型
+
 根据明暗不同可将物体分为三个区块，分别是高光、漫反射和环境光照。注意，该反射模型只是一个经验公式。
 
 #### 漫反射
+
 符合 Lambert's 余弦定律所表明的经验公式。其内容是：物体所吸收的光照与光线方向和物体表面法线之间夹角的余弦成正比。
 
 有公式：
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0AL_%7Bd%7D%3Dk_%7Bd%7D%5Cleft%28+%5Cfrac%7BI%7D%7Br%5E2%7D+%5Cright%29max%280%2C%5Cvec%7Bn%7D%5Ccdot%7B%5Cvec%7Bl%7D%7D%29%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AL_%7Bd%7D%3Dk_%7Bd%7D%5Cleft%28+%5Cfrac%7BI%7D%7Br%5E2%7D+%5Cright%29max%280%2C%5Cvec%7Bn%7D%5Ccdot%7B%5Cvec%7Bl%7D%7D%29%0A%7D)
 
 其中，Ld 是漫反射光照强度，kd 是物体颜色（三通道的 rgb 值），第二项指示到达物体的光的强度，第三项即余弦值（且不为负，因为没有意义），指示物体接收到的光的强度。
 
 漫反射的特点在于和观测方向无关，因为它均匀反射到各个方向。
 
 #### 高光
+
 观察方向与镜面反射方向足够接近时能够看到高光，或者说，法线方向与半程向量方向接近。半程向量即视线向量和光照向量的平均。
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0A%5Cvec%7Bh%7D%3Dbisector%28%5Cvec%7Bv%7D%2C%5Cvec%7Bl%7D%29%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0A%5Cvec%7Bh%7D%3Dbisector%28%5Cvec%7Bv%7D%2C%5Cvec%7Bl%7D%29%0A%7D)
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0AL_%7Bs%7D%3Dk_%7Bs%7D%5Cleft%28+%5Cfrac%7Bl%7D%7Br%5E2%7D+%5Cright%29max%280%2C%5Cvec%7Bn%7D%5Ccdot%7B%5Cvec%7Bh%7D%7D%29%5Ep%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AL_%7Bs%7D%3Dk_%7Bs%7D%5Cleft%28+%5Cfrac%7Bl%7D%7Br%5E2%7D+%5Cright%29max%280%2C%5Cvec%7Bn%7D%5Ccdot%7B%5Cvec%7Bh%7D%7D%29%5Ep%0A%7D)
 
 其中，ks 是镜面反射系数。p 值通常取 100-200，p 值越大则高光区越小。
 
 #### 环境光照
+
 环境光照来自四周，与观测方向、光照方向无关，因此可被认为是常数，有经验公式：
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0AL_%7Ba%7D%3Dk_%7Ba%7DI_%7Ba%7D%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AL_%7Ba%7D%3Dk_%7Ba%7DI_%7Ba%7D%0A%7D)
 
 ka 是环境光照系数。
 
 #### 着色模型
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0AL%3DL_%7Bd%7D%2BL_%7Bs%7D%2BL_%7Ba%7D%3Dk_%7Bd%7D%5Cleft%28+%5Cfrac%7BI%7D%7Br%5E2%7D+%5Cright%29max%280%2C%5Cvec%7Bn%7D%5Ccdot%7B%5Cvec%7Bl%7D%7D%29%2Bk_%7Bs%7D%5Cleft%28+%5Cfrac%7Bl%7D%7Br%5E2%7D+%5Cright%29max%280%2C%5Cvec%7Bn%7D%5Ccdot%7B%5Cvec%7Bh%7D%7D%29%5Ep%2Bk_%7Ba%7DI_%7Ba%7D%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AL%3DL_%7Bd%7D%2BL_%7Bs%7D%2BL_%7Ba%7D%3Dk_%7Bd%7D%5Cleft%28+%5Cfrac%7BI%7D%7Br%5E2%7D+%5Cright%29max%280%2C%5Cvec%7Bn%7D%5Ccdot%7B%5Cvec%7Bl%7D%7D%29%2Bk_%7Bs%7D%5Cleft%28+%5Cfrac%7Bl%7D%7Br%5E2%7D+%5Cright%29max%280%2C%5Cvec%7Bn%7D%5Ccdot%7B%5Cvec%7Bh%7D%7D%29%5Ep%2Bk_%7Ba%7DI_%7Ba%7D%0A%7D)
 
 ### 着色方式
+
 1. Flat shading/平滑着色：对三角形求法线，内部无颜色过渡
 2. Gouraud shading：逐顶点着色，利用插值，着色效果较好
 3. Phong shading：逐像素着色，利用插值，着色效果最好
@@ -497,15 +547,18 @@ ka 是环境光照系数。
 着色频率取决于具体模型的复杂度，当面过于密集可能 flat shading 效果会更好。
 
 ### 图形/实时渲染管线
+
 1. 顶点处理：空间上的点
 2. 变换：形成三角形
 3. 光栅化：采样和深度测试
 4. 着色
 
 ### 着色编程
+
 只需针对一个顶点或像素进行着色，称为顶点着色器或片段/像素着色器。
 
 下面是一段 openGL GLSL 着色器例程：
+
 ```c
 uniform sampler2D myTexture;
 uniform vec3 lightDir;
@@ -526,15 +579,17 @@ void diffuseShader(){
 ```
 
 #### 一些 API
+
 shadertoy、openGL、directX
 
 #### 硬件实现
+
 GPUs。独立显卡和图形显卡。
 
 GPU 核心数量等于可并行的数量。其并行度高，适合做图形学（简单、相似）计算。
 
-
 ### 纹理映射
+
 纹理（texture）即一张图片，将这张图片蒙罩在物体表面即称为纹理。纹理和物体存在一一对应关系。映射方法是光栅和纹理坐标的对应。
 
 纹理坐标系为 (u, v)，定义域为 (0, 1)。
@@ -542,51 +597,57 @@ GPU 核心数量等于可并行的数量。其并行度高，适合做图形学�
 ### 插值
 
 #### 为什么要插值
+
 为了得到颜色的平滑过渡
 
 #### 重心坐标
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0A%28x%2C+y%29%3D%5Calpha+A%2B%5Cbeta+B%2B%5Cgamma+C%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0A%28x%2C+y%29%3D%5Calpha+A%2B%5Cbeta+B%2B%5Cgamma+C%0A%7D)
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0A%5Calpha%2B%5Cbeta%2B%5Cgamma%3D1%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0A%5Calpha%2B%5Cbeta%2B%5Cgamma%3D1%0A%7D)
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0A%5Calpha%5Cgeq+0+%5Cquad+%5Cbeta%5Cgeq+0+%5Cquad+%5Cgamma%5Cgeq+0+%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0A%5Calpha%5Cgeq+0+%5Cquad+%5Cbeta%5Cgeq+0+%5Cquad+%5Cgamma%5Cgeq+0+%0A%7D)
 
 由此，得到：
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0AV%3D%5Calpha+V_%7BA%7D%2B%5Cbeta+V_%7BB%7D%2B%5Cgamma+V_%7BC%7D%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AV%3D%5Calpha+V_%7BA%7D%2B%5Cbeta+V_%7BB%7D%2B%5Cgamma+V_%7BC%7D%0A%7D)
 
 其中，V_A, V_B, V_C 可以是位置、纹理、颜色、深度等
 
 > 重心坐标在投影过程中会发生变化，因此应对三维属性在三维空间中做插值
 
-
 ### 纹理范围问题
+
 #### 纹理过小
+
 当纹理分辨率过低，屏幕像素映射到一个非整数纹理坐标，此时需应用双线性插值。
 
 线性插值即在两个像素之间按比例进行插值，双线性插值即取周围邻近的四个像素按垂直和水平两个方向进行线性插值。
 
 #### 纹理过大
+
 会产生走样问题，近处产生锯齿，远处产生摩尔纹。
 
 #### Mipmap
+
 纹理大小的通用解决方法。生成一系列原图的缩放图，原图称为第一层，其他层较上层分辨率缩小一半。需要的额外存储空间仅为原图的三分之一。
 
 对区域在纹理上投影的像素近似为一个正方形，令 L 为该正方形边长。则 Mipmap 层数为：
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0AD%3D%5Clog_%7B2%7D%7BL%7D%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AD%3D%5Clog_%7B2%7D%7BL%7D%0A%7D)
 
 由于 Mipmap 是离散函数，会在边界产生不连续，因此需要在层与层之间再进行一次插值，配合水平和垂直的插值，称为三线性插值。
 
 三线性插值在实时渲染中应用广泛，过渡连续，开销小。
 
-但是三线性插值会产生 OverBlur 现象（远处模糊）。原因在与Mipmap使用正方形进行查询，解决方法有各向异性过滤（对应矩形区域查询有更好的效果，开销较高，是原图的三倍。对显存要求高），EWA过滤（使用圆形多次查询，效果好但代价高）
+但是三线性插值会产生 OverBlur 现象（远处模糊）。原因在与 Mipmap 使用正方形进行查询，解决方法有各向异性过滤（对应矩形区域查询有更好的效果，开销较高，是原图的三倍。对显存要求高），EWA 过滤（使用圆形多次查询，效果好但代价高）
 
 ### PA3
+
 PA3 主要包括以上章节的全部内容，难度稍高。其中 bump 和 displacement 着色器的实现有些超纲，故暂先不放出（可能留待后面补全）
 
 #### 参数插值
+
 第一部分投影变换与作业一、二一致，故不再说了。参数插值部分代码如下：
 
 ```cpp
@@ -656,6 +717,7 @@ void rst::rasterizer::rasterize_triangle(
 ```
 
 #### Phong 着色器
+
 ```cpp
 Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
   // 漫反射系数
@@ -701,6 +763,7 @@ Eigen::Vector3f phong_fragment_shader(const fragment_shader_payload &payload) {
 ```
 
 #### 纹理贴图
+
 ```cpp
 Eigen::Vector3f
 texture_fragment_shader(const fragment_shader_payload &payload) {
@@ -718,44 +781,54 @@ texture_fragment_shader(const fragment_shader_payload &payload) {
 ```
 
 ### 凹凸贴图（Bump Textures）
+
 凹凸贴图上一点 P 的切线为 (1, d_p)，其中 dp 为 u 变化一个单位，v 变化的值：
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0Ad_%7Bp%7D%3Dc%2A%28h_%7Bp%2B1%7D-h_%7Bp%7D%29%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0Ad_%7Bp%7D%3Dc%2A%28h_%7Bp%2B1%7D-h_%7Bp%7D%29%0A%7D)
 
 则其法线为：
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0A%28-d_%7Bp%7D%5C+%2C%5C+1%29.normalized%28%29%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0A%28-d_%7Bp%7D%5C+%2C%5C+1%29.normalized%28%29%0A%7D)
 
 在三维中：
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0An%3D%28++-%5Cfrac%7Bd_%7Bp%7D%7D%7Bd_%7Bu%7D%7D%2C%5C++-%5Cfrac%7Bd_%7Bp%7D%7D%7Bd_%7Bv%7D%7D%2C%5C+1%29.normalized%28%29%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0An%3D%28++-%5Cfrac%7Bd_%7Bp%7D%7D%7Bd_%7Bu%7D%7D%2C%5C++-%5Cfrac%7Bd_%7Bp%7D%7D%7Bd_%7Bv%7D%7D%2C%5C+1%29.normalized%28%29%0A%7D)
 
 ### 位移贴图（Displacement Textures）
+
 和凹凸贴图的区别在于，凹凸贴图并没有改变顶点的位置，而位移贴图则改变了，因此效果较好，但更加消耗性能。
 
 ### 纹理的其他应用
+
 1. 噪声：可通过噪声函数实现裂缝、大理石之类的纹路。
 2. 存储信息：记录已经计算好的着色，便于之后计算（提前计算）
 
 ## 几何
 
 ### 隐式表示法
+
 #### 代数表示
-使用数学公式定义一个形状，缺点在于复杂形状描述困难。有CSG（Constructive Solid Geometry），通过简单几何的运算（交并）得到复杂几何，建模软件广泛应用。
+
+使用数学公式定义一个形状，缺点在于复杂形状描述困难。有 CSG（Constructive Solid Geometry），通过简单几何的运算（交并）得到复杂几何，建模软件广泛应用。
 
 #### 距离函数
+
 距离函数指空间上一个点到物体表面或边界的最小距离。对两个物体的距离函数进行运算，之后再转化为实体（取 f (x)=0 的点）。
 
 #### 分形
+
 递归方法
 
 ### 显式表示法
+
 直接给出目标坐标和源坐标的映射关系，通过函数或参数映射的方式表述。
 
 #### 点云
+
 点云使用无数离散的点描述一个形体，它是一个 (x, y, z) 的列表，理论上能表述任何物体
 
 #### 多边形面
+
 常用三角形/四边形，可以表述很多几何体，应用最为广泛
 
 > . obj 文件使用文本表示点的坐标、法线、纹理
@@ -763,27 +836,30 @@ texture_fragment_shader(const fragment_shader_payload &payload) {
 ### 曲线
 
 #### 贝塞尔曲线
+
 使用一系列的控制点定义一条曲线
 
 ![](https://picdl.sunbangyan.cn/2023/06/18/ix90zy.png)
 
 贝塞尔曲线符合伯恩斯坦多项式：
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0Ab%5En%28t%29%3D%5Csum%5Climits%5En%5Climits_%7Bj%3D0%7Db_%7Bj%7DB_%7Bj%7D%5En%28t%29%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0Ab%5En%28t%29%3D%5Csum%5Climits%5En%5Climits_%7Bj%3D0%7Db_%7Bj%7DB_%7Bj%7D%5En%28t%29%0A%7D)
 对 n=3，
-![](https://www.zhihu.com/equation?tex=\bbox[white]{+b_%7B0%7D%3D%280%2C2%2C3%29+%5Cquad+b_%7B1%7D%3D%282%2C3%2C5%29%5Cquad+b_%7B2%7D%3D%286%2C7%2C9%29%5Cquad+b_%7B3%7D%3D%283%2C4%2C5%29})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B+b_%7B0%7D%3D%280%2C2%2C3%29+%5Cquad+b_%7B1%7D%3D%282%2C3%2C5%29%5Cquad+b_%7B2%7D%3D%286%2C7%2C9%29%5Cquad+b_%7B3%7D%3D%283%2C4%2C5%29%7D)
 
 有:
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{b%5En%28t%29%3Db_%7B0%7D%281-t%29%5E3%2Bb_%7B1%7D3t%281-t%29%5E2%2Bb_%7B2%7D3t%5E2%281-t%29%2Bb_%7B3%7Dt%5E3})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bb%5En%28t%29%3Db_%7B0%7D%281-t%29%5E3%2Bb_%7B1%7D3t%281-t%29%5E2%2Bb_%7B2%7D3t%5E2%281-t%29%2Bb_%7B3%7Dt%5E3%7D)
 
 性质：
-1. 过起点和终点:![](https://www.zhihu.com/equation?tex=\bbox[white]{b%280%29%3Db_%7B0%7D%5Cquad+b%281%29%3Db_%7B3%7D})
-2. ![](https://www.zhihu.com/equation?tex=\bbox[white]{b%27%280%29%3D3%28b_%7B1%7D-b_%7B0%7D%29+%5Cquad+b%27%281%29%3D3%28b_%7B3%7D-b_%7B2%7D%29})
+
+1. 过起点和终点:![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bb%280%29%3Db_%7B0%7D%5Cquad+b%281%29%3Db_%7B3%7D%7D)
+2. ![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bb%27%280%29%3D3%28b_%7B1%7D-b_%7B0%7D%29+%5Cquad+b%27%281%29%3D3%28b_%7B3%7D-b_%7B2%7D%29%7D)
 3. 仿射变换最终结果只与控制点有关
 4. 凸包性：线上的任何一个点必在控制点围成的凸包之内
 
 #### 逐段 (Piecewise) 贝塞尔曲线
+
 为解决贝塞尔曲线难以控制的问题，每四个点定义一个（三次）贝塞尔曲线。
 
 为保证两段曲线连续且光滑，要求两个端控制点重合，旁边的两个控制点共线。
@@ -792,9 +868,11 @@ C0 连续：两条曲线连续，即端点重合
 C1 连续：切线连续，要求两个点（第一条曲线的 2 点和另一条曲线的 1 点）共线且距离相同
 
 #### B 样条
+
 对贝塞尔曲线的改进，避免改变一个点就会影响全部的缺点（具有局部性）
 
 #### PA4
+
 实现 de Casteljau 算法，代码很简单，但是请注意，你需要自己画出四个点才会出图 orz：
 
 ```cpp
@@ -829,17 +907,22 @@ void bezier(const std::vector<cv::Point2f> &control_points, cv::Mat &window) {
 曲面即曲线的延伸。在两个方向上分别定义贝塞尔曲线，从而得到贝塞尔曲面。
 
 #### 网格优化
+
 1. 网格细分：增加三角形
 2. 网格简化
 3. 网格正则化
 
 #### 网格细分
+
 ##### loop 细分
+
 1. 细分：从三角形三边中点将三角形分为四部分
 2. 调整三角形各顶点的位置：新顶点的值是其周围四个点的平均（加权 1/8 和 3/8）；老顶点的值是其周围顶点和它自己的值的加权
 
 ##### Catmull-Clark 细分
+
 概念：
+
 1. 四边形面和非四边形面
 2. 奇异点：度不为 4 的点
 
@@ -848,6 +931,7 @@ void bezier(const std::vector<cv::Point2f> &control_points, cv::Mat &window) {
 ![](https://picdl.sunbangyan.cn/2023/06/18/uc1da7.png)
 
 #### 网格简化
+
 目标是减少网格数量同时维持大体的形状
 
 其中一种方法是边坍缩，边选择的手段是二次误差度量。二次误差度量即计算点到各边的距离的平方之和，使它的值最小。因为一条边的坍缩可能影响其他边，需要使用优先队列确定坍缩的顺序。
@@ -855,60 +939,70 @@ void bezier(const std::vector<cv::Point2f> &control_points, cv::Mat &window) {
 ## 光线追踪
 
 ### Shadow Mapping
+
 #### 步骤
+
 1. 从光源看向场景，记录深度
 2. 从相机看向场景，投影回光源，比较记录的深度是否一致，若不同，则在阴影中。
 
 #### 缺点
+
 1. 浮点数由于存在数值精度问题，在判定相等时存在困难
 2. 分辨率过小出现锯齿，分辨率过大则开销大
 
 ### 光线追踪概论
 
 #### 为什么使用光线追踪
+
 1. 光栅化无法很好展示全局效果，包括软阴影、镜面反射、间接光照等
 2. 光栅化虽然速度快但质量较低
 3. 光线追踪质量高、真实性好，但生成慢，一般用于非实时渲染
 
 #### 光线的假设
+
 1. 光线沿直线传播
 2. 光线之间不发生冲突
 3. 光线的路径是从光源到人眼，且具有可逆性
 
 #### 光线追踪过程
+
 1. 从眼睛出发的一条光线（eye ray）指向物体，产生一个交点，记录最小的深度
 2. 该交点与光源连线，判断是否被光源可见，从而判断是否在阴影中，然后计算着色
 
 #### Whited 风格光线追踪
+
 对玻璃材质的物体，eye ray 在与物体相交时，会发生反射和折射（并发生能量损失），所有光线与物体的交点均作与光源的连线，每个交点的着色均会加到图像平面的像素中去。
 
 ![](https://picdl.sunbangyan.cn/2023/06/19/ly52ub.png)
 
-
 ### 光线与物体求交
+
 #### 光线与隐式表面求交
-光线上一点 ![](https://www.zhihu.com/equation?tex=\bbox[white]{r%28t%29%3D%7Bo%7D%2Bt%7Bd%7D%5Cquad+0%5Cleq+t%3C%5Cinfty})
+
+光线上一点 ![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Br%28t%29%3D%7Bo%7D%2Bt%7Bd%7D%5Cquad+0%5Cleq+t%3C%5Cinfty%7D)
 
 其中，t 表示光传播的时间
 
-球上一点 p: ![](https://www.zhihu.com/equation?tex=\bbox[white]{%28p-c%29%5E2-R%5E2%3D0})
+球上一点 p: ![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%28p-c%29%5E2-R%5E2%3D0%7D)
 
-则 ![](https://www.zhihu.com/equation?tex=\bbox[white]{%28%7Bo%7D%2Btd-c%29%5E2-R%5E2%3D0})
+则 ![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%28%7Bo%7D%2Btd-c%29%5E2-R%5E2%3D0%7D)
 
 依据求根公式可求得 t。
 
 #### 光线与显式表面（三角形）求交
+
 ##### 光线与平面求交
 
-平面定义：平面上一点 p，有 ![](https://www.zhihu.com/equation?tex=\bbox[white]{%28p-p%27%29%5Ccdot+%5Cvec%7BN%7D%3D0}) ，p'是平面上的一个点，N 是平面的法线
+平面定义：平面上一点 p，有 ![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%28p-p%27%29%5Ccdot+%5Cvec%7BN%7D%3D0%7D) ，p'是平面上的一个点，N 是平面的法线
 
-得到 ![](https://www.zhihu.com/equation?tex=\bbox[white]{t%3D%5Cfrac%7B%7B%28p%27-o%29%5Ccdot+%5Cvec%7BN%7D%7D%7D%7Bd%5Ccdot%5Cvec%7BN%7D%7D})
+得到 ![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bt%3D%5Cfrac%7B%7B%28p%27-o%29%5Ccdot+%5Cvec%7BN%7D%7D%7D%7Bd%5Ccdot%5Cvec%7BN%7D%7D%7D)
 
 然后与光线方程联立
 
 此种方法的缺点是当三角形数量过多时计算量特别大，因此对于显然不会通过物体的情况，引入包围盒（AABBs）加速计算
 
 ##### 光线与包围盒求交
+
 1. 只有当光线进入全部的三组对立面时才认为它进入盒子
 2. 当光线离开任何一组对立面时认为它离开盒子
 
@@ -919,6 +1013,7 @@ void bezier(const std::vector<cv::Point2f> &control_points, cv::Mat &window) {
 当且仅当 t_enter < t_exit && t_exit >= 0 时，光线与包围盒有交
 
 ###### 均匀空间划分
+
 <img src="https://picdl.sunbangyan.cn/2023/06/21/111qjjh.png" />
 
 对大包围盒进行平均划分成多个小包围盒。我们认为光线与包围盒求交要远快于与物体或三角形面求交。因此，将光线与小包围盒求交，如果通过的某个包围盒中存储有物体，则光线可能通过物体，此时做光线与格子中存在的物体求交。
@@ -940,9 +1035,10 @@ void bezier(const std::vector<cv::Point2f> &control_points, cv::Mat &window) {
 相对于对空间进行划分，对物体进行划分应用更为广泛，此种方法被称为 BVH。
 
 ###### BVH
+
 ![](https://picdl.sunbangyan.cn/2023/06/21/124yhkh.png)
 
-BVH的过程是：先找到一个包围盒，将包围盒的物体划分为两堆，然后重新计算包围盒，再对子包围盒进行递归计算。
+BVH 的过程是：先找到一个包围盒，将包围盒的物体划分为两堆，然后重新计算包围盒，再对子包围盒进行递归计算。
 
 BVH 能够很好地避免 KD-Tree 产生的一个物体出现在多个子节点中的问题，但是包围盒会产生重叠，因此划分方法十分重要。
 
@@ -953,26 +1049,27 @@ BVH 能够很好地避免 KD-Tree 产生的一个物体出现在多个子节点�
 > 这里提到了知识掌握的有效方法：Why, What and How，其中 How 是相对最无用的。私以为确实如此，不知道 Why 就不清楚学习的意义，也无法活用；不知道 What 就相当于没学；至于 How 则是细节问题，完全可以需要时再加以掌握。
 
 #### 概念
+
 Radiant Energy：辐射能量，用 Q 表示，单位是 J
 
-Radiant Flux / Power：辐射通量，表示单位时间能量，![](https://www.zhihu.com/equation?tex=\bbox[white]{%5Cphi%3D%5Cfrac%7BdQ%7D%7Bdt%7D})，单位是 W
+Radiant Flux / Power：辐射通量，表示单位时间能量，![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cphi%3D%5Cfrac%7BdQ%7D%7Bdt%7D%7D)，单位是 W
 
-Radiant Intensity：辐射强度，![](https://www.zhihu.com/equation?tex=\bbox[white]{I%28%5Comega%29%3D%5Cfrac%7Bd%5Cphi%7D%7Bd%5Comega%7D})，其中 omega 是立体角（球上的面积除以半径的平方，即空间上的角度定义），表示单位角度能量
+Radiant Intensity：辐射强度，![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7BI%28%5Comega%29%3D%5Cfrac%7Bd%5Cphi%7D%7Bd%5Comega%7D%7D)，其中 omega 是立体角（球上的面积除以半径的平方，即空间上的角度定义），表示单位角度能量
 
-Irradiance：单位面积上接收到的能量，![](https://www.zhihu.com/equation?tex=\bbox[white]{E%3D%5Cfrac%7B%5Cphi%7D%7B4%5Cpi%7D})，可用以解释光强衰减
+Irradiance：单位面积上接收到的能量，![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7BE%3D%5Cfrac%7B%5Cphi%7D%7B4%5Cpi%7D%7D)，可用以解释光强衰减
 
-Radiance：描述某确定的微小面对某个立体角辐射的能量，或某个微面在某个立体角接收的能量，相当于 Intensity per unit area 或 Irradiance per solid angle, 与 Irradiance 区别在于 Radiance 具备方向性。![](https://www.zhihu.com/equation?tex=\bbox[white]{L%28p%2C%5Comega%29%3D%5Cfrac%7BdI%28p%2C%5Comega%29%7D%7BdA%5Ccos+%5Ctheta%7D}) 。Irradiance 可以通过 Radiance 积分得到。
+Radiance：描述某确定的微小面对某个立体角辐射的能量，或某个微面在某个立体角接收的能量，相当于 Intensity per unit area 或 Irradiance per solid angle, 与 Irradiance 区别在于 Radiance 具备方向性。![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7BL%28p%2C%5Comega%29%3D%5Cfrac%7BdI%28p%2C%5Comega%29%7D%7BdA%5Ccos+%5Ctheta%7D%7D) 。Irradiance 可以通过 Radiance 积分得到。
 
 ![](https://picdl.sunbangyan.cn/2023/06/22/825lr.png)
 
-
-
 #### BRDF
+
 即反射方程，描述某个方向入射光反射所得到的出射光。
 
 ![](https://picdl.sunbangyan.cn/2023/06/22/d8gec.png)
 
 #### 渲染方程
+
 对于发光物体，它对某方向出射的光等于其发出的光和反射的光之和。因此，所有情形可由下式表述，这是现代图形学的基础：
 
 ![](https://picdl.sunbangyan.cn/2023/06/22/in8an.png)
@@ -1012,7 +1109,7 @@ Radiance：描述某确定的微小面对某个立体角辐射的能量，或某
 
 ## 材质与表面
 
-> 本章的目的是使用BDRF重新解释着色
+> 本章的目的是使用 BDRF 重新解释着色
 
 漫反射材质将入射光线均匀反射到各个方向，我们认为入射和出射光线存在能量守恒，则反射方程可以转化为以下形式：
 
@@ -1032,32 +1129,36 @@ Radiance：描述某确定的微小面对某个立体角辐射的能量，或某
 
 微表面模型认为从近处看到的是几何，从远处看则几何消失，变成外观。也就是说，在近处可认为有无数小的微表面，光线在微表面上发生镜面反射。
 
-
 ![](https://picdl.sunbangyan.cn/2023/06/22/xbadal.png)
 
 微表面模型 BRDF 如图所示，F 项为菲涅尔项，决定有多少能量被反射；D 项决定法线分布；G 项称为几何项，决定有多少光线（几乎平行入射的光线）会发生子投影和子遮挡，修正用。
 
 ### 各向同性/各向异性
+
 各向同性与各向异性取决于微表面分布是否与方向有关，各向同性与方向无关，各个地方微表面分布相同；各向异性与方向有关。
 
 ## 高级渲染主题
+
 ### 高级光线传播
 
 两种无偏路径追踪：BDPT、MLT；两种有偏路径追踪：光子映射、VCM（Vertex connnection and merging）
 
 #### 双向路径追踪（BDPT）
+
 从光源和相机分别发出半路径，再将半路径端点连接起来。
 
 适合光源处光线传播复杂的情况，但实现困难，且计算缓慢。
 
 #### Metropolis（MLT）
+
 通过在一个 path 周围产生新的 path 样本找出全部 path。
 
-因为只需要一条path，特别适合复杂场景的路径追踪。
+因为只需要一条 path，特别适合复杂场景的路径追踪。
 
 缺点在于很难估计收敛，结果噪点多，很难用以生成动画。
 
 #### 光子映射（Photon Mapping）
+
 能够很好地表现 Castics 现象
 
 光子映射过程如下：
@@ -1069,13 +1170,14 @@ Radiance：描述某确定的微小面对某个立体角辐射的能量，或某
 光子映射是一种有偏但一致的方法：只要着色点不是无限多，结果必定存在模糊；但着色点无限多则必定真实。
 
 #### VCM
+
 BDPT 和光子映射的结合
 
 #### Instant Radiosity（IR）
+
 认为被照亮的点可以被看做光源。
 
 优点在于快且结果质量较好，但在窄的/缝隙场景会发光，且无法渲染 Glossy 物体
-
 
 ### 高级表面模型
 
@@ -1084,9 +1186,11 @@ BDPT 和光子映射的结合
 #### 非表面模型
 
 ##### 散射介质
+
 对于云、雾等散射介质，光进入介质中会发生反射和折射，可使用路径追踪计算
 
 ##### 毛发
+
 人的头发模型：玻璃柱模型
 
 三种头发模型：R（光线在毛发表面反射）、TT（光线穿透毛发）、TRT（光线穿透毛发并在内壁反射回来）
@@ -1094,10 +1198,13 @@ BDPT 和光子映射的结合
 对于动物毛发，与人的头发模型不一致。动物毛发中髓质较大，更加容易发生反射。故提出双层圆柱模型（是的，就是讲师提出的模型！），以描述髓质与光线的作用。与人的头发模型不同的是，动物毛发多出两个散射模型：TTs 和 TRTs，描述被髓质散射的光线。
 
 ##### Granular 模型（颗粒模型）
+
 通过小的颗粒构图，缺点在于时间开销大
 
 #### 表面模型
+
 ##### 半透明材质
+
 符合次表面反射模型（BSSRDF），可采用 Dipole 方法近似计算。
 
 ![](https://picdl.sunbangyan.cn/2023/06/22/10elqjx.png)
@@ -1113,8 +1220,10 @@ BDPT 和光子映射的结合
 3. 分别渲染每一个纤维。缺点同上。
 
 ## 相机、透镜、光场
+
 ### 相机
-组成部分：快门（shutter）、传感器（sensor，记录irradiance）
+
+组成部分：快门（shutter）、传感器（sensor，记录 irradiance）
 
 针孔摄像机：利用小孔成像原理，拍出的相片无景深
 
@@ -1130,61 +1239,69 @@ H (曝光度)=T (曝光时间) xE (Irradiance)
 
 曝光时间由快门控制。具体影响因素如下：
 
-1. 光圈大小：改变 f-stop（称为f数，f数越小光圈越大）
+1. 光圈大小：改变 f-stop（称为 f 数，f 数越小光圈越大）
 2. Shutter speed：控制光进入的时长
 3. ISO 增益/感光度：对结果进行增益和修正
 
 ![](https://picdl.sunbangyan.cn/2023/06/23/m890nx.png)
 
 ##### ISO
+
 ISO 对图像进行后期处理，通过对图像乘以一个增益，能够增加图像的曝光度，但是会增加图像的噪声。
 
 ##### f 数
+
 即光圈直径的倒数，可以控制同一时间进入相机的光量，从而直接调整曝光度。
 
 ##### 快门
+
 直接控制光进入的时间（曝光时间）。
 
 当物体在快门打开时存在运动，由于传感器的平均作用，会发生模糊现象，称为运动模糊。因此，更长的曝光时间会产生更严重的运动模糊。
 
-而相对更少的曝光时间会导致更低的曝光度，可通过更大的F数进行补偿。
+而相对更少的曝光时间会导致更低的曝光度，可通过更大的 F 数进行补偿。
 
 由于快门打开过程需要一定时间，当物体运动速度快于快门打开的时间，会产生扭曲现象（如拍摄高速旋转的螺旋桨），称为 Rolling Shutter 现象。
 
 #### 场景
+
 ##### 高速摄影
+
 高速摄影需要非常短的曝光时间，曝光度较低，因此需要大光圈。
 
 ##### 长曝光相片
+
 长曝光导致曝光度高，因此需要小光圈。
 
 ### 镜头
+
 #### 透镜
 
 对于理想的薄（凸）透镜，平行光照射到棱镜上会汇聚的焦点；过焦点的光线必定会变成平行光；棱镜的焦距可以被改变。
 
 ![](https://picdl.sunbangyan.cn/2023/06/23/n9cif1.png)
 
-
-得到 ![](https://www.zhihu.com/equation?tex=\bbox[white]{%5Cfrac%7B1%7D%7Bf%7D%3D%5Cfrac%7B1%7D%7Bz_%7Bi%7D%7D%2B%5Cfrac%7B1%7D%7Bz_%7Bo%7D%7D})
+得到 ![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cfrac%7B1%7D%7Bf%7D%3D%5Cfrac%7B1%7D%7Bz_%7Bi%7D%7D%2B%5Cfrac%7B1%7D%7Bz_%7Bo%7D%7D%7D)
 
 ![](https://picdl.sunbangyan.cn/2023/06/23/ncdxuq.png)
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0AC%3DA%5Cfrac%7B%7B%7Cz_%7Bs%7D-z_%7Bi%7D%7C%7D%7D%7Bz_%7Bi%7D%7D%3D%5Cfrac%7Bf%7D%7BN%7D%5Cfrac%7B%7B%7Cz_%7Bs%7D-z_%7Bi%7D%7C%7D%7D%7Bz_%7Bi%7D%7D%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AC%3DA%5Cfrac%7B%7B%7Cz_%7Bs%7D-z_%7Bi%7D%7C%7D%7D%7Bz_%7Bi%7D%7D%3D%5Cfrac%7Bf%7D%7BN%7D%5Cfrac%7B%7B%7Cz_%7Bs%7D-z_%7Bi%7D%7C%7D%7D%7Bz_%7Bi%7D%7D%0A%7D)
 
 CoC 原理是一个点由于屏幕在成像点之后，导致产生一个模糊的圈；圈的大小与光圈大小成正比。
 
 透镜的光线追踪较简单，只需计算光线的折射方向，并记录在屏幕上的位置即可。
 
 #### 景深
+
 景深的定义是存在的一个范围，它在成像平面附近形成的区域 CoC 足够小，使成像清晰。
 
 ![](https://picdl.sunbangyan.cn/2023/06/23/niyddk.png)
 
 ### 光场（Light Field）
+
 #### 全光函数
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%0AP%28%5Ctheta%2C%5Cphi%2C%5Clambda%2Ct%2CV_%7BX%7D%2CV_%7BY%7D%2CV_%7BZ%7D%29%0A})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AP%28%5Ctheta%2C%5Cphi%2C%5Clambda%2Ct%2CV_%7BX%7D%2CV_%7BY%7D%2CV_%7BZ%7D%29%0A%7D)
 
 全光函数定义光线的方向（极坐标）、光的波长（颜色）、时间、人/相机的位置，从而定义了一个 3D 全息场景。
 
@@ -1203,16 +1320,19 @@ CoC 原理是一个点由于屏幕在成像点之后，导致产生一个模糊�
 其中可见光的范围在 400nm-700nm 之间。
 
 ### 谱功率密度（SPD）
+
 SPD 可描述光强在不同波长处的分布，SPD 存在可加性。
 
 ### 颜色
-颜色是人眼的感知，并非SPD，因此也存在个体差异。
+
+颜色是人眼的感知，并非 SPD，因此也存在个体差异。
 
 视网膜上存在感光细胞，分为棒状细胞和锥形细胞。棒状细胞感知光的强度，锥形细胞感知颜色。锥形细胞又分为 S、M、L，其感知光的波长不同，用数值表示如下：
 
 ![](https://picdl.sunbangyan.cn/2023/06/23/p3gibr.png)
 
 ### 同色异谱现象
+
 SPD 不同但最终得到的颜色（SML）相同，称为同色异谱现象。而这也是颜色匹配/混合的基础。我们通常使用 RGB 三色进行加色得到各种颜色。
 
 CIE RGB 提出了一个颜色匹配函数，其三原色数值可为负，能够混合出任何颜色。该色彩空间称为 sRGB（Standard RGB）。
@@ -1220,32 +1340,39 @@ CIE RGB 提出了一个颜色匹配函数，其三原色数值可为负，能够
 #### 色彩空间
 
 ##### CIE XYZ
+
 CIE 提出的一类颜色系统，其中 X、Z 表示不同颜色，Y 表示亮度。对其进行归一化处理，可将其定义在 (0, 1) 的一个色域之中，有 x=X/(X+Y+Z)，下同。由于 Y 表示亮度，可以固定 y，从而使颜色匹配函数转化为 x 和 z 的函数。
 
 ##### 色域
+
 色域是一个颜色空间所有可能表示的颜色。
 
 ##### 其他色彩空间
+
 - HSV：颜色拾取器，色调（Hue）、饱和度（Saturation）、亮度（Value）
 - CIELAB：定义互补色，L（亮度）、a 轴（红或绿）、b 轴（蓝或黄）
-- CMYK：三种彩色+黑色
-
+- CMYK：三种彩色 + 黑色
 
 ## 计算机动画
+
 ### 动画的定义
+
 1. Bring things to life，使图片动起来
 2. 建模的扩展，更好地展示模型的运动
 
 ### 历史
+
 1. 从科学研究到娱乐业：奔跑的马
 2. 手绘动画：白雪公主与七个小矮人
 3. 数字动画：遥控的精确作图
 4. CG：玩具总动员
 
 ### 关键帧动画
+
 关键帧（keyframes）：一些重要的帧，可定义动画的走向。其他帧称为关键帧的过渡。
 
 ### 物理仿真
+
 利用牛顿力学公式进行仿真 F=ma
 
 流程是先模拟后渲染
@@ -1261,9 +1388,10 @@ CIE 提出的一类颜色系统，其中 X、Z 表示不同颜色，Y 表示亮�
 质点弹簧系统的应用：绳子模型、头发模型
 
 #### 粒子系统
+
 粒子之间存在引力、斥力、摩擦力等...
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{F%3D%5Cfrac%7BGm_%7B1%7Dm_%7B2%7D%7D%7Bd%5E2%7D})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7BF%3D%5Cfrac%7BGm_%7B1%7Dm_%7B2%7D%7D%7Bd%5E2%7D%7D)
 
 ![](https://picsw.sunbangyan.cn/2023/06/24/sogox1.png)
 
@@ -1272,6 +1400,7 @@ CIE 提出的一类颜色系统，其中 X、Z 表示不同颜色，Y 表示亮�
 ### 运动学
 
 #### 正运动学（骨骼系统）
+
 关节分为三类：Pin（1D）、Ball（2D）、Prismatic Joint（translation）
 
 通过定义每个关节从而计算出每一个部位的位置参数
@@ -1279,33 +1408,34 @@ CIE 提出的一类颜色系统，其中 X、Z 表示不同颜色，Y 表示亮�
 缺点在于定义贴近物理（需要调节角度），导致艺术家使用困难；优点在于直观、计算方便
 
 #### 逆运动学
+
 定义运动的轨迹，自动计算出关节的位置和角度。
 
 逆运动学可能出现多解和无解问题
 
-
 ### Rigging
+
 Rigging 即控制模型做出动作。
 
 通过控制点改变模型姿态和动作。
 
 动作捕捉：易于得到大量真实的数据，但装置复杂昂贵，无法得到动画戏剧性效果
 
-
 ### 产品流水线
+
 ![](https://picdo.sunbangyan.cn/2023/06/24/qs4bls.png)
 
-
 ## 模拟
+
 ### 欧拉方法
+
 场上任何一点在某一时刻的速度已知，称其为速度场：v (x, t)，即：
 
-![](https://www.zhihu.com/equation?tex=\bbox[white]{%5Cfrac%7Bdx%7D%7Bdt%7D%3D%5Cdot%7Bx%7D%3Dv%28x%2Ct%29})
+![](https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cfrac%7Bdx%7D%7Bdt%7D%3D%5Cdot%7Bx%7D%3Dv%28x%2Ct%29%7D)
 
 对下一帧的位置和速度，可从上一帧的位置、速度、加速度求出，称为欧拉方法：
 
 ![](https://picsh.sunbangyan.cn/2023/06/24/qz69ca.png)
-
 
 欧拉方法存在以下问题：
 
@@ -1313,6 +1443,7 @@ Rigging 即控制模型做出动作。
 2. 欧拉方法由于是离散的，即使步长取得再小误差也必定会无限累积，导致其不稳定。
 
 #### 中点法
+
 一种欧拉方法的不稳定性的解决方法：
 
 ![](https://picsl.sunbangyan.cn/2023/06/24/r3xxdw.png)
@@ -1341,30 +1472,34 @@ Rigging 即控制模型做出动作。
 局部截断误差：每一步产生的误差
 整体误差：全局的误差
 
-隐式欧拉方法的误差是一阶，局部误差是O(h^2)，整体误差是O(h)
+隐式欧拉方法的误差是一阶，局部误差是 O(h^2)，整体误差是 O(h)
 
 #### 隆戈库塔方法
+
 用来解常微分方程，特别适用于求解非线性方程，最常用的是四阶。
 
 ![](https://picdc.sunbangyan.cn/2023/06/24/s51tjt.png)
 
 ### Position-Based/Verlet Method
+
 不基于物理，直接修改位置，非能量守恒，但计算很快
 
 一个例子是水体的模拟。抽象水体为许多不可压缩的小球，只要确定每个小球的位置，确定其分布，即可模拟出水体的形态。由于水的密度不变，因此可基于密度对小球的位置进行修正，这就用到了 Position-Based 方法。
 
 ### 刚体模拟
+
 对欧拉方法的扩充
 
 ![](https://picsp.sunbangyan.cn/2023/06/24/s7sdqf.png)
 
-
 ### 拉格朗日方法
+
 拉格朗日方法也称质点法，其关注某个质点随时间的参数变化；而欧拉方法也称网格法，其关注某个空间内某点在某时间的参数。
 
 MPM（Material Point Method）是一种结合拉格朗日方法和欧拉方法的方法。
 
 ## 未来可能的一些学习话题
+
 - 光栅化：现在可以学习和掌握 OpenGL、DirectX 等，甚至手写着色器！
 - 几何：掌握数学基础，微分几何、离散微分几何、拓扑...
 - 光线传播

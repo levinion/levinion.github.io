@@ -1,5 +1,4 @@
-## 创建namespace
-
+## 创建 namespace
 
 ```shell
 sudo unshare -munip --fork bash

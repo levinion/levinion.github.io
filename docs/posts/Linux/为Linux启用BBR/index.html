@@ -126,38 +126,38 @@
         <p>2025-05-06 23:56:04</p>
       </div>
       <article><h2 id="bbr"><a class="anchor" href="#bbr">#</a> BBR</h2>
-<p><a href="https://github.com/google/bbr">BBR</a>是谷歌开发的一种TCP拥塞算法，相比传统的Cubic能更加有效地利用网络资源，从而减少延迟和增加吞吐量。目前有三个版本，Linux最新内核使用v3。</p>
+<p><a href="https://github.com/google/bbr">BBR</a> 是谷歌开发的一种 TCP 拥塞算法，相比传统的 Cubic 能更加有效地利用网络资源，从而减少延迟和增加吞吐量。目前有三个版本，Linux 最新内核使用 v3。</p>
 <h2 id="heading"><a class="anchor" href="#heading">#</a> 如何启用</h2>
-<p>默认情况下，TCP拥塞算法一般为Cubic，这可以通过以下方式查看：</p>
+<p>默认情况下，TCP 拥塞算法一般为 Cubic，这可以通过以下方式查看：</p>
 <pre><code class="language-shell">&gt; sysctl net.ipv4.tcp_congestion_control
 net.ipv4.tcp_congestion_control = cubic
 </code></pre>
-<p>要开启bbr，先加载<code>tcp_bbr</code>模块：</p>
+<p>要开启 bbr，先加载 <code>tcp_bbr</code> 模块：</p>
 <pre><code class="language-shell">sudo modprobe tcp_bbr
 </code></pre>
-<p>要自动加载模块，在<code>/etc/modules-load.d</code>中新建一个文件：</p>
+<p>要自动加载模块，在 <code>/etc/modules-load.d</code> 中新建一个文件：</p>
 <pre><code class="language-shell">echo &quot;tcp_bbr&quot; | sudo tee /etc/modules-load.d/bbr.conf
 </code></pre>
-<p>使用以下命令检查bbr是否可用：</p>
+<p>使用以下命令检查 bbr 是否可用：</p>
 <pre><code class="language-shell">&gt; sysctl net.ipv4.tcp_available_congestion_control
 net.ipv4.tcp_available_congestion_control = reno cubic bbr
 </code></pre>
-<p>然后修改内核参数。在<code>/etc/sysctl.d/99-sysctl.conf</code>中添加如下配置：</p>
+<p>然后修改内核参数。在 <code>/etc/sysctl.d/99-sysctl.conf</code> 中添加如下配置：</p>
 <blockquote>
-<p>有些地方可能会将配置写在/etc/sysctl.conf，这对于大多数发行版来说没有问题，但对于archlinux来说无效，因为archlinux已于2013年弃用了这个配置文件</p>
+<p>有些地方可能会将配置写在/etc/sysctl.conf，这对于大多数发行版来说没有问题，但对于 archlinux 来说无效，因为 archlinux 已于 2013 年弃用了这个配置文件</p>
 </blockquote>
 <pre><code class="language-shell">net.ipv4.tcp_congestion_control = bbr
 net.core.default_qdisc = cake
 </code></pre>
-<p>执行<code>sudo sysctl -p</code>以应用。这应该输出：</p>
+<p>执行 <code>sudo sysctl -p</code> 以应用。这应该输出：</p>
 <blockquote>
-<p>对于archlinux用户来说应该是<code>sudo sysctl -p /etc/sysctl.d/99-sysctl.conf</code></p>
+<p>对于 archlinux 用户来说应该是 <code>sudo sysctl -p /etc/sysctl.d/99-sysctl.conf</code></p>
 </blockquote>
 <pre><code class="language-shell">net.ipv4.tcp_congestion_control = bbr
 net.core.default_qdisc = cake
 </code></pre>
-<p>如果提示找不到<code>net.core.default_qdisc</code>，尝试重启。</p>
-<p>对于队列使用cake还是fq好有一些争议，但在日常使用场景下，应该不会有太大差别，因此可以随意选择一个你喜欢的。</p>
+<p>如果提示找不到 <code>net.core.default_qdisc</code>，尝试重启。</p>
+<p>对于队列使用 cake 还是 fq 好有一些争议，但在日常使用场景下，应该不会有太大差别，因此可以随意选择一个你喜欢的。</p>
 <h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 参考</h2>
 <ol>
 <li><a href="https://djangocas.dev/blog/huge-improve-network-performance-by-change-tcp-congestion-control-to-bbr/">huge-improve-network-performance-by-change-tcp-congestion-control-to-bbr</a></li>

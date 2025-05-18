@@ -17,7 +17,7 @@ created: 2025-01-09 23:38:49
 
 这里是一个 hysteria2 和 reality 的配置文件，你可以直接使用，但是注意修改 outbound 的 ip 以及端口等信息（前提是已在服务器部署有相关服务，未部署的可以看下面的服务端篇）。
 
-其中 dns 主要配置 dns 的解析规则；inbounds 配置入站，这里采用 tun 的方式进行透明代理，但是使用这种方式要求管理员权限；outbounds 配置出站，分别是各个代理的具体配置以及选择器。Route 配置路由，主要应用 clash 模式以及规则集；experimental 中主要是缓存以及 clash api 的配置。
+其中 dns 主要配置 dns 的解析规则；inbounds 配置入站，这里采用 tun 的方式进行透明代理，但是使用这种方式要求管理员权限；outbounds 配置出站，分别是各个代理的具体配置以及选择器。Route 配置路由，主要应用 clash 模式以及规则集；experimental 中主要是缓存以及 clash API 的配置。
 
 ```yaml
 {
@@ -171,13 +171,13 @@ ws.run "cmd /c <Your Path>\sing-box.bat",vbhide
 
 #### 关闭代理
 
-PowerToys Run 有一个非常好用的插件，名叫 ProcessKiller，顾名思义，能够杀掉进程，很像 Linux 下的 pkill 命令，插件的 Github 地址如下：[Process Killer](https://github.com/8LWXpg/PowerToysRun-ProcessKiller)
+PowerToys Run 有一个非常好用的插件，名叫 ProcessKiller，顾名思义，能够杀掉进程，很像 Linux 下的 pkill 命令，插件的 GitHub 地址如下：[Process Killer](https://github.com/8LWXpg/PowerToysRun-ProcessKiller)
 
 然后将插件的激活命令设置为 `kl`，唤出 PowerToys Run，输入 `kl sing-box<Enter>` 即可杀掉代理。
 
 #### 切换代理
 
-由于 sing-box 支持 clash api，所以可以通过 api 进行代理的切换，而 sing-box 提供了一个 web ui，可以通过该 web ui 进行代理切换。
+由于 sing-box 支持 clash API，所以可以通过 API 进行代理的切换，而 sing-box 提供了一个 Web ui，可以通过该 Web ui 进行代理切换。
 
 ```json
 "clash_api":
@@ -197,13 +197,13 @@ PowerToys Run 有一个非常好用的插件，名叫 ProcessKiller，顾名思�
 git clone https://github.com/levinion/hysteria2-reality-install-script
 ```
 
-### 2. 安装just
+### 2. 安装 just
 
 ```shell
 curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to /usr/bin
 ```
 
-### 3. 安装sing-box
+### 3. 安装 sing-box
 
 ```shell
 cd hysteria2-reality-install-script
@@ -218,7 +218,7 @@ just generate
 
 配置文件（.env）文件会生成在当前目录下，可按需修改（非强制）
 
-### 5. 安装证书、生成 sing-box配置文件、配置端口跳跃、优化系统参数
+### 5. 安装证书、生成 sing-box 配置文件、配置端口跳跃、优化系统参数
 
 ```shell
 just install
@@ -238,7 +238,7 @@ systemctl enable ufw --now
 just enable
 ```
 
-### 8. 可选：生成客户端Outbounds示例
+### 8. 可选：生成客户端 Outbounds 示例
 
 ```shell
 just outbounds
@@ -255,6 +255,6 @@ just stop
 
 ### 10. 更新配置以及重新运行
 
-```shell	
+```shell
 just reload
 ```

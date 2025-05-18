@@ -134,7 +134,7 @@
 <li><input disabled="" type="checkbox"> 具备一定的 python 基础（如果有其他编程语言经验，至少具备查阅资料的能力）</li>
 <li><input disabled="" type="checkbox"> 积极动手实践</li>
 </ul>
-<p><em style="color:pink">&gt;这篇文章的大体思路如下：</em></p>
+<p><em style="color:pink">&gt; 这篇文章的大体思路如下：</em></p>
 <ol>
 <li>Hello World</li>
 <li>以我自己编写的插件 “sumi” 为例，你能够学会：</li>
@@ -144,7 +144,7 @@
 <li>命令参数</li>
 <li>自定义规则</li>
 <li>读取环境配置</li>
-<li>json 保存和读取数据</li>
+<li>JSON 保存和读取数据</li>
 <li>发送和下载图片到本地（没错，就是偷图功能哒！）</li>
 </ul>
 <p>行了，废话不多说，让我们开始吧。</p>
@@ -219,10 +219,10 @@ async def _(event:PokeNotifyEvent):
 </code></pre>
 <p>这是一段检测 poke 行为并进行回复的简易程序，下面我们将对其进行讲解。</p>
 <p>首先我们定义了一个用以检验 poke 行为的自定义规则。<code>PokeNotifyEvent</code> 是一个 Poke 事件，当该事件作用的对象为机器人本身时，进入响应器的作用流程。</p>
-<p><code>on_notice()</code>注册了一个消息事件响应器。自定义规则通过 rule 传递给响应器，<code>priority</code>指定响应器的作用优先级，<code>block=True</code>时不再响应优先级更低的事件。</p>
+<p><code>on_notice()</code> 注册了一个消息事件响应器。自定义规则通过 rule 传递给响应器，<code>priority</code> 指定响应器的作用优先级，<code>block=True</code> 时不再响应优先级更低的事件。</p>
 <p><code>MessageSegment</code> 是一个非常好用的工具。在 nonebot 中，我们想要发送图片，或@某人等特殊信息，通常使用 CQ 码。<code>MessageSegment</code> 对 CQ 码进行包装，使其更加容易编写。此处我们使用 <code>MessageSegment.at()</code> 函数，实现了@某人的效果。</p>
-<p>当我们要实现一个动作时，往往需要提前告知动作作用的对象。<code>event.get_user_id()</code> 返回 string 格式的用户 qq 号。</p>
-<p><code>MessageSegment</code>返回一个<code>Message</code>对象，能够和其他<code>Message</code>对象相加，合并成一个消息列表。因此最后发送给用户的信息应当是：“@用户名hi”。</p>
+<p>当我们要实现一个动作时，往往需要提前告知动作作用的对象。<code>event.get_user_id()</code> 返回 string 格式的用户 QQ 号。</p>
+<p><code>MessageSegment</code> 返回一个 <code>Message</code> 对象，能够和其他 <code>Message</code> 对象相加，合并成一个消息列表。因此最后发送给用户的信息应当是：“@用户名 hi”。</p>
 <h3 id="22----"><a class="anchor" href="#22----">#</a> 2.2 第二步 - 叫我主人大人！</h3>
 <p>有时我们需要从用户发送的消息中抽取有用的信息，并对其进行处理或存储。这通常使用 <code>CommandArg</code> 来实现。</p>
 <pre><code class="language-python">call_me=on_command(&quot;叫我&quot;,rule=to_me()&amp; Rule(is_super_user),priority=8)
@@ -247,10 +247,10 @@ async def _(event:Event,args:Message=CommandArg()):
 
 </code></pre>
 <p>CommandArg 获取的消息是一个 Message 对象，需要使用 extract. <code>plain_text()</code> 函数返回一个消息字符串。当然你也可以使用 split 方法对这个字符串进行切割，从而返回一个 string 列表。我在上面的示例中就是这样做的。我通过 <code>if else</code> 语句强制规定该响应器只能接受一个参数。</p>
-<p><code>oyobi</code> 变量成功保存了接受到的命令参数，接着就是 python 中基本的文件操作。这里你需要掌握的是 json 文件的操作。json 格式文件常用于 nonebot 中的数据保存。由于不需要建立数据库，只需要操作文件，所以方便快捷。对 json 的操作一般包括增删改查，流程大都是通过调用 <code>json.load()</code> 和 <code>json.dump()</code> 两个函数。<code>json.load()</code> 函数用以读取 json 格式信息并转化为字典或列表格式的变量。<code>json.dump()</code> 函数将 python 中的数据格式，如字典或列表转化为 json 格式数据并写入文件中。在要保存的数据中包括 cjk 字符（中文或日文等）的情况下，建议将 <code>json.dump()</code> 函数中的 <code>ensure_ascii</code> 参数置为 <code>False</code>，否则 cjk 字符将被保存为 ascii 码导致阅读困难。</p>
-<p>学会json的操作，你就可以写下一个响应器，让机器人叫你你喜欢的名字了（<s>比如ご主人様之类</s>）。</p>
+<p><code>oyobi</code> 变量成功保存了接受到的命令参数，接着就是 python 中基本的文件操作。这里你需要掌握的是 JSON 文件的操作。JSON 格式文件常用于 nonebot 中的数据保存。由于不需要建立数据库，只需要操作文件，所以方便快捷。对 JSON 的操作一般包括增删改查，流程大都是通过调用 <code>json.load()</code> 和 <code>json.dump()</code> 两个函数。<code>json.load()</code> 函数用以读取 JSON 格式信息并转化为字典或列表格式的变量。<code>json.dump()</code> 函数将 python 中的数据格式，如字典或列表转化为 JSON 格式数据并写入文件中。在要保存的数据中包括 cjk 字符（中文或日文等）的情况下，建议将 <code>json.dump()</code> 函数中的 <code>ensure_ascii</code> 参数置为 <code>False</code>，否则 cjk 字符将被保存为 ascii 码导致阅读困难。</p>
+<p>学会 JSON 的操作，你就可以写下一个响应器，让机器人叫你你喜欢的名字了（<s>比如 ご 主人様之类</s>）。</p>
 <h3 id="23----"><a class="anchor" href="#23----">#</a> 2.3 第三步 - 你到底是不是我的主人？</h3>
-<p>说是例子，其实更恰当地来讲不过是工具函数罢了。判断是否超管在实现某些功能时很有必要，比如对你示爱，对其他人冷眼以对的<s>超级棒的</s>机器人。自定义规则适用于响应器中事件的判断，如果你想要对响应器是否执行进行判断（如果不符合，不进入响应器），可以使用 <code>nonebot.rule</code> 中封装好的规则，如<code>to_me</code>等，或 <code>nonebot.permission</code> 中的封装好的权限，如<code>SUPERUSER</code>。</p>
+<p>说是例子，其实更恰当地来讲不过是工具函数罢了。判断是否超管在实现某些功能时很有必要，比如对你示爱，对其他人冷眼以对的<s>超级棒的</s>机器人。自定义规则适用于响应器中事件的判断，如果你想要对响应器是否执行进行判断（如果不符合，不进入响应器），可以使用 <code>nonebot.rule</code> 中封装好的规则，如 <code>to_me</code> 等，或 <code>nonebot.permission</code> 中的封装好的权限，如 <code>SUPERUSER</code>。</p>
 <pre><code class="language-python">import nonebot
 
 def is_super_user(event:Event):
@@ -306,7 +306,7 @@ async def _collect(event: Event):
 </code></pre>
 <p>机器人的自主学习使我们梦寐以求的。偷图虽然离自主学习还很遥远（<s>其实根本八竿子打不着</s>），但偷图依然是一项实用的功能。</p>
 <p>现在你已经掌握了编写插件所具有的基本知识，因此我想到了这步，只是提示一下思路就已经足够了。</p>
-<p>正如我们前面所说，cq-http 中一些复杂消息类型，如@或图片等均是通过 CQ 码实现的。因此我们接收到的图片应当是类似 <code>[CQ:image,...,url=http://xxx.com/xxx.jpg]</code> 的格式，因此我们可以使用一些方式，如正则或 json 的方式获取消息中的 url，并且利用 request 或着 httpx 将 url 的图片下载到本地。</p>
+<p>正如我们前面所说，cq-http 中一些复杂消息类型，如@或图片等均是通过 CQ 码实现的。因此我们接收到的图片应当是类似 <code>[CQ:image,...,url=http://xxx.com/xxx.jpg]</code> 的格式，因此我们可以使用一些方式，如正则或 JSON 的方式获取消息中的 url，并且利用 request 或着 httpx 将 url 的图片下载到本地。</p>
 <h3 id="25----"><a class="anchor" href="#25----">#</a> 2.5 第五步 - 随机回复</h3>
 <pre><code class="language-python"># 随机回复
 def _reply_check():
@@ -329,7 +329,7 @@ async def _reply():
     &quot;&quot;&quot;
     return random.random()*100 &lt; s
 </code></pre>
-<p>给出了这个函数，结合你学到的知识，你应该能够轻松看懂这个程序，因此就程序不做讲解了。与之相比，我想要说的是干扰性的问题。我们通常难以对概率有一个清楚的认知，要知道，一般抽卡手游的概率可是 2%左右，即使是 10%的概率也是天文数字。在一个活跃的群里，10%的概率意味着每隔几秒机器人就会发一次言；但是在一个冷门的群里，大家一天只发一两句话，那么机器人几乎不可能发言。在后一种情况下，这个功能其实可有可无，也不存在干扰的问题；但在前者，我们就需要降低概率，甚至添加冷却时间以防止连续触发。</p>
+<p>给出了这个函数，结合你学到的知识，你应该能够轻松看懂这个程序，因此就程序不做讲解了。与之相比，我想要说的是干扰性的问题。我们通常难以对概率有一个清楚的认知，要知道，一般抽卡手游的概率可是 2% 左右，即使是 10% 的概率也是天文数字。在一个活跃的群里，10% 的概率意味着每隔几秒机器人就会发一次言；但是在一个冷门的群里，大家一天只发一两句话，那么机器人几乎不可能发言。在后一种情况下，这个功能其实可有可无，也不存在干扰的问题；但在前者，我们就需要降低概率，甚至添加冷却时间以防止连续触发。</p>
 </article>
     </div>
   </body>

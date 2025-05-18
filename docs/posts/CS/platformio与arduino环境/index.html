@@ -126,12 +126,12 @@
         <p>2025-04-01 23:38:46</p>
       </div>
       <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
-<p>arduino有一个cli工具：<code>arduino-cli</code>，可以简单地进行项目初始化、编译等工作，但LSP不尽如人意，很难利用clangd获取提示，遂放弃，并选择platformio搭配arduino使用。</p>
-<p>platformio是一个平台，大概是目前支持嵌入式设备种类最多、社区最活跃的了。它本身在vscode上有一个图形界面（IDE），但在vim上，有<code>platformio-core</code>就足够了。</p>
+<p>arduino 有一个 cli 工具：<code>arduino-cli</code>，可以简单地进行项目初始化、编译等工作，但 LSP 不尽如人意，很难利用 clangd 获取提示，遂放弃，并选择 platformio 搭配 arduino 使用。</p>
+<p>platformio 是一个平台，大概是目前支持嵌入式设备种类最多、社区最活跃的了。它本身在 vscode 上有一个图形界面（IDE），但在 VIM 上，有 <code>platformio-core</code> 就足够了。</p>
 <h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 安装</h2>
 <pre><code class="language-shell">sudo pacman -S platformio-core platformio-core-udev
 </code></pre>
-<p>其中后者提供了udev规则，解决了访问某些设备端口的权限问题。</p>
+<p>其中后者提供了 udev 规则，解决了访问某些设备端口的权限问题。</p>
 <h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 初始化</h2>
 <pre><code class="language-shell">mkdir pio-example
 cd pio-example
@@ -140,12 +140,12 @@ git init
 pio project init --board &lt;board-id&gt; --ide &lt;ide&gt;
 </code></pre>
 <p>这里我们创建一个文件夹，并进行初始化，这将创建一个基本的项目模板。</p>
-<p>如果不清楚板子的id，可以执行<code>pio devices</code>列出全部支持的设备ID，并使用<code>grep</code>或<code>rg</code>进行检索。</p>
-<p>以我的luatos esp32s3举例，将使用下面的ID创建项目：</p>
+<p>如果不清楚板子的 id，可以执行 <code>pio devices</code> 列出全部支持的设备 ID，并使用 <code>grep</code> 或 <code>rg</code> 进行检索。</p>
+<p>以我的 luatos esp32s3 举例，将使用下面的 ID 创建项目：</p>
 <pre><code class="language-shell">pio project init --board esp32-s3-devkitc-1 --ide vim
 </code></pre>
-<h2 id="platformioini"><a class="anchor" href="#platformioini">#</a> 修改platformio.ini</h2>
-<p>如果是platformio原生支持的开发板，可以跳过这一步。如果不是，我们需要使用一个通用ID进行初始化，并且手动覆盖一些参数：</p>
+<h2 id="-platformioini"><a class="anchor" href="#-platformioini">#</a> 修改 platformio.ini</h2>
+<p>如果是 platformio 原生支持的开发板，可以跳过这一步。如果不是，我们需要使用一个通用 ID 进行初始化，并且手动覆盖一些参数：</p>
 <pre><code class="language-ini">[env:esp32-s3-devkitc-1]
 platform = espressif32
 board = esp32-s3-devkitc-1
@@ -158,9 +158,9 @@ build_flags = -DBOARD_HAS_PSRAM
 board_build.arduino.memory_type = qio_opi
 extra_scripts = pre:./build/build.py
 </code></pre>
-<p>如果不清楚具体参数，可以上<a href="https://community.platformio.org/">platformio社区</a>查找或提问。</p>
+<p>如果不清楚具体参数，可以上 <a href="https://community.platformio.org/">platformio 社区</a>查找或提问。</p>
 <h2 id="heading-3"><a class="anchor" href="#heading-3">#</a> 编译</h2>
-<p>在<code>src/</code>目录下创建一个<code>main.cpp</code>文件：</p>
+<p>在 <code>src/</code> 目录下创建一个 <code>main.cpp</code> 文件：</p>
 <pre><code class="language-cpp">#include &quot;Arduino.h&quot;
 
 void setup() {
@@ -177,16 +177,16 @@ void loop() {
 <p>或者使用以下命令进行监听：</p>
 <pre><code class="language-shell">pio device monitor
 </code></pre>
-<h2 id="clangd"><a class="anchor" href="#clangd">#</a> clangd设置</h2>
-<p>整个环境配置最难的大概就是配置clangd了。</p>
+<h2 id="clangd-"><a class="anchor" href="#clangd-">#</a> clangd 设置</h2>
+<p>整个环境配置最难的大概就是配置 clangd 了。</p>
 <h3 id="compile-commandsjson"><a class="anchor" href="#compile-commandsjson">#</a> compile_commands.json</h3>
-<p>首先，我们需要让platformio生成一份<code>compile_commands.json</code>。</p>
+<p>首先，我们需要让 platformio 生成一份 <code>compile_commands.json</code>。</p>
 <pre><code class="language-shell">pio run -t compiledb
 </code></pre>
-<p>这将在项目根目录（与<code>platformio.ini</code>同级）下生成一份<code>compile_commands.json</code>文件。nvim默认检索<code>compile_commands.json</code>的路径也就是根目录；但如果你修改过这个路径，将它移到对应目录中去。或者我们也可以通过<code>extra scripts</code>：</p>
+<p>这将在项目根目录（与 <code>platformio.ini</code> 同级）下生成一份 <code>compile_commands.json</code> 文件。nvim 默认检索 <code>compile_commands.json</code> 的路径也就是根目录；但如果你修改过这个路径，将它移到对应目录中去。或者我们也可以通过 <code>extra scripts</code>：</p>
 <pre><code class="language-shell">extra_scripts = pre:build.py
 </code></pre>
-<p>对于<code>build.py</code>：</p>
+<p>对于 <code>build.py</code>：</p>
 <pre><code class="language-python">import os
 
 Import(&quot;env&quot;)
@@ -195,9 +195,9 @@ env.Replace(COMPILATIONDB_INCLUDE_TOOLCHAIN=True)
 
 env.Replace(COMPILATIONDB_PATH=&quot;build/compile_commands.json&quot;)
 </code></pre>
-<p>然后重新运行<code>pio run -t compiledb</code>，就会生成在<code>build/</code>目录下。</p>
+<p>然后重新运行 <code>pio run -t compiledb</code>，就会生成在 <code>build/</code> 目录下。</p>
 <h3 id="heading-4"><a class="anchor" href="#heading-4">#</a> 解决报错</h3>
-<p>现在，当引入<code>Arduino</code>时会遇到clangd报错，但因为编译能够通过，所以我们直接忽略这些错误就好。创建一个<code>.clangd</code>文件：</p>
+<p>现在，当引入 <code>Arduino</code> 时会遇到 clangd 报错，但因为编译能够通过，所以我们直接忽略这些错误就好。创建一个 <code>.clangd</code> 文件：</p>
 <pre><code>CompileFlags:
   Add: [
     -ferror-limit=0
@@ -210,8 +210,8 @@ env.Replace(COMPILATIONDB_PATH=&quot;build/compile_commands.json&quot;)
 Diagnostics:
   Suppress: &quot;no_member&quot;
 </code></pre>
-<p>当我们选择忽略一些编译选项后，会提示<code>too many errors</code>，这时我们添加<code>-ferror-limit=0</code>以禁用错误数量限制，也就不会报错了。对于其他一些诊断问题，在<code>Suppress</code>中添加禁用就好。</p>
-<p>clangd默认参数可以参考；</p>
+<p>当我们选择忽略一些编译选项后，会提示 <code>too many errors</code>，这时我们添加 <code>-ferror-limit=0</code> 以禁用错误数量限制，也就不会报错了。对于其他一些诊断问题，在 <code>Suppress</code> 中添加禁用就好。</p>
+<p>clangd 默认参数可以参考；</p>
 <pre><code class="language-shell">&quot;clangd&quot;,
 &quot;--clang-tidy&quot;,
 &quot;--all-scopes-completion&quot;,

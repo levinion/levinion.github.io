@@ -126,7 +126,7 @@
         <p>2022-09-26 19:29:10</p>
       </div>
       <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 引言</h2>
-<p>一定是闲得没事的人才会去把 ATRI 放在 Arch 上跑吧😂。平时在 Arch 上面跑 Osu！，而游玩其他游戏只能切换到 Win——这一整套流程想想就头疼。因此试着用 <code>Wine</code> 直接跑 ATRI，不想直接跑通，于是有了这篇文章。</p>
+<p>一定是闲得没事的人才会去把 ATRI 放在 Arch 上跑吧 😂。平时在 Arch 上面跑 Osu！，而游玩其他游戏只能切换到 Win——这一整套流程想想就头疼。因此试着用 <code>Wine</code> 直接跑 ATRI，不想直接跑通，于是有了这篇文章。</p>
 <p><img src="https://ghproxy.com/github.com/levinion/blog-pic/blob/main/img/ss_47e1f809fa56ab6d48de3c66e3147585b4ee30a2.600x338.jpg" alt="atri"></p>
 <blockquote>
 <p>ATRI 是一个很好的游戏，不过作为一个不怎么推 Gal 的人，对其也并没有多少发言权。本来是可以在 Steam 上购买的，无奈有些小贵，只得自寻旁门外道（笑），等日后补票。虽然我很喜欢开源社区的理念，认为其贯彻了互联网的共享精神，也并不反感所谓盗版；但我也不反对为开发者和游戏创作者的劳动付费。在付费和开源之间寻求平衡，也是互联网发展所必然面对的课题之一——然而今天要谈的不是这些。</p>
@@ -155,7 +155,8 @@ wine ATRI.My.Dear.Moments/ATRI-MyDearMoments-.exe
 </ol>
 <h2 id="--1"><a class="anchor" href="#--1">#</a> 🔗 创建一个快捷方式吧！</h2>
 <ol>
-<li>反正都在终端输入命令运行了，第一发想一定是创建一个 alias。
+<li>
+<p>反正都在终端输入命令运行了，第一发想一定是创建一个 alias。</p>
 <pre><code class="language-sh"># .config/fish/config.fish 或 .zshrc 或 .bashrc
 alias atri=&quot;cd /run/media/maruka/data/games/ATRI.My.Dear.Moments/ATRI.My.Dear.Moments;wine ATRI.My.Dear.Moments/ATRI-MyDearMoments-.exe&quot;
 </code></pre>
@@ -163,7 +164,8 @@ alias atri=&quot;cd /run/media/maruka/data/games/ATRI.My.Dear.Moments/ATRI.My.De
 <p>之所以没有采用 <code>wine /run/media/maruka/data/games/ATRI.My.Dear.Moments/ATRI.My.Dear.MomentsATRI.My.Dear.Moments/ATRI-MyDearMoments-.exe</code> 的方式运行，是因为本机报了错，大概是无法直接在另一系统硬盘上运行程序吧。所以先 cd 过去再运行。如果你运行出了问题，请尝试这样做。</p>
 </blockquote>
 </li>
-<li>创建一个 Desktop Entry
+<li>
+<p>创建一个 Desktop Entry</p>
 <blockquote>
 <p>.desktop 是实现应用程序菜单的文件，通过创建该文件，可以在应用条目中查看到应用，方便使用 krunner 等程序快速唤起。该配置文件分为系统条目和用户条目。系统条目一般包括存于系统中、可供所有用户使用的应用程序，位于 <code>/usr/share/applications/</code> 或 <code>/usr/local/share/applications/</code> 文件夹中；用户条目优先级高于系统条目，一般位于 <code>~/.local/share/applications/</code> 文件夹中。</p>
 </blockquote>
@@ -212,7 +214,7 @@ Exec= wine ATRI-MyDearMoments-.exe
 
 </code></pre>
 <blockquote>
-<p>Type 选择 Application，Name 自定，Exec 指打开快捷方式时运行的命令，Path 表示命令执行的位置（使用Path 的目的与 alias 中给出的理由相同），没什么好解释的，简单易懂。最后，如果你定义的. desktop 文件属于用户条目，即位于 <code>~/.local/share/applications/</code> ，执行以下命令以更新桌面条目；否则就不用管。</p>
+<p>Type 选择 Application，Name 自定，Exec 指打开快捷方式时运行的命令，Path 表示命令执行的位置（使用 Path 的目的与 alias 中给出的理由相同），没什么好解释的，简单易懂。最后，如果你定义的. desktop 文件属于用户条目，即位于 <code>~/.local/share/applications/</code> ，执行以下命令以更新桌面条目；否则就不用管。</p>
 </blockquote>
 <pre><code class="language-sh">update-desktop-database ~/.local/share/applications
 </code></pre>
@@ -242,7 +244,7 @@ sudo vim /usr/share/polkit-1/actions/org.freedesktop.UDisks2.policy
 </code></pre>
 <p>重启验证，认证不再需要输入密码。本来想实现开机自动挂载，但是似乎失败了</p>
 <blockquote>
-<p>通过改写 fstab 文件可以轻易做到，看来当初还是走了不少弯路😢 &ndash;2023-01-20</p>
+<p>通过改写 fstab 文件可以轻易做到，看来当初还是走了不少弯路 😢 &ndash;2023-01-20</p>
 </blockquote>
 <p>算了，继续推阿托莉去。对游戏的感想就留待以后再写。</p>
 </article>

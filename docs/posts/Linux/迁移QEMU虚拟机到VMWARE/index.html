@@ -125,27 +125,27 @@
         <h1>迁移QEMU虚拟机到VMWARE</h1>
         <p>2025-05-10 21:51:13</p>
       </div>
-      <article><p>由于qemu/kvm暂不支持Windows虚拟机的硬件加速，因此使用vmware（对于Windows虚拟机）是一个更好的选择。同时，vmware的GUI做得很不错（毕竟是一个商业软件）。</p>
+      <article><p>由于 qemu/kvm 暂不支持 Windows 虚拟机的硬件加速，因此使用 vmware（对于 Windows 虚拟机）是一个更好的选择。同时，vmware 的 GUI 做得很不错（毕竟是一个商业软件）。</p>
 <h2 id="heading"><a class="anchor" href="#heading">#</a> 转换磁盘格式</h2>
-<p>首先转换虚拟磁盘文件格式。<code>qemu-img</code>支持从qcow2到vmware使用的vmdk文件格式的转换：</p>
+<p>首先转换虚拟磁盘文件格式。<code>qemu-img</code> 支持从 qcow2 到 vmware 使用的 vmdk 文件格式的转换：</p>
 <pre><code class="language-shell">sudo qemu-img convert -f qcow2 -O vmdk /var/lib/libvirt/images/win10.qcow2 win10.vmdk
 </code></pre>
 <h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 安装虚拟机</h2>
-<p>这步按照引导完成虚拟机安装即可。其中，如果原先虚拟机未使用UEFI安装，可选择使用BIOS，否则无法引导。</p>
-<p>在创建磁盘界面选择已有的磁盘，然后填入vmdk文件的路径。</p>
+<p>这步按照引导完成虚拟机安装即可。其中，如果原先虚拟机未使用 UEFI 安装，可选择使用 BIOS，否则无法引导。</p>
+<p>在创建磁盘界面选择已有的磁盘，然后填入 vmdk 文件的路径。</p>
 <h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 启用内核模块</h2>
 <p>在启动虚拟机是，可能提示缺少内核模块，按照需求补全即可。</p>
 <pre><code class="language-shell">sudo modprobe vmmon
 sudo modprobe vmw_vmci
 </code></pre>
-<p>在<code>/etc/modules-load.d/</code>中创建一个<code>vmware.conf</code>文件以自动加载模块：</p>
+<p>在 <code>/etc/modules-load.d/</code> 中创建一个 <code>vmware.conf</code> 文件以自动加载模块：</p>
 <pre><code class="language-shell">vmmon
 vmw_vmci
 </code></pre>
 <p>或</p>
 <pre><code class="language-shell">printf &quot;vmmon\nvmw_vmci\n&quot; | sudo tee -a /etc/modules-load.d/vmware.conf
 </code></pre>
-<h2 id="nat"><a class="anchor" href="#nat">#</a> 启用NAT</h2>
+<h2 id="-nat"><a class="anchor" href="#-nat">#</a> 启用 NAT</h2>
 <pre><code class="language-shell">sudo systemctl enable --now vmware-networks.service
 </code></pre>
 </article>

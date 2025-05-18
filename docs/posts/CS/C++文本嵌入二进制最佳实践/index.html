@@ -126,11 +126,11 @@
         <p>2025-03-07 23:57:42</p>
       </div>
       <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
-<p>文本嵌入在编写着色器时特别有用。它能够使我们将着色器代码从项目代码中剥离出来，从而能够利用相应的lsp进行提示、高亮以及格式化，并且进一步降低代码耦合度。</p>
-<p>对于Rust而言，嵌入一段字符串十分简单：</p>
+<p>文本嵌入在编写着色器时特别有用。它能够使我们将着色器代码从项目代码中剥离出来，从而能够利用相应的 lsp 进行提示、高亮以及格式化，并且进一步降低代码耦合度。</p>
+<p>对于 Rust 而言，嵌入一段字符串十分简单：</p>
 <pre><code class="language-rust">include!(&quot;path_to_file/file&quot;)
 </code></pre>
-<p>对于C++，一般以下有几种方法：</p>
+<p>对于 C++，一般以下有几种方法：</p>
 <h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 字符串</h2>
 <pre><code class="language-cpp">const char* vertex_shader_code =
     &quot;#version 330 core\n&quot;
@@ -142,15 +142,15 @@
 </code></pre>
 <p>这是最传统的方式，运行时初始化字符串。缺点很明显，性能较低，且修改困难。</p>
 <h2 id="embed"><a class="anchor" href="#embed">#</a> embed</h2>
-<p>embed是C的提案，但在C++中也得到支持：</p>
+<p>embed 是 C 的提案，但在 C++ 中也得到支持：</p>
 <pre><code class="language-cpp">const char vertex_shader_code[] = {
     #embed &quot;path_to_file/file&quot;
 };
 </code></pre>
-<p>缺点在于目前只有clang得到支持，并且在编译时会显示警告：<code>#embed is an extension of clang</code>。在打印时，通过这种方式嵌入的字符会在末尾打印出未知字符（乱码），可以猜到以上数组并不包括字符串末尾的<code>\0</code>。但我目前没找到好的填<code>\0</code>方法。</p>
-<p>另外，C++的<code>std::embed</code>还在日程中……</p>
+<p>缺点在于目前只有 clang 得到支持，并且在编译时会显示警告：<code>#embed is an extension of clang</code>。在打印时，通过这种方式嵌入的字符会在末尾打印出未知字符（乱码），可以猜到以上数组并不包括字符串末尾的 <code>\0</code>。但我目前没找到好的填 <code>\0</code> 方法。</p>
+<p>另外，C++ 的 <code>std::embed</code> 还在日程中……</p>
 <h2 id="xxd"><a class="anchor" href="#xxd">#</a> xxd</h2>
-<p>在Linux下，有<code>xxd</code>命令，它提供了将一个文件转换为C语言头文件的功能，使用方法如下：</p>
+<p>在 Linux 下，有 <code>xxd</code> 命令，它提供了将一个文件转换为 C 语言头文件的功能，使用方法如下：</p>
 <pre><code class="language-shell">xxd -n variable_name -i input.glsl &gt; output.h 
 </code></pre>
 <p>对于上面的例子，有：</p>
@@ -172,13 +172,13 @@
 };
 unsigned int _vertex_shader_code_len = 122;
 </code></pre>
-<p>可以注意到上面的数组并不是以<code>\0</code>结尾，如果需要转换到C字符串，则需要手动填<code>\0</code>。或是使用<code>sed</code>进行替换：</p>
+<p>可以注意到上面的数组并不是以 <code>\0</code> 结尾，如果需要转换到 C 字符串，则需要手动填 <code>\0</code>。或是使用 <code>sed</code> 进行替换：</p>
 <pre><code class="language-shell">xxd -n _vertex_shader_code -i ./assets/shader/vertex.glsl | sed &quot;s/}/,\'\\\0\'}/&quot; &gt; ./include/shader/vertex.h 
 </code></pre>
-<p>如果对代码格式化有强迫症，使用<code>clang-format</code>进行后处理格式化：</p>
+<p>如果对代码格式化有强迫症，使用 <code>clang-format</code> 进行后处理格式化：</p>
 <pre><code class="language-shell">clang-format -i ./include/hierro/shader/*
 </code></pre>
-<p>然后在代码中include对应头文件：</p>
+<p>然后在代码中 include 对应头文件：</p>
 <pre><code class="language-cpp">#include &quot;hierro/shader/vertex.h&quot;
 </code></pre>
 <p>调用变量：</p>

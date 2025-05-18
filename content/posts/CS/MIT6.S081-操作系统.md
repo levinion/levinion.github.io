@@ -2,16 +2,17 @@
 title: MIT6.S081-操作系统
 created: 2023-06-24 17:36:35
 ---
-
 ## 1 引言
 
 ### 1.1 课程内容简介
 
 #### 课程目标
+
 1. 理解操作系统的设计和实现。设计指具体结构，实现指具体代码。
 2. 通过现有的示例操作系统（XV6），对其进行扩展，并通过接口开发软件，以作为实践环节。
 
 #### 操作系统目标
+
 1. 硬件抽象。以便从高层次操作硬件，以获得更好的通用性和可移植性。
 2. 并发性。能够同时使用多个应用程序。
 3. 隔离性。能够隔离应用程序，防止 bug 的传播。
@@ -35,6 +36,7 @@ created: 2023-06-24 17:36:35
 ### 1.3 挑战与乐趣并存
 
 #### 挑战
+
 1. 内核的**编程环境恶劣**，它并没有一个方便的软件基础，需要与底层的硬件资源交互。
 2. 操作系统的**高效性和易用性之间的矛盾**。高效性意味着操作层级应较低，而易用性则需要提供高层次的抽象接口。而对操作系统开发人员来说，我们又需要提供尽可能简单、却又功能性很强的接口。
 3. 应用程序的**灵活性和安全性之间的矛盾**。内核对应用程序的限制应尽可能小，从而保证其灵活性；但同时又要限制应用程序，以避免其对硬件的直接访问，从而破坏隔离性和安全性。
@@ -42,6 +44,7 @@ created: 2023-06-24 17:36:35
 5. 操作系统需要紧跟硬件的发展。
 
 #### 乐趣
+
 1. 我们需要思考操作系统服务之间的交互方式，这应当是有趣的。
 2. 重新思考设计操作系统使其匹配最新硬件的过程是有趣的。
 3. 对计算机运行原理感兴趣，喜欢构建能够被其他应用程序使用的基础架构，或是为了定位操作系统级别的程序 BUG，都需要操作系统的知识。
@@ -88,6 +91,7 @@ write(1，buf，n);
 write 系统调用同样接受三个参数，其与 read 相同。
 
 #### exit
+
 exit 接受一个参数，当为 0 时代表正常退出，否则表示发生错误。
 
 ### 1.5 open 系统调用
@@ -151,7 +155,7 @@ I/O 重定向广泛用于 Unix 管道工具。它通过 `>`、`<` 等管道符�
 
 ## Lab1
 
-1. 获取源代码并切换到util分支
+1. 获取源代码并切换到 util 分支
 
 ```sh
 git clone git://g.csail.mit.edu/xv6-labs-2021
@@ -160,6 +164,7 @@ git checkout util
 ```
 
 2. 尝试编译运行 xv6
+
 ```sh
 make qemu
 ```
@@ -222,6 +227,7 @@ int main(int argc， char **argv) {
 ```
 
 修改 makefile：
+
 ```c
 UPROGS=\
 ...
@@ -289,7 +295,7 @@ $
 ```
 
 5. 素数
-虽然难度标的是 hard，但其实并不太难，只是需要灵活应用 pipe：
+   虽然难度标的是 hard，但其实并不太难，只是需要灵活应用 pipe：
 
 ```c
 #include "user.h"
@@ -473,12 +479,12 @@ $ echo hello too | xargs echo bye
 bye hello to
 ```
 
-
 ## 2 系统结构与系统调用
 
 ### 2.1 操作系统隔离性
 
 #### 为何需要隔离性
+
 1. 应用程序之间需要隔离性：在操作系统上运行的应用不应该不必要地影响其他正在运行的应用程序。
 2. 应用程序和操作系统之间需要隔离性：应用程序的崩溃不应该导致整个操作系统崩溃，要求操作系统有处理异常的能力。
 
@@ -489,6 +495,7 @@ bye hello to
 ### 2.2 操作系统防御性
 
 #### 为何需要防御性
+
 1. 操作系统需要应对恶意应用程序，防止恶意应用程序使操作系统崩溃。
 2. 操作系统应当保持对应用程序隔离，防止应用程序获取内核权限从而控制硬件资源。
 
@@ -499,6 +506,7 @@ bye hello to
 硬件对于强隔离的支持包括：user/kernel mode 和 page table。
 
 #### user/kernel mode
+
 处理器具有两种操作状态：当运行在用户态时，只能够执行普通权限指令；当运行在内核态时，能够执行特殊权限指令。
 
 普通权限指令包括寄存器的加减、跳转操作；特殊权限指令与硬件状态相关，如设置 page table 寄存器和控制时钟中断。
@@ -508,9 +516,11 @@ bye hello to
 对于 RISC-V，处理器还具有第三种状态：机器态（machine mode）。机器态拥有最高的特权级别，能够执行任何指令，主要用于处理器初始化和异常/中断处理。
 
 #### 虚拟内存
+
 page table 提供了虚拟内存地址和物理内存地址的对应关系。每一个独立进程都维护着一个独立的 page table，保证其物理内存地址不重叠，使其无法访问到其他应用程序的内存，从而保证了内存的隔离性。
 
 ### 用户态/内核态切换
+
 用户态和内核态划定了用户空间和内核空间的界线：应用程序运行在用户空间，而内核程序运行在内核空间。
 
 应用程序通过系统调用转移控制权给内核。在 RISC-V 中，通过 ECALL 指令转移控制权。
@@ -524,6 +534,7 @@ ECALL 接受一个数字，可跳转到内核中特定的系统调用接入点�
 ### 2.4 宏内核与微内核
 
 #### TCB
+
 TCB 即被信任的计算空间（Trusted Computing Base），代指安全的内核。一个安全的内核应当具有以下特征：
 
 1. 内核应当具有尽可能少的漏洞。
@@ -532,12 +543,14 @@ TCB 即被信任的计算空间（Trusted Computing Base），代指安全的内
 所有敏感的操作都应当运行在内核态，也就是 TCB 当中。
 
 #### 宏内核
+
 所有操作系统服务均运行在内核态，这样的操作系统内核称为宏内核。绝大多数的 Unix 操作系统均是宏内核。
 
 - Pro：宏内核组件具有良好的集成性，因此具有不错的性能
 - Cron：由于服务都运行在内核中，宏内核发生故障的可能性更大。
 
 #### 微内核
+
 微内核只在内核中提供了最基本的服务，以减少内核中的代码量。在微内核中，原本由内核提供的服务现在以一个用户程序的形式运行。
 
 - Pro：微内核代码量少，发生 Bug 的可能性更低，因此更加安全。
@@ -552,6 +565,7 @@ TCB 即被信任的计算空间（Trusted Computing Base），代指安全的内
 - mkfs：mkfs 创建一个空的文件镜像，通过挂载到磁盘上得到一个空的文件系统。
 
 #### 内核编译过程
+
 1. 编译：对每个. c 文件经编译器得到. s，这是 RISC-V 汇编代码文件
 2. 汇编：对. s 文件调用汇编器，形成. o，这是汇编代码的二进制形式
 3. 链接：使用系统加载器（Loader）链接成内核文件 kernel
@@ -580,7 +594,6 @@ TCB 即被信任的计算空间（Trusted Computing Base），代指安全的内
 5. init 进程配置控制台，调用 fork 启动 shell。
 6. 最后 shell 被执行，XV6 启动完成。
 
-
 所以，XV6 的启动过程可以概括为: 执行一系列初始化函数配置系统环境 -> userinit 启动第一个用户进程 -> 该进程执行 exec 系统调用启动 init 进程 -> init 进程 fork 出 shell 进程 -> shell 被执行，系统启动完成。
 
 ## Lab2
@@ -593,7 +606,7 @@ TCB 即被信任的计算空间（Trusted Computing Base），代指安全的内
 	$U/_trace\
 ```
 
-2. 在`user/user.h`声明函数头文件；在`user/usys.pl`中添加存根；在`kernel/syscall.h`中添加系统调用的数值代号
+2. 在 `user/user.h` 声明函数头文件；在 `user/usys.pl` 中添加存根；在 `kernel/syscall.h` 中添加系统调用的数值代号
 
 ```c
 // user/user.h
@@ -635,7 +648,7 @@ uint64 sys_trace(void) {
 }
 ```
 
-4. 修改 `kernel/proc.c`中的`fork`函数，以从父进程复制到子进程的跟踪掩码
+4. 修改 `kernel/proc.c` 中的 `fork` 函数，以从父进程复制到子进程的跟踪掩码
 
 ```c
 //proc.c
@@ -669,11 +682,7 @@ syscall(void)
 }
 ```
 
-
 ### Sysinfo
-
-
-
 
 ## 3 虚拟内存
 
@@ -717,7 +726,7 @@ RISC-V 最大支持 56 位物理地址，因此最大内存理论上最多能够
 
 虚拟地址的 27 位 index 又细分为 L2、L1、L0，依次对应高、中、低级 page directory。每级 page directory 索引 512 个条目，每个条目（PTE）占 8 字节。在索引时，从高到低依次索引，然后在最低级的 page directory 中可得到实际物理地址。
 
-分级结构很容易理解：通过将一个大的表单拆分多个小的表单，我们可以不索引许多没有用到的PTE，从而大大减少了内存开销。
+分级结构很容易理解：通过将一个大的表单拆分多个小的表单，我们可以不索引许多没有用到的 PTE，从而大大减少了内存开销。
 
 一个 page directory 分为 44 位 PPN（page 起始地址）和 10 位标志位，其他 10 位作为拓展位留空。标志位包括：
 
@@ -736,6 +745,7 @@ TLB 会保存查询到的虚拟地址到物理地址的映射关系，在下一�
 ### 3.4 xv6 页表实现
 
 #### 物理内存分布
+
 物理地址寻址由具体主板决定，一般来说，从某个物理地址分隔（教程中是 0x80000000），以上是从 DRAM 寻址，以下是 I/O 设备。
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MK_UbCc81Y4Idzn55t8%2F-MKaeaT3eXOyG4jfKKU7%2Fimage.png?alt=media&token=a04af08d-3c8d-4c61-a63d-6376dec252ea)
@@ -743,6 +753,7 @@ TLB 会保存查询到的虚拟地址到物理地址的映射关系，在下一�
 上电后，主板运行 boot ROM 中的代码，然后跳转到 0x80000000，从而启动操作系统。
 
 #### xv6 虚拟地址空间
+
 处于简单考虑，在 xv6 中，虚拟地址和物理地址的映射是相等映射。但是，虚拟地址和物理地址之间的映射关系可能是一对一、一对多、多对一。
 
 我们还可以为 page table 设置权限，从而提早发现和处理 bug。
@@ -775,13 +786,13 @@ C 程序无法直接被计算机理解。计算机能够理解的是二进制代
 
 RISC-V 是一种精简指令集（RISC，Reduced Instruction Set Computer），而 x86 是复杂指令集（CISC，Complex Instruction Set Computer）。两者主要区别如下：
 
-1. RISC-V 指令数量远小于 x86，x86存在历史包袱；
+1. RISC-V 指令数量远小于 x86，x86 存在历史包袱；
 2. RISC-V 指令更加简单（封装程度低）；
 3. RISC-V 是唯一的开源指令集；
 
 ### 4.3 RISC-V 寄存器
 
-RISC-V寄存器结构如下：
+RISC-V 寄存器结构如下：
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MM-XjiGboAFe-3YvZfT%2F-MM0rYc4eVnR9nOesAAv%2Fimage.png?alt=media&token=f30ebac8-8dc0-4b5d-8aa7-b241a10b43b3)
 
@@ -812,6 +823,7 @@ a0-7 寄存器保存函数参数，当参数数量大于寄存器数量时需要
 在函数调用的最后加载返回地址到 ra 寄存器，然后对栈指针加 16 以删除创建的栈帧。
 
 ### 4.5 结构体的结构
+
 结构体在内存中是一段连续的地址，类似于一个数组，但每个字段的类型不需要相同。
 
 ## 5 隔离与系统调用的进入和退出
@@ -905,7 +917,6 @@ COW Fork 所做的就是让子进程共享父进程物理内存 page，也就是
 
 在 PTE 中的 RSW 寄存器中存有 Dirty 和 Access bit，这两个 bit 标志该 PTE 是否是 dirty 以及在何时被访问过，因此可以用 Access bit 来决定 LRU 排名。
 
-
 ### 6.6 Memory Mapped Files
 
 我们会面临将文件加载到内存中对其处理的场合，由 mmap 系统调用函数提供。而使用 eager 策略将其加载到内存中的代价往往较高，因此操作系统一般采用懒加载策略。
@@ -932,6 +943,7 @@ mmap 接受一个虚拟地址（VA）、长度（len）、保护、标志位、�
 外设连接到 CPU，CPU 通过 PLIC（Platform Level Interrupt Control）处理外设的中断。PLIC 路由中断到 CPU 的一个核以进行处理，当处理完毕，CPU 会通知 PLIC；当没有空闲的核时，PLIC 保留中断直至被处理。
 
 ### 7.3 设备驱动
+
 驱动即内核中用以管理设备的代码，一般分为 bottom 和 top 两部分。
 
 bottom 是中断 handler，由 CPU 调用以处理中断；top 是供用户进程及内核其他部分调用的接口。
@@ -956,15 +968,15 @@ RISC-V 有如下与中断相关的寄存器：
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MNYn8xQ_nM7UyU1sa-g%2F-MNa5Rv4ANj0GOmpMXf9%2Fimage.png?alt=media&token=99fa1a9b-b983-46ec-9c0f-616220592cd9)
 
-2. 在`main`函数中处理中断
+2. 在 `main` 函数中处理中断
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MNYn8xQ_nM7UyU1sa-g%2F-MNa6N7vHde52fObSxUz%2Fimage.png?alt=media&token=65580d62-73c5-46eb-8767-e2fde2daac36)
 
-3. 处理 consoleinit。初始化锁，然后初始化uart
+3. 处理 consoleinit。初始化锁，然后初始化 uart
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MNYn8xQ_nM7UyU1sa-g%2F-MNa6mHXaOc6Dtv5U6bj%2Fimage.png?alt=media&token=80ea954c-2230-4eba-adcf-1a8e386bdb4a)
 
-4. 初始化uart。关闭中断，设置波特率，设置字符长度为8，重置FIFO，开启中断。之后uart可以生成中断。
+4. 初始化 uart。关闭中断，设置波特率，设置字符长度为 8，重置 FIFO，开启中断。之后 uart 可以生成中断。
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MNYn8xQ_nM7UyU1sa-g%2F-MNa7OdMH3taGmHfE7Wj%2Fimage.png?alt=media&token=0538d371-3758-431d-98e6-907f5f5a6ab9)
 
@@ -972,11 +984,11 @@ RISC-V 有如下与中断相关的寄存器：
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MNa7TJFrEQk2gYzkwCG%2F-MNcl8NhzO719lb6xtPl%2Fimage.png?alt=media&token=ceb45ee2-8509-48fb-9166-7d6bc9930fef)
 
-6. 使用plicinithart决定对哪些中断感兴趣
+6. 使用 plicinithart 决定对哪些中断感兴趣
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MNa7TJFrEQk2gYzkwCG%2F-MNcmoGEKLSU8ifrGFC6%2Fimage.png?alt=media&token=4bbb1a15-4f10-427c-961e-51b801adf8ef)
 
-7. 调用scheduler函数以设置SSTATUS寄存器，使CPU能够接受中断
+7. 调用 scheduler 函数以设置 SSTATUS 寄存器，使 CPU 能够接受中断
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MNa7TJFrEQk2gYzkwCG%2F-MNcnlTuggw_Il7m9iIW%2Fimage.png?alt=media&token=ac9df287-e059-4438-957e-548f1b22e030)
 
@@ -998,17 +1010,17 @@ RISC-V 有如下与中断相关的寄存器：
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MNa7TJFrEQk2gYzkwCG%2F-MNctcQci75CDpfVpdRq%2Fimage.png?alt=media&token=08880b86-4d8f-4b67-aa3c-cc5ce6cb17b0)
 
-4. uart中定义了一个环形buffer。`uartputc`函数中先判断环形buffer是否已满，若已满则sleep一段时间以让出CPU，否则将数据写入buffer，然后调用`uartstart`函数。
+4. uart 中定义了一个环形 buffer。`uartputc` 函数中先判断环形 buffer 是否已满，若已满则 sleep 一段时间以让出 CPU，否则将数据写入 buffer，然后调用 `uartstart` 函数。
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MNa7TJFrEQk2gYzkwCG%2F-MNcudamCocCj7PtfYpv%2Fimage.png?alt=media&token=f9ff4004-3b5d-4c5a-bbf2-676d10dc2033)
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MNa7TJFrEQk2gYzkwCG%2F-MNcu9oxFUI2qpie5z4T%2Fimage.png?alt=media&token=b0201ce3-225c-4696-a5e4-348e1b081bcc)
 
-5. `uartstart`通知设备执行操作。首先检测设备是否空闲，若空闲则从buffer中读取数据并写入THR（Transmission Holding Register）寄存器以发送数据。当数据到达设备，系统调用返回。
+5. `uartstart` 通知设备执行操作。首先检测设备是否空闲，若空闲则从 buffer 中读取数据并写入 THR（Transmission Holding Register）寄存器以发送数据。当数据到达设备，系统调用返回。
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MNcv-xytcPNjgcA09N-%2F-MNfDMD08BsxVVcKpVl3%2Fimage.png?alt=media&token=58e70d9b-7dd2-46bb-8243-bb188dcb8307)
 
-### 7.6 UART驱动 bottom
+### 7.6 UART 驱动 bottom
 
 当一个中断由 PCIE 发送给 CPU：
 
@@ -1016,7 +1028,7 @@ RISC-V 有如下与中断相关的寄存器：
 2. 设置 SEPT 寄存器为当前 pc，以便之后恢复
 3. 保存当前 mode（如 user mode）
 4. 将 mode 设置为 Supervisor mode
-5. 将 pc 置为 STVEC 的值（即 trap 处理程序的地址），进入usertrap
+5. 将 pc 置为 STVEC 的值（即 trap 处理程序的地址），进入 usertrap
 6. `usertrap` 调用 `devintr`，通过 SCAUSE 判断是否来自外设的中断，然后使用 `plic_claim` 获取中断。
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MNfH5qMvmyxhegTFSUo%2F-MNpcUmolzUjQhGtVWpo%2Fimage.png?alt=media&token=a894536b-a241-4230-8c0e-300d556275b6)
@@ -1030,13 +1042,14 @@ RISC-V 有如下与中断相关的寄存器：
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MNfH5qMvmyxhegTFSUo%2F-MNpeCI5zYrIAIDEUzeD%2Fimage.png?alt=media&token=796177bb-eeb4-45d8-8502-2c60fac1b5ec)
 
 ### 7.7 中断相关并发
+
 中断相关的并发包括以下几类：
 
 1. 设备与 CPU 并行。称为 producer-consumer 并行。
 2. 中断停止当前程序运行。中断不仅会打断用户空间代码，也有可能打断内核空间代码，而内核空间代码某些不应该被打断。
 3. 驱动的 top 和 bottom 并行执行。这也意味着它们可以在两个 CPU 上执行，需要通过锁来共享数据。
 
-驱动中包含一个环形buffer，大小为32个字节，它有两个指针：读指针和写指针。当向buffer中写入数据时写指针加，读数据时读指针加；两指针相等时表示buffer是空的。
+驱动中包含一个环形 buffer，大小为 32 个字节，它有两个指针：读指针和写指针。当向 buffer 中写入数据时写指针加，读数据时读指针加；两指针相等时表示 buffer 是空的。
 
 producer-consumer 并发中，producer（在示例中是 uartputc）可以一直向 buffer 中写入数据，直到 buffer 满了，暂时 sleep；consumer，即中断 handler 函数（在示例中是 uartintr）当发生中断时从 buffer 中读数据，直到 buffer 为空。
 
@@ -1049,9 +1062,11 @@ producer-consumer 并发中，producer（在示例中是 uartputc）可以一直
 ### 8.1 为什么要使用锁
 
 #### 为何我们倾向于使用多线程提高性能
-自2000年开始，CPU的时钟频率几乎不再增加，因此CPU的单线程达到了一个极限；而CPU的晶体管数量持续增加，因此我们倾向使用多核的方式提高计算机性能。
+
+自 2000 年开始，CPU 的时钟频率几乎不再增加，因此 CPU 的单线程达到了一个极限；而 CPU 的晶体管数量持续增加，因此我们倾向使用多核的方式提高计算机性能。
 
 #### 锁的优缺点
+
 当我们同时使用多个核时，需要使用锁来协调多线程时数据的更新，以确保共享数据的正确性以及避免 race condition 的发生。
 
 但是锁同时也会带来性能损失，使程序再次变成串行。
@@ -1074,6 +1089,7 @@ producer-consumer 并发中，producer（在示例中是 uartputc）可以一直
 ### 8.4 锁的特性和死锁
 
 #### 锁的特性
+
 1. 避免丢失数据更新
 2. 打包多个操作，使其具有原子性
 3. 维护共享数据的不变性
@@ -1090,17 +1106,17 @@ producer-consumer 并发中，producer（在示例中是 uartputc）可以一直
 
 #### 自旋锁的结构
 
-xv6中自旋锁的定义如下：
+xv6 中自旋锁的定义如下：
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MPS4AMuEHdeXFZVa2tv%2F-MPTKBMvidl5JDe89V15%2Fimage.png?alt=media&token=b9427226-3928-4e4d-a1cc-04c13641fe75)
 
-locked 表明是否上锁，name 是锁的名称，cpu 表示当前锁被哪个 cpu 持有。
+locked 表明是否上锁，name 是锁的名称，CPU 表示当前锁被哪个 CPU 持有。
 
 #### 获取锁
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MPS4AMuEHdeXFZVa2tv%2F-MPTLYWRF8Z7xnWXnrs2%2Fimage.png?alt=media&token=03319722-1193-4ab4-bb36-23dbc3c11fae)
 
-获取锁的最大挑战是保证设置 locked 字段的操作的原子性，这时由 amoswap 指令实现的。它接受一个地址和两个寄存器r1，r2。它会先锁定地址，将地址中的数据保存到一个临时变量，然后将r1中的数据写入地址，再将临时变量中的数据写入r2，最后解锁地址。
+获取锁的最大挑战是保证设置 locked 字段的操作的原子性，这时由 amoswap 指令实现的。它接受一个地址和两个寄存器 r1，r2。它会先锁定地址，将地址中的数据保存到一个临时变量，然后将 r1 中的数据写入地址，再将临时变量中的数据写入 r2，最后解锁地址。
 
 在流程中最重要的是 `lock_test_and_set` 循环。该函数实现了 atomic swap 操作：若锁未被持有，则 locked 字段为 0，这时将其设为 1，然后返回原数值 0，退出循环；若锁被持有，则 locked 字段为 1，这时再次对其写入 1，返回原数值 1，继续循环。
 
@@ -1125,6 +1141,7 @@ locked 表明是否上锁，name 是锁的名称，cpu 表示当前锁被哪个 
 3. 多线程可通过并行计算提高计算机性能。
 
 #### 线程的定义
+
 对同时多任务编程的抽象，可被认为是串行执行代码的单元。线程具有状态，因此我们可以随时保存其状态并暂停或恢复它。线程的状态包括：
 
 1. 程序计数器（PC），表示当前线程执行的位置
@@ -1141,7 +1158,7 @@ locked 表明是否上锁，name 是锁的名称，cpu 表示当前锁被哪个 
 
 #### 线程系统遇到的挑战
 
-1. 如何实现线程切换。线程切换的过程称为线程调度，每个CPU都实现了一个线程调度器
+1. 如何实现线程切换。线程切换的过程称为线程调度，每个 CPU 都实现了一个线程调度器
 2. 决定在线程切换时保留哪些信息以及如何保存。
 3. 如何处理运算密集型线程
 
@@ -1181,12 +1198,12 @@ locked 表明是否上锁，name 是锁的名称，cpu 表示当前锁被哪个 
 
 在第二步中，一个内核线程并不直接切换到另一个内核线程，而是切换到这个 CPU 对应的调度器线程，并由调度器线程（同样是一个内核线程）切换到下一个内核线程。
 
-
 #### 线程切换程序
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MPlA8TdJmidn6m4MngD%2F-MPnrlXVjhqSv55SaNaq%2Fimage.png?alt=media&token=11b1bceb-efc7-4bdb-8ef1-511e44f8b149)
 
-proc记录了进程状态相关的字段，其中：
+proc 记录了进程状态相关的字段，其中：
+
 1. trapframe 字段保存用户空间线程寄存器
 2. context 字段保存内核线程寄存器
 3. kstack 表示当前进程内核保存函数调用的位置
@@ -1298,7 +1315,7 @@ write(fd,"abc",3)
 link("x/y","x/z")
 ```
 
-#### inode和文件描述符
+#### inode 和文件描述符
 
 inode 是文件系统中代表文件的对象，通过编号（int）进行区分，它实现了 read 和 write 方法，同时实现了引用计数以支持链接。
 
@@ -1324,7 +1341,7 @@ inode 是文件系统中代表文件的对象，通过编号（int）进行区�
 - sector 是磁盘驱动可以读写的最小单元，通常是 512 字节
 - block 是操作系统/文件系统视角的数据，通常是 1024 字节
 
-文件系统运行在 CPU 上，将内部数据存储在内存，会读取 block 形式存储在 SSD 或 HDD 设备上的数据。其 api 包括 read/write。
+文件系统运行在 CPU 上，将内部数据存储在内存，会读取 block 形式存储在 SSD 或 HDD 设备上的数据。其 API 包括 read/write。
 
 #### 磁盘
 
@@ -1373,21 +1390,23 @@ inode 是文件系统中代表文件的对象，通过编号（int）进行区�
 3. 查找 inode 251，扫描其下所有 block，找到 x 并得到对应的 inode 编号
 
 #### 文件创建流程
-1. 在inode block中找到一个空闲的inode索引，分配给新创建的文件。
-2. 在inode数组中为新创建的文件分配一个inode结构体，并初始化文件的属性。
+
+1. 在 inode block 中找到一个空闲的 inode 索引，分配给新创建的文件。
+2. 在 inode 数组中为新创建的文件分配一个 inode 结构体，并初始化文件的属性。
 3. 在数据块位图中找到一组空闲的数据块索引，分配给新创建的文件。
-4. 更新inode block和数据 block。
+4. 更新 inode block 和数据 block。
 5. 在父级目录的 inode 中加入新创建文件的目录项，包括文件名和对应的 inode 索引。
 6. 更新 root inode，修改 size 字段以包含新创建的文件
 
 简单来说，即是分配 inode 并更新新文件的 data block
 
 #### block cache
+
 为了减少磁盘开销，以及加速文件读写，通常采用缓存机制。当应用程序读取或写入文件，首先检查块缓存，如果在缓存中则无需访问磁盘。
 
 块缓存中的数据有两种策略：
 
-1. 写回策略：数据块的修改不会被立刻写回磁盘，而是在满足一定条件（如I/O延迟，缓存阈值，磁盘空闲）时写回并覆盖磁盘原有内容，可以减少磁盘读写
+1. 写回策略：数据块的修改不会被立刻写回磁盘，而是在满足一定条件（如 I/O 延迟，缓存阈值，磁盘空闲）时写回并覆盖磁盘原有内容，可以减少磁盘读写
 2. 强制写入策略：数据块修改立刻写回磁盘，可保证数据一致性，但会增加磁盘开销并影响性能
 
 ## 12 崩溃恢复
@@ -1445,7 +1464,7 @@ log 结构如图所示：
 
 我们使用 pin/unpin，利用引用计数的方式淘汰未被引用的块。
 
-#### 文件系统操作必须适配log大小
+#### 文件系统操作必须适配 log 大小
 
 假设 log block 的最大数量为 30，这意味着文件系统尝试写入的最大 block 数为 30。尝试写入超过这个数值的操作是不允许的（因为会被写入文件系统区域）
 
@@ -1481,10 +1500,12 @@ xv6 logging 方案的最大缺陷在于性能。在每次 commit 之后，需要
 ### 13.4 ext3 数据结构
 
 #### 内存中
+
 - block cache，用以缓存数据
 - transaction（可以粗略翻译成事务） 信息，包括序列号，修改的 block 编号（cache 中的），handle（读写 cache 的系统调用）
 
 #### 磁盘中
+
 - 文件系统树，包括 inode、文件、目录
 - bitmap block，标记 data block 是否空闲
 - log 区域
@@ -1504,6 +1525,7 @@ ext3 的 log 包含以下部分：
 ### 13.6 ext3 性能提升措施
 
 #### 异步的系统调用
+
 异步的系统调用即是应用程序调用文件系统的系统调用，但是仅修改完毕缓存中的 block 即返回，不去执行耗时更长的写磁盘操作。
 
 与此同时，文件系统在后台并行地进行写磁盘操作。通过这种方式，实现了 I/O 并发。
@@ -1515,6 +1537,7 @@ ext3 的 log 包含以下部分：
 为了保证异步 I/O 能够拿到可预期的结果，我们使用了 fsync 系统调用。它接受一个文件描述符，保证与该文件相关的写操作全部完成之后返回。但 fsync 会牺牲异步 I/O 带来的性能，因此通常只在必要的地方使用。另外，fsync 有时也被称为 flush。
 
 #### 批量执行
+
 批量执行即是将多个操作打包成一个操作以统一执行。具体来说，ext3 同一时间只会有一个打开的 transaction（创建周期一般是 5s），在这 5s 之中，所有的操作均会打包在这个 transaction 之中；待结束之后统一提交执行。
 
 > 注意，ext3 在内存中执行的数据结构与 log 中不同：在内存中，有一个 transaction 打包批量执行系统调用，然后一次性将变更内容提交到 log 中持久化；此时 log 中可能存在多个已经 commit 的 transaction，当它们执行完毕（将数据写入 data block）时清空当前 transaction
@@ -1526,7 +1549,8 @@ ext3 的 log 包含以下部分：
 3. 向磁盘中连续的 block 写入比写入零散的 block 效率更高。
 
 #### 并发
-ext3的并发体现在：
+
+ext3 的并发体现在：
 
 1. 允许多个系统调用同时修改当前的 transaction
 2. 允许不同状态的 transaction 存在：内存中一个打开的 transaction 接受系统调用，log 中多个 transaction 可以写数据，以及正在被释放的 transaction
@@ -1550,7 +1574,7 @@ stop(h)
 
 当全部 transaction 结束，我们可以提交操作：
 
-1. 阻止新的系统调用（因为同一时间只有一个接收系统调用的transaction），系统调用等待
+1. 阻止新的系统调用（因为同一时间只有一个接收系统调用的 transaction），系统调用等待
 2. 等待这个 transaction 中的系统调用完成，即数据已经更新到 cache 中。
 3. 开启一个新的 transaction，以接收系统调用
 4. 更新 descriptor block，其中包含所有被修改了的 block 编号
@@ -1632,7 +1656,7 @@ munmap(addr)
 
 sigaction 的应用场景是：当应用程序设置的 signal 触发则调用特定函数。它接受一个信号和一个 handler。
 
-#### sigalarm（非标准Unix接口）
+#### sigalarm（非标准 Unix 接口）
 
 sigalarm 类似 sigaction，但它类似定时器，每隔一段时间就调用 handler。该功能也可通过 sigaction 实现。
 
@@ -1660,7 +1684,6 @@ VMAs 即 Virtual Memory Areas，它会记录一些有关连续的虚拟内存地
 对于一个大的缓存表来说，其可能大于物理内存。我们使用一个虚拟内存 page，而不为其分配任何物理内存。当触发 Page Fault 时，分配物理内存。
 
 当物理内存达到上限，我们可以回收部分物理内存 page（修改这些物理内存的 PTE 权限，使访问时能够出发 Page Fault。
-
 
 ### 14.5 copying GC
 
@@ -1701,6 +1724,7 @@ GC 结束之前，from 空间所有对象被丢弃。
 宏内核表示操作系统内核是一个完成各种事情的大的程序。
 
 #### 优势
+
 1. 接口高度抽象，可移植
 2. 可以向应用程序隐藏复杂度，从而使应用开发变得简单
 3. 由内核管理资源，可以简化应用程序的处理逻辑
@@ -1718,7 +1742,7 @@ GC 结束之前，from 空间所有对象被丢弃。
 
 内核仅支持进程/任务/线程，以及 IPC 作为消息的传递途径。其他原本由内核提供的服务，如文件系统等，现在作为用户进程运行。
 
-以 vim 读取一个文件为例，通过 IPC 发送一条消息到文件系统进程。文件系统发送一个 IPC 到磁盘驱动程序，磁盘驱动程序与磁盘交互。磁盘驱动返回一个磁盘块给文件系统，文件系统通过 IPC 发送数据给 vim。
+以 VIM 读取一个文件为例，通过 IPC 发送一条消息到文件系统进程。文件系统发送一个 IPC 到磁盘驱动程序，磁盘驱动程序与磁盘交互。磁盘驱动返回一个磁盘块给文件系统，文件系统通过 IPC 发送数据给 VIM。
 
 #### 优点
 
@@ -1739,7 +1763,6 @@ GC 结束之前，from 空间所有对象被丢弃。
 3. IPC 需要足够快。
 4. 由于服务被拆分，在集成时优化空间较小，性能可能相比宏内核更低。
 
-
 ### 15.3 L4 微内核
 
 L4 是最早的一批可以工作的微内核。
@@ -1748,7 +1771,7 @@ L4 是最早的一批可以工作的微内核。
 
 1. 只有 7 个系统调用。相比之下，Linux 约有 350 个系统调用，xv6 有 21 个系统调用。
 2. 代码少。只有 13000 行代码，只有 Linux 代码的几十分之一。
-3. 只包含非常基础的抽象，包括Task、线程、地址空间、IPC。每个 Task 中有多个线程。每个线程有一个标识符，可以通过其实现 IPC 通信。
+3. 只包含非常基础的抽象，包括 Task、线程、地址空间、IPC。每个 Task 中有多个线程。每个线程有一个标识符，可以通过其实现 IPC 通信。
 
 #### 系统调用
 
@@ -1786,7 +1809,6 @@ L4 是最早的一批可以工作的微内核。
 5. 对于 rpc，存在一个 call 系统调用，可减少一般的内核态和用户态切换。
 
 通过以上优化，对于短 rpc 请求，可以使速度提升 20 倍。
-
 
 ### 15.5 运行在 L4 上的 Linux
 
@@ -1866,7 +1888,7 @@ VMM 维护了一个映射表，将 Guest 物理内存地址（gpa）映射到真
 
 #### 对于真实设备的 pass-through
 
-第三种策略最典型的例子是网卡。网卡可以表现为多个独立的子网卡，Guest可以直接与子网卡进行交互。
+第三种策略最典型的例子是网卡。网卡可以表现为多个独立的子网卡，Guest 可以直接与子网卡进行交互。
 
 ### 16.6 硬件对虚拟机的支持
 
@@ -1905,7 +1927,6 @@ VMM 在内存中通过一个结构体与 VT-x 硬件交互，称为 VMCS（Virtu
 
 > 这里 EPT 的作用与 Shadow Page Table 十分类似。
 
-
 ### Dune
 
 Dune 是对支持虚拟机的硬件在 host 中的应用。它支持对进程的管理，使得进程同时拥有 Guest Supervisor mode 和 Guest User mode。
@@ -1914,15 +1935,16 @@ Dune 是对支持虚拟机的硬件在 host 中的应用。它支持对进程的
 
 Dune 还支持以一种方便的方式获取 PTE 及其 dirty 位，从而加速进程的垃圾回收。
 
-
 ## 17 内核与高级语言
 
 ### 17.1 C 语言实现操作系统的优劣势
 
 #### 背景
+
 许多操作系统，如 Windows、Linux、BSD 都是由 C 实现的。
 
 #### 优势
+
 1. C 语言提供了强大的控制能力，能够完全控制内存分配和释放
 2. C 语言没有高度的抽象（原文是隐藏的代码，其实就是语言接近底层），与 RISC-V 指令高度对应
 3. 有直接内存访问能力，可以读写寄存器
@@ -1943,6 +1965,7 @@ Dune 还支持以一种方便的方式获取 PTE 及其 dirty 位，从而加速
 这里的高级编程语言主要指一些 GC 语言。
 
 #### 优势
+
 1. 高级编程语言提供了内存安全
 2. 高级编程语言提供了类型安全
 3. 高级编程语言通过 GC 实现了自动的内存管理
@@ -2007,7 +2030,7 @@ Biscuit 即是本次使用 Golang 编写的实验性的操作系统内核。
 
 #### 系统调用
 
-biscuit系统调用流程如下：
+biscuit 系统调用流程如下：
 
 1. 用户线程将参数保存在寄存器中，通过库函数使用系统调用接口
 2. 用户线程执行 SYSENTER
@@ -2023,7 +2046,7 @@ biscuit系统调用流程如下：
 
 ### 17.5 Heap 耗尽问题
 
-在 xv6 中我们静态分配内存，因此不需要 heap。而在其他正常的内核中，内存是动态分配的，需要有一个heap。
+在 xv6 中我们静态分配内存，因此不需要 heap。而在其他正常的内核中，内存是动态分配的，需要有一个 heap。
 
 当应用程序打开许多文件描述符、socket 等，heap 会被逐渐填满。当 heap 没有额外空间时，在 xv6 中返回一个错误；而在 Go runtime 中，new 分配对象必定成功。
 
@@ -2091,11 +2114,11 @@ biscuit系统调用流程如下：
 #### 性能是否与 Linux 接近
 
 1. 首先关闭 Linux 中所有 Biscuit 不提供的功能
-2. 吞吐量测试，Biscuit 更慢，mailbench 差 10%，nginx 与 redis 差 10%-15%
+2. 吞吐量测试，Biscuit 更慢，mailbench 差 10%，nginx 与 Redis 差 10%-15%
 
 #### 高级语言额外的代价有多大
 
-- 3%的时间用于 GC cycles
+- 3% 的时间用于 GC cycles
 - Prologue（确保栈足够大）占用 CPU 时间最多（4%-6%）
 - Write barrier（跟踪不同空间指针）时间很少（<1%）
 - Safety cycles（空指针检查）占用 2%-3%
@@ -2104,13 +2127,13 @@ biscuit系统调用流程如下：
 
 #### GC 会带来多少损耗
 
-在空闲内存较小时，存在严重的 overhead 现象。为了控制 GC 的 overhead 在 10%以内，物理内存大小至少应是 heap 的三倍。
+在空闲内存较小时，存在严重的 overhead 现象。为了控制 GC 的 overhead 在 10% 以内，物理内存大小至少应是 heap 的三倍。
 
 #### GC 延迟如何
 
 go 的 GC 是一个带有短暂 pause 的并发 GC：会暂停一段极短的时间来执行 write barrier。
 
-- 单个 pause 最大时间为 115 微秒，出现在 web server 中。
+- 单个 pause 最大时间为 115 微秒，出现在 Web server 中。
 - 一个 HTTP 请求的最大 pause 时间是 582 微秒。
 - 超过 100 微秒的 pause 少于 0.3%
 
@@ -2125,7 +2148,7 @@ go 的 GC 是一个带有短暂 pause 的并发 GC：会暂停一段极短的时
 
 #### 是否应当在一个新的内核中使用高级语言
 
-- 如果性能至关重要（15%提升），应当使用 C
+- 如果性能至关重要（15% 提升），应当使用 C
 - 如果想要最小化内存使用，使用 C
 - 如果安全更重要，使用高级语言
 - 如果性能不是那么重要，高级语言是很好的选择
@@ -2169,7 +2192,7 @@ go 的 GC 是一个带有短暂 pause 的并发 GC：会暂停一段极短的时
 
 以太网的 48bit 地址是网卡的唯一 ID，前 24bit 表示制造商，而每个网卡制造商有自己的唯一编号；后 24bit 是网卡制造商提供的唯一数字，通常是递增的数字。
 
-#### tcpdump获取packet
+#### tcpdump 获取 packet
 
 我们通常可以使用 tcpdump 查看以太网 packet，他能够得到：
 
@@ -2230,6 +2253,7 @@ IP header 中关键信息包括：目的 IP 地址（ip_dst）、源 IP 地址�
 TCP 不仅能够将 packet 发送到正确应用程序，并且包含了序列号等数据结构以检测丢包并支持重传，从而保证数据完整有序传输。
 
 #### UDP
+
 UDP 是一种更简单的协议，它只将 packet 发送到对应应用，不提供其他功能。
 
 ![](https://906337931-files.gitbook.io/~/files/v0/b/gitbook-legacy-files/o/assets%2F-MHZoT2b_bcLghjAOPsJ%2F-MOEZ9iqKkt92zbewl4r%2F-MOQ0ZD1O8xfxdq8_uRj%2Fimage.png?alt=media&token=ad49b938-5048-46bc-90c5-0dab11be8d25)
@@ -2303,7 +2327,7 @@ Meltdown 攻击基本流程如下：
 5. 将这个值乘以 4096，得到 4096 或 0
 6. 读取申请的 buffer，要么是 `buffer[0]`，要么是 `buffer[4096]`
 
-这段攻击代码依赖于预测执行和CPU的缓存方式
+这段攻击代码依赖于预测执行和 CPU 的缓存方式
 
 ### 19.2 预测执行
 
@@ -2321,7 +2345,6 @@ Meltdown 攻击基本流程如下：
 这里提前执行的分支将值保存在一个临时寄存器中，当分支命中则变成真实寄存器，否则抛弃临时寄存器。
 
 如果 r0 指针无效，当超前执行代码时不会产生 Page Fault。它需要等待 load 返回后才能产生 Page Fault。
-
 
 ### 19.3 CPU 缓存
 
@@ -2399,10 +2422,3 @@ RCU 的优点在于其数据读取非常快，对 reader 几乎没有额外负�
 1. 重新构造数据结构使其非共享
 2. 分离数据：对于频繁写入单不需跨核同步的数据可以为每个 CPU 创建单独的实例从而避免使用锁
 3. 延迟同步：对于统计计数器，可以为每个 CPU 维护单独的实例，然后读取全部实例并相加。
-
-
-
-
-
-
-

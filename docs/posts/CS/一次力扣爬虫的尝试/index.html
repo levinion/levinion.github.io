@@ -125,9 +125,9 @@
         <h1>一次力扣爬虫的尝试</h1>
         <p>2023-02-14 21:02:57</p>
       </div>
-      <article><h2 id="1-"><a class="anchor" href="#1-">#</a> 1 🤔欲做其事，必先利其器</h2>
+      <article><h2 id="1--"><a class="anchor" href="#1--">#</a> 1 🤔 欲做其事，必先利其器</h2>
 <p>最近开始刷力扣，奈何力扣的那个编辑器（monaco editor）实在不好用，还是用起了常用的 vscode。每次开始一道题目之前不可避免地需要将题目要求和代码复制到本地，而这样的重复劳动十分令人生厌，于是开个项目，把之前写的统计文件数的命令行程序扩展成一个爬虫工具。</p>
-<h2 id="2-"><a class="anchor" href="#2-">#</a> 2 🧰工具和基础代码</h2>
+<h2 id="2--"><a class="anchor" href="#2--">#</a> 2 🧰 工具和基础代码</h2>
 <p>由于个人主要使用 go 语言，因此爬虫也选择使用 go 来实现；如果你使用其他语言，也可以参考该实现的主要思路。该命令行工具使用 cobra 框架完成，但那并非要讨论的内容。让我们看看爬虫部分。</p>
 <h3 id="21-req"><a class="anchor" href="#21-req">#</a> 2.1 req</h3>
 <p>req 是 go 语言爬虫的最佳实践之一，其操作十分简单。在爬虫部分中，核心环节即是由 req 实现的 query 请求函数。让我们看看代码：</p>
@@ -145,8 +145,8 @@
 
 </code></pre>
 <p>在该段代码中，使用 <code>.C()</code> 获取一个爬虫客户端，使用 <code>.R()</code> 获取请求，然后设置必要的 <code>Header</code> 和请求体，最后使用 <code>Post</code> 方法发起请求，得到一个可进行后续处理的 <code>Response</code> 结构体指针。详细内容下面会讲。</p>
-<h3 id="22-json-"><a class="anchor" href="#22-json-">#</a> 2.2 json 格式数据处理</h3>
-<p>当我们得到了请求到的数据，你会发现它是一个 json 格式的字符串。我们需要从该 json 格式数据中得到我们需要的信息，如题号、题目要求、题目代码等。在 go 中，一个很方便的实践是 gjson。而当我们想要修改 json 字符串时（你会发现我们确实需要），sjson 则是一个好的选择。在获取特定题目标题时，我使用了 gjson 以获取标题和难度等级。</p>
+<h3 id="22-json-"><a class="anchor" href="#22-json-">#</a> 2.2 JSON 格式数据处理</h3>
+<p>当我们得到了请求到的数据，你会发现它是一个 JSON 格式的字符串。我们需要从该 JSON 格式数据中得到我们需要的信息，如题号、题目要求、题目代码等。在 go 中，一个很方便的实践是 gjson。而当我们想要修改 JSON 字符串时（你会发现我们确实需要），sjson 则是一个好的选择。在获取特定题目标题时，我使用了 gjson 以获取标题和难度等级。</p>
 <pre><code class="language-go">
 func GetSlug(index int) (slug, diff string) {
     res := query(slugPayload)
@@ -159,7 +159,7 @@ func GetSlug(index int) (slug, diff string) {
     return
 }
 </code></pre>
-<h2 id="3-"><a class="anchor" href="#3-">#</a> 3 🐛开始爬取数据</h2>
+<h2 id="3--"><a class="anchor" href="#3--">#</a> 3 🐛 开始爬取数据</h2>
 <p>OK，到这里你已经知道了该使用什么工具，而我们的爬虫教程也终于可以正式开始了！</p>
 <h3 id="31-"><a class="anchor" href="#31-">#</a> 3.1 爬取特定题目信息</h3>
 <p>首先让我们先爬取特定题目的有用信息。这些信息可能包括题目的题号、难度、代码、需求和标题，为了方便起见，将它们加入一个结构体。</p>
@@ -198,7 +198,7 @@ question: {questionId: &quot;1&quot;, questionFrontendId: &quot;1&quot;, categor
 &quot;query&quot;: &quot;query questionData($titleSlug: String!) { question(titleSlug: $titleSlug) {\n questionId\n categoryTitle\n title\n titleSlug\n translatedTitle\n translatedContent\n isPaidOnly\n difficulty\n codeSnippets\n { lang\n langSlug\n code\n } } }&quot;
 }
 </code></pre>
-<p>这样我们就在 <code>res</code> 中获得了在浏览器中抓包得到的同样的 json 数据，你可以使用 <code>res.String()</code> 将它打印出来以进行验证；我们这里就不这样做了。然后使用 <code>gjson</code> 提取我们需要的数据：</p>
+<p>这样我们就在 <code>res</code> 中获得了在浏览器中抓包得到的同样的 JSON 数据，你可以使用 <code>res.String()</code> 将它打印出来以进行验证；我们这里就不这样做了。然后使用 <code>gjson</code> 提取我们需要的数据：</p>
 <pre><code class="language-go">
 func GetInter(slug, codeType string) (string, string, string) {
     interPayload, err := sjson.Set(interPayload, &quot;variables.titleSlug&quot;, slug)
@@ -220,14 +220,14 @@ func GetInter(slug, codeType string) (string, string, string) {
 <p>但是我们如何爬取其他题目呢？我们发现涉及题目标题的请求信息只有 <code>referer</code> 和请求体的 <code>titleSlug</code>，而修改 <code>referer</code> 似乎是不起作用的，那么真正区分不同题目的就只有 <code>titleSlug</code> 的值。只要利用 <code>sjson</code> 将其修改为其他题目的标题，我们确实拉取到了其他题目的信息。</p>
 <h3 id="heading"><a class="anchor" href="#heading">#</a> 爬取全部题目列表</h3>
 <p>至此我们已经能够根据标题取得我们需要的数据了，但每次传入标题的形式并不高效，更何况还是 slug 格式的标题。我们所需要的是根据题号爬取题目信息。</p>
-<p>还是回到<a href="https://leetcode.cn/problems/two-sum/">两数之和</a>这个页面，如果你足够仔细的话，你可能早就发现了以下的 json 信息：</p>
+<p>还是回到<a href="https://leetcode.cn/problems/two-sum/">两数之和</a>这个页面，如果你足够仔细的话，你可能早就发现了以下的 JSON 信息：</p>
 <pre><code class="language-json">{data: {allQuestionsBeta: [{questionId: &quot;1&quot;, __typename: &quot;QuestionNode&quot;, status: &quot;ac&quot;},…]}}
 </code></pre>
 <p>该信息中维护了全部的题目信息，适当修改其请求体以获取 <code>slug</code> 格式标题，当然这也可包括其他数据：</p>
 <pre><code class="language-json">{&quot;operationName&quot;: &quot;allQuestions&quot;, &quot;query&quot;: &quot;query allQuestions { allQuestionsBeta { ...questionSummaryFields __typename }}fragment questionSummaryFields on QuestionNode { title titleSlug translatedTitle questionId difficulty __typename}&quot;}
 </code></pre>
 <blockquote>
-<p>细心的同学可能注意到，为何我们不在这里取得题目具体的信息，如code和need之类的呢？为何我们还需要维护一个请求专门爬取上面两个数据呢？这是因为我在修改上面请求体的过程中发现只要请求了以上任何一个数据就会报错，因此不得不这样做，虽然可能因此拖慢了程序的速度（毕竟要爬两次呢）。</p>
+<p>细心的同学可能注意到，为何我们不在这里取得题目具体的信息，如 code 和 need 之类的呢？为何我们还需要维护一个请求专门爬取上面两个数据呢？这是因为我在修改上面请求体的过程中发现只要请求了以上任何一个数据就会报错，因此不得不这样做，虽然可能因此拖慢了程序的速度（毕竟要爬两次呢）。</p>
 </blockquote>
 <p>于是我们就可以利用它取得题号对应的标题：</p>
 <pre><code class="language-go">func GetSlug(index int) (slug, diff string) {
@@ -241,7 +241,7 @@ func GetInter(slug, codeType string) (string, string, string) {
     return
 }
 </code></pre>
-<p>除开以上关键环节就只剩下一些文件操作（以及一些简单的ui），最后爬虫部分最终代码如下：</p>
+<p>除开以上关键环节就只剩下一些文件操作（以及一些简单的 ui），最后爬虫部分最终代码如下：</p>
 <pre><code class="language-go">func Get(index int) {
     t := timer.NewTimer()
     t.Start()

@@ -4,7 +4,7 @@ created: 2025-03-11 21:47:28
 ---
 ## 文本渲染流程
 
-对于文本渲染，首先我们需要引入`freetype`库。它主要实现了从字形文件生成位图的功能，从而方便生成材质以供文本渲染。
+对于文本渲染，首先我们需要引入 `freetype` 库。它主要实现了从字形文件生成位图的功能，从而方便生成材质以供文本渲染。
 
 ```cpp
 #include <ft2build.h>
@@ -12,7 +12,7 @@ created: 2025-03-11 21:47:28
 #include FT_FREETYPE_H
 ```
 
-总共涉及的初始化包括三部分，分别是freetype、shader和vao、vbo的初始化：
+总共涉及的初始化包括三部分，分别是 freetype、shader 和 vao、vbo 的初始化：
 
 ```cpp
 void init(std::string font) {
@@ -22,7 +22,7 @@ void init(std::string font) {
 }
 ```
 
-对freetype进行一些初始化工作：
+对 freetype 进行一些初始化工作：
 
 ```cpp
 // 初始化freetype
@@ -38,7 +38,7 @@ FT_Set_Pixel_Sizes(this->face, 0, 48);
 glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 ```
 
-初始化shader：
+初始化 shader：
 
 ```cpp
 void init_shader() {
@@ -67,7 +67,7 @@ void init_shader() {
 }
 ```
 
-shader代码如下：
+shader 代码如下：
 
 ```glsl
 // vertex.glsl
@@ -98,7 +98,7 @@ void main()
 }
 ```
 
-进行vao和vbo初始化：
+进行 vao 和 vbo 初始化：
 
 ```cpp
 void init_buffer() {
@@ -221,15 +221,15 @@ void draw_text(
 
 对于中文渲染，主要需要修改的地方在于：
 
-1. 英文只需要128个字符，与之相对中文（cjk）则需要更多，因此需要使用`char32_t`或`wchar_t`替换`char`。
-2. 同理，需要使用`std::wstring`替换`std::string`，或是使用以下方法进行格式转换：
+1. 英文只需要 128 个字符，与之相对中文（cjk）则需要更多，因此需要使用 `char32_t` 或 `wchar_t` 替换 `char`。
+2. 同理，需要使用 `std::wstring` 替换 `std::string`，或是使用以下方法进行格式转换：
 
 ```cpp
 std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> utf32conv;
 auto s = utf32conv.from_bytes(text);
 ```
 
-3. 另外，由于unicode字符非常多，因此无法一次性完成材质创建，需要进行动态载入。在绘制实际字符时进行判断：
+3. 另外，由于 unicode 字符非常多，因此无法一次性完成材质创建，需要进行动态载入。在绘制实际字符时进行判断：
 
 ```cpp
 if (!this->character_table.contains(*c)) {

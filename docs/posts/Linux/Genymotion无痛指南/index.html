@@ -125,32 +125,32 @@
         <h1>Genymotion无痛指南</h1>
         <p>2025-02-11 11:13:06</p>
       </div>
-      <article><p>继上文，在Linux上运行安卓游戏最好的方案大概就是Genymotion了。前文也提到过，它对于免费用户，在游戏界面会有一个牛皮癣的横幅；<code>Free for personal use</code>。本文就来解决这个。</p>
+      <article><p>继上文，在 Linux 上运行安卓游戏最好的方案大概就是 Genymotion 了。前文也提到过，它对于免费用户，在游戏界面会有一个牛皮癣的横幅；<code>Free for personal use</code>。本文就来解决这个。</p>
 <h2 id="xvfb"><a class="anchor" href="#xvfb">#</a> Xvfb</h2>
-<p>Xvfb能够在Xorg中创建一个虚拟的显示屏，适合将一切依赖图形界面运行，而我们却一点不想看见的应用放在那里。</p>
-<p>首先我们获取Xvfb：</p>
+<p>Xvfb 能够在 Xorg 中创建一个虚拟的显示屏，适合将一切依赖图形界面运行，而我们却一点不想看见的应用放在那里。</p>
+<p>首先我们获取 Xvfb：</p>
 <pre><code class="language-shell">paru -S xorg-server-xvfb
 </code></pre>
 <pre><code class="language-shell">Xvfb :3 -nolisten tcp -screen :3 1280x800x24
 </code></pre>
-<p>上条命令在<code>DISPLAY=:3</code>上创建了一个<code>1280x800x24</code>的显示器，其中24是色深。</p>
-<p>有一种更简单的运行方式，即<code>xvfb-run &lt;some command&gt;</code>。如果不附带其他参数，默认会在<code>：99</code>上创建屏幕并运行传入的命令。</p>
+<p>上条命令在 <code>DISPLAY=:3</code> 上创建了一个 <code>1280x800x24</code> 的显示器，其中 24 是色深。</p>
+<p>有一种更简单的运行方式，即 <code>xvfb-run &lt;some command&gt;</code>。如果不附带其他参数，默认会在 <code>：99</code> 上创建屏幕并运行传入的命令。</p>
 <h2 id="genymotion-player"><a class="anchor" href="#genymotion-player">#</a> genymotion-player</h2>
-<p>然后在创建的虚拟显示器上运行<code>genymotion-player</code>：</p>
+<p>然后在创建的虚拟显示器上运行 <code>genymotion-player</code>：</p>
 <pre><code class="language-shell">DISPLAY=:3 genymotion-player -n &lt;设备名&gt; -s
 </code></pre>
 <p>或是；</p>
 <pre><code class="language-shell">xvfb-run genymotion-player -n &lt;设备名&gt; -s
 </code></pre>
 <h2 id="scrcpy"><a class="anchor" href="#scrcpy">#</a> scrcpy</h2>
-<p>使用scrcpy进行连接：</p>
+<p>使用 scrcpy 进行连接：</p>
 <pre><code class="language-shell">scrcpy
 </code></pre>
 <p>如果没有，安装：</p>
 <pre><code class="language-shell">paru -S scrcpy
 </code></pre>
 <h2 id="oom"><a class="anchor" href="#oom">#</a> oom</h2>
-<p>genymotion的最大问题是它存在内存泄漏，即<code>genymotion-player</code>占用的内存会越来大，最终导致整个系统运行缓慢。这似乎没有什么好的方法，我所能想到的方案也就是定时杀掉它并重新运行。下面为此所写的一个内存监控脚本：</p>
+<p>genymotion 的最大问题是它存在内存泄漏，即 <code>genymotion-player</code> 占用的内存会越来大，最终导致整个系统运行缓慢。这似乎没有什么好的方法，我所能想到的方案也就是定时杀掉它并重新运行。下面为此所写的一个内存监控脚本：</p>
 <pre><code class="language-python">#!/bin/python3
 import subprocess
 import os
@@ -201,7 +201,7 @@ if __name__ == &quot;__main__&quot;:
     except KeyboardInterrupt:
         exit(0)
 </code></pre>
-<p>通过<code>oom.py xvfb-run genymotion-player -n &lt;device id&gt; -s</code>来运行genymotion，当其内存达到32G（即我主机内存的一半，你可以进行修改）时，自动重新运行该进程。</p>
+<p>通过 <code>oom.py xvfb-run genymotion-player -n &lt;device id&gt; -s</code> 来运行 genymotion，当其内存达到 32G（即我主机内存的一半，你可以进行修改）时，自动重新运行该进程。</p>
 </article>
     </div>
   </body>

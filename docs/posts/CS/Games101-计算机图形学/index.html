@@ -135,7 +135,7 @@
 <h3 id="heading-2"><a class="anchor" href="#heading-2">#</a> 挑战</h3>
 <p>真实世界的理解、计算方法、显示方法</p>
 <h3 id="heading-3"><a class="anchor" href="#heading-3">#</a> 内容</h3>
-<p>数学理论、着色、形体、仿真动画，不包括OpenGL、DirectX、Vulcan等（图形学api）</p>
+<p>数学理论、着色、形体、仿真动画，不包括 OpenGL、DirectX、Vulcan 等（图形学 API）</p>
 <ul>
 <li>光栅化：广泛应用在实时图形学(&gt;30fps)</li>
 <li>几何（曲线和曲面）</li>
@@ -150,23 +150,15 @@
 <h3 id="heading-5"><a class="anchor" href="#heading-5">#</a> 向量</h3>
 <p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cvec%7BAB%7D=%5Cvec%7BB%7D-%5Cvec%7BA%7D%7D" alt=""></p>
 <ul>
-<li>
-<p>向量加法（三角形法则）<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cvec%7BAB%7D=%5Cvec%7BAO%7D%2B%5Cvec%7BOB%7D%7D" alt=""></p>
-</li>
-<li>
-<p>向量点乘（Dot）: 表示方向性<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cvec%7Ba%7D%5Ccdot%5Cvec%7Bb%7D=%7C%5Cvec%7Ba%7D%7C%7C%5Cvec%7Bb%7D%7C%5Ccdot%5Ccos(%5Ctheta)%7D" alt=""></p>
-</li>
-<li>
-<p>投影
-b在a上的投影：<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bk=%7C%5Cvec%7Bb%7D%7C%5Ccos%5Ctheta%7D" alt=""></p>
-</li>
-<li>
-<p>叉乘（方向根据右手定则）：已知两个坐标系得到另一个坐标系<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%7C%5Cvec%7Ba%7D%5Ctimes%5Cvec%7Bb%7D%7C=%7C%5Cvec%7Ba%7D%7C%7C%5Cvec%7Bb%7D%7C%5Csin%5Cphi%7D" alt=""></p>
-</li>
+<li>向量加法（三角形法则）<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cvec%7BAB%7D=%5Cvec%7BAO%7D%2B%5Cvec%7BOB%7D%7D" alt=""></li>
+<li>向量点乘（Dot）: 表示方向性<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cvec%7Ba%7D%5Ccdot%5Cvec%7Bb%7D=%7C%5Cvec%7Ba%7D%7C%7C%5Cvec%7Bb%7D%7C%5Ccdot%5Ccos(%5Ctheta)%7D" alt=""></li>
+<li>投影
+b 在 a 上的投影：<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Bk=%7C%5Cvec%7Bb%7D%7C%5Ccos%5Ctheta%7D" alt=""></li>
+<li>叉乘（方向根据右手定则）：已知两个坐标系得到另一个坐标系<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%7C%5Cvec%7Ba%7D%5Ctimes%5Cvec%7Bb%7D%7C=%7C%5Cvec%7Ba%7D%7C%7C%5Cvec%7Bb%7D%7C%5Csin%5Cphi%7D" alt=""></li>
 </ul>
 <h3 id="heading-6"><a class="anchor" href="#heading-6">#</a> 矩阵</h3>
 <ul>
-<li>矩阵乘法（矩阵X矩阵、矩阵X向量）</li>
+<li>矩阵乘法（矩阵 X 矩阵、矩阵 X 向量）</li>
 <li>结合律、分配律、无交换律</li>
 <li>单位矩阵</li>
 <li>逆矩阵</li>
@@ -199,9 +191,9 @@ b在a上的投影：<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite
 <p>因此：</p>
 <ul>
 <li>点-点=向量</li>
-<li>向量+-向量=向量</li>
-<li>点+-向量=点</li>
-<li>点+点=2？=&gt;点，若w!=0，w=w/w，x=x/w，其他同理</li>
+<li>向量 +-向量=向量</li>
+<li>点 +-向量=点</li>
+<li>点 + 点=2？=&gt; 点，若 w!=0，w=w/w，x=x/w，其他同理</li>
 </ul>
 <p>代价即是引入了一个额外的坐标，但是可省略仿射变换，只保留左上角矩阵，因此代价不高。</p>
 <p>另外，在三维空间中，用四个参数描述一个三维齐次坐标系下的点。</p>
@@ -221,7 +213,7 @@ b在a上的投影：<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite
 <p>罗德里格斯旋转公式：<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7BR+%3D+I+%2B+%5Csin%5Ctheta+%2A+A+%2B+%281-%5Ccos%5Ctheta%29+%2A+A%5E2%7D" alt="">
 可计算出任意轴和任意角度的旋转变换矩阵</p>
 </blockquote>
-<h3 id="mvp"><a class="anchor" href="#mvp">#</a> MVP变换</h3>
+<h3 id="mvp-"><a class="anchor" href="#mvp-">#</a> MVP 变换</h3>
 <p>M - Model 变换: 将物体从对象空间转换到世界空间。它包含物体的缩放、旋转和位置变换。</p>
 <p>V - View 变换: 将世界空间转换到视图空间。它决定摄像机的位置和方向。</p>
 <p>P - Projection 变换: 将视图空间转换到裁剪空间。它实现透视效果, 包含视锥体和视口的定义。</p>
@@ -247,11 +239,11 @@ b在a上的投影：<img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite
 <p>先后进行透视投影和正交投影，得到总变换矩阵：</p>
 <p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AM_%7Bper%7D%3DM_%7Bortho%7DM_%7Bpersp%7D%3D%5Cbegin%7Bbmatrix%7D%0A%5Cfrac%7B2n%7D%7Br-l%7D%260%26+%5Cfrac%7Bl%2Br%7D%7Bl-r%7D%260+%5C%5C%0A0%26+%5Cfrac%7B2n%7D%7Bt-b%7D+%26+%5Cfrac%7Bb%2Bt%7D%7Bb-t%7D%260+%5C%5C%0A0%260%26+%5Cfrac%7Bf%2Bn%7D%7Bn-f%7D+%26+%5Cfrac%7B2fn%7D%7Bf-n%7D+%5C%5C%0A0%260%261%260+%5C%5C%0A%5Cend%7Bbmatrix%7D%0A%7D" alt=""></p>
 <h4 id="heading-23"><a class="anchor" href="#heading-23">#</a> 另一种表述</h4>
-<p>有时我们偏向使用eye_fovy（垂向视角）和aspect_ratio（宽高比进行表述）。其中，</p>
+<p>有时我们偏向使用 eye_fovy（垂向视角）和 aspect_ratio（宽高比进行表述）。其中，</p>
 <p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%5Cfrac%7Bt%7D%7Bn%7D%3D%5Ctan%7B%5Cfrac%7Bfovy%7D%7B2%7D%7D%7D" alt=""></p>
 <p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7Baspect%3D%5Cfrac%7Bt%7D%7Br%7D%7D" alt=""></p>
 <h3 id="pa0"><a class="anchor" href="#pa0">#</a> PA0</h3>
-<p>P点坐标（2，1），逆时针旋转45度，再平移（2，1），利用齐次坐标计算变换后的坐标。</p>
+<p>P 点坐标（2，1），逆时针旋转 45 度，再平移（2，1），利用齐次坐标计算变换后的坐标。</p>
 <pre><code class="language-cpp">#include &lt;cmath&gt;
 #include &lt;eigen3/Eigen/Core&gt;
 #include &lt;eigen3/Eigen/Dense&gt;
@@ -290,12 +282,12 @@ result print here
 <li>需要 eigen 和 opencv 两个库，推荐使用系统的包管理器下载: <code>paru -S eigen opencv</code></li>
 <li>opencv 可能由于路径问题（多出一个 opencv4 目录）无法找到库，建立一个软链接：<code>sudo ln -s /usr/include/opencv4/opencv2 /usr/include/</code></li>
 <li>推荐使用 xmake 管理项目（当然你用 vs 或 cmake 也行），需要在 xmake. lua 中添加依赖 <code>set_requires(&quot;opencv&quot;)</code> 以及 <code>set_packages(&quot;opencv&quot;)</code></li>
-<li>然后使用xmake编译和运行</li>
+<li>然后使用 xmake 编译和运行</li>
 </ol>
 <h3 id="pa1"><a class="anchor" href="#pa1">#</a> PA1</h3>
 <p>填写一个旋转矩阵和一个透视投影矩阵。给定三维下三个点 v0 (2.0, 0.0, −2.0), v1 (0.0, 2.0, −2.0), v2 (−2.0, 0.0, −2.0), 你需要将这三个点的坐标变换为屏幕坐标并在屏幕上绘制出对应的线框三角形。</p>
 <blockquote>
-<p>PS: 大概是我太弱，PA1 做得异常艰难，好不容易才弄懂。重要的大概就是几个变换矩阵，知道怎么推出来直接拿来用就好。再次鸣谢 <a href="https://zhuanlan.zhihu.com/p/448547679">keanu大佬的笔记</a>！</p>
+<p>PS: 大概是我太弱，PA1 做得异常艰难，好不容易才弄懂。重要的大概就是几个变换矩阵，知道怎么推出来直接拿来用就好。再次鸣谢 <a href="https://zhuanlan.zhihu.com/p/448547679">keanu 大佬的笔记</a>！</p>
 </blockquote>
 <p>模型变换代码如下：</p>
 <pre><code class="language-cpp">Eigen::Matrix4f get_model_matrix(float rotation_angle) {
@@ -397,7 +389,7 @@ Eigen::Matrix4f get_projection_matrix(float eye_fov, float aspect_ratio,
 <p>依序从远到近作画，近处的物体覆盖远处的物体，从而解决遮挡问题。</p>
 <p>但是无法处理存在互相遮挡关系的物体之间的深度关系，故不采用。</p>
 <h4 id="z-buffer"><a class="anchor" href="#z-buffer">#</a> Z-Buffer</h4>
-<p>即深度缓存。通过遍历每个几何体，记录其每个像素的深度，在 buffer 中保留最浅深度。算法复杂度为 O (n)。伪代码如下，其中frameBuffer保存颜色信息，zbuffer保存深度信息。</p>
+<p>即深度缓存。通过遍历每个几何体，记录其每个像素的深度，在 buffer 中保留最浅深度。算法复杂度为 O (n)。伪代码如下，其中 frameBuffer 保存颜色信息，zbuffer 保存深度信息。</p>
 <pre><code class="language-cpp">//初始化深度为正无穷
 zbuffer[x,y]=infinity
 for each Triangle T{
@@ -413,7 +405,7 @@ for each Triangle T{
 <p>算法假设不存在在同一像素上同深度的物体。</p>
 <h3 id="pa2"><a class="anchor" href="#pa2">#</a> PA2</h3>
 <ol>
-<li>实现三角形栅格化算法；实现zbuffer算法</li>
+<li>实现三角形栅格化算法；实现 zbuffer 算法</li>
 </ol>
 <pre><code class="language-cpp">// Screen space rasterization
 void rst::rasterizer::rasterize_triangle(const Triangle &amp;t) {
@@ -569,7 +561,7 @@ void diffuseShader(){
 <p><img src="https://www.zhihu.com/equation?tex=%5Cbbox%5Bwhite%5D%7B%0AD%3D%5Clog_%7B2%7D%7BL%7D%0A%7D" alt=""></p>
 <p>由于 Mipmap 是离散函数，会在边界产生不连续，因此需要在层与层之间再进行一次插值，配合水平和垂直的插值，称为三线性插值。</p>
 <p>三线性插值在实时渲染中应用广泛，过渡连续，开销小。</p>
-<p>但是三线性插值会产生 OverBlur 现象（远处模糊）。原因在与Mipmap使用正方形进行查询，解决方法有各向异性过滤（对应矩形区域查询有更好的效果，开销较高，是原图的三倍。对显存要求高），EWA过滤（使用圆形多次查询，效果好但代价高）</p>
+<p>但是三线性插值会产生 OverBlur 现象（远处模糊）。原因在与 Mipmap 使用正方形进行查询，解决方法有各向异性过滤（对应矩形区域查询有更好的效果，开销较高，是原图的三倍。对显存要求高），EWA 过滤（使用圆形多次查询，效果好但代价高）</p>
 <h3 id="pa3"><a class="anchor" href="#pa3">#</a> PA3</h3>
 <p>PA3 主要包括以上章节的全部内容，难度稍高。其中 bump 和 displacement 着色器的实现有些超纲，故暂先不放出（可能留待后面补全）</p>
 <h4 id="heading-56"><a class="anchor" href="#heading-56">#</a> 参数插值</h4>
@@ -713,7 +705,7 @@ texture_fragment_shader(const fragment_shader_payload &amp;payload) {
 <h2 id="heading-59"><a class="anchor" href="#heading-59">#</a> 几何</h2>
 <h3 id="heading-60"><a class="anchor" href="#heading-60">#</a> 隐式表示法</h3>
 <h4 id="heading-61"><a class="anchor" href="#heading-61">#</a> 代数表示</h4>
-<p>使用数学公式定义一个形状，缺点在于复杂形状描述困难。有CSG（Constructive Solid Geometry），通过简单几何的运算（交并）得到复杂几何，建模软件广泛应用。</p>
+<p>使用数学公式定义一个形状，缺点在于复杂形状描述困难。有 CSG（Constructive Solid Geometry），通过简单几何的运算（交并）得到复杂几何，建模软件广泛应用。</p>
 <h4 id="heading-62"><a class="anchor" href="#heading-62">#</a> 距离函数</h4>
 <p>距离函数指空间上一个点到物体表面或边界的最小距离。对两个物体的距离函数进行运算，之后再转化为实体（取 f (x)=0 的点）。</p>
 <h4 id="heading-63"><a class="anchor" href="#heading-63">#</a> 分形</h4>
@@ -872,7 +864,7 @@ void bezier(const std::vector&lt;cv::Point2f&gt; &amp;control_points, cv::Mat &a
 <p>相对于对空间进行划分，对物体进行划分应用更为广泛，此种方法被称为 BVH。</p>
 <h6 id="bvh"><a class="anchor" href="#bvh">#</a> BVH</h6>
 <p><img src="https://picdl.sunbangyan.cn/2023/06/21/124yhkh.png" alt=""></p>
-<p>BVH的过程是：先找到一个包围盒，将包围盒的物体划分为两堆，然后重新计算包围盒，再对子包围盒进行递归计算。</p>
+<p>BVH 的过程是：先找到一个包围盒，将包围盒的物体划分为两堆，然后重新计算包围盒，再对子包围盒进行递归计算。</p>
 <p>BVH 能够很好地避免 KD-Tree 产生的一个物体出现在多个子节点中的问题，但是包围盒会产生重叠，因此划分方法十分重要。</p>
 <h3 id="heading-87"><a class="anchor" href="#heading-87">#</a> 辐射度量学</h3>
 <p>辐射度量学是为了更合理、科学地描述光照，它提供了光照的数个属性：radiant flux（辐射通量），intensity（光强），irradiance（辐射照度），radiance（辐射亮度）。</p>
@@ -913,7 +905,7 @@ void bezier(const std::vector&lt;cv::Point2f&gt; &amp;control_points, cv::Mat &a
 <p><img src="https://picdl.sunbangyan.cn/2023/06/22/ty82uq.png" alt=""></p>
 <h2 id="heading-92"><a class="anchor" href="#heading-92">#</a> 材质与表面</h2>
 <blockquote>
-<p>本章的目的是使用BDRF重新解释着色</p>
+<p>本章的目的是使用 BDRF 重新解释着色</p>
 </blockquote>
 <p>漫反射材质将入射光线均匀反射到各个方向，我们认为入射和出射光线存在能量守恒，则反射方程可以转化为以下形式：</p>
 <p><img src="https://picdl.sunbangyan.cn/2023/06/22/ulhxh6.png" alt=""></p>
@@ -936,7 +928,7 @@ void bezier(const std::vector&lt;cv::Point2f&gt; &amp;control_points, cv::Mat &a
 <p>适合光源处光线传播复杂的情况，但实现困难，且计算缓慢。</p>
 <h4 id="metropolismlt"><a class="anchor" href="#metropolismlt">#</a> Metropolis（MLT）</h4>
 <p>通过在一个 path 周围产生新的 path 样本找出全部 path。</p>
-<p>因为只需要一条path，特别适合复杂场景的路径追踪。</p>
+<p>因为只需要一条 path，特别适合复杂场景的路径追踪。</p>
 <p>缺点在于很难估计收敛，结果噪点多，很难用以生成动画。</p>
 <h4 id="photon-mapping"><a class="anchor" href="#photon-mapping">#</a> 光子映射（Photon Mapping）</h4>
 <p>能够很好地表现 Castics 现象</p>
@@ -979,7 +971,7 @@ void bezier(const std::vector&lt;cv::Point2f&gt; &amp;control_points, cv::Mat &a
 </ol>
 <h2 id="heading-105"><a class="anchor" href="#heading-105">#</a> 相机、透镜、光场</h2>
 <h3 id="heading-106"><a class="anchor" href="#heading-106">#</a> 相机</h3>
-<p>组成部分：快门（shutter）、传感器（sensor，记录irradiance）</p>
+<p>组成部分：快门（shutter）、传感器（sensor，记录 irradiance）</p>
 <p>针孔摄像机：利用小孔成像原理，拍出的相片无景深</p>
 <p>FOV：视场，相机拍摄的角度</p>
 <p><img src="https://picdl.sunbangyan.cn/2023/06/23/m1tnho.png" alt=""></p>
@@ -988,7 +980,7 @@ void bezier(const std::vector&lt;cv::Point2f&gt; &amp;control_points, cv::Mat &a
 <p>H (曝光度)=T (曝光时间) xE (Irradiance)</p>
 <p>曝光时间由快门控制。具体影响因素如下：</p>
 <ol>
-<li>光圈大小：改变 f-stop（称为f数，f数越小光圈越大）</li>
+<li>光圈大小：改变 f-stop（称为 f 数，f 数越小光圈越大）</li>
 <li>Shutter speed：控制光进入的时长</li>
 <li>ISO 增益/感光度：对结果进行增益和修正</li>
 </ol>
@@ -1000,7 +992,7 @@ void bezier(const std::vector&lt;cv::Point2f&gt; &amp;control_points, cv::Mat &a
 <h5 id="heading-108"><a class="anchor" href="#heading-108">#</a> 快门</h5>
 <p>直接控制光进入的时间（曝光时间）。</p>
 <p>当物体在快门打开时存在运动，由于传感器的平均作用，会发生模糊现象，称为运动模糊。因此，更长的曝光时间会产生更严重的运动模糊。</p>
-<p>而相对更少的曝光时间会导致更低的曝光度，可通过更大的F数进行补偿。</p>
+<p>而相对更少的曝光时间会导致更低的曝光度，可通过更大的 F 数进行补偿。</p>
 <p>由于快门打开过程需要一定时间，当物体运动速度快于快门打开的时间，会产生扭曲现象（如拍摄高速旋转的螺旋桨），称为 Rolling Shutter 现象。</p>
 <h4 id="heading-109"><a class="anchor" href="#heading-109">#</a> 场景</h4>
 <h5 id="heading-110"><a class="anchor" href="#heading-110">#</a> 高速摄影</h5>
@@ -1033,7 +1025,7 @@ void bezier(const std::vector&lt;cv::Point2f&gt; &amp;control_points, cv::Mat &a
 <h3 id="spd"><a class="anchor" href="#spd">#</a> 谱功率密度（SPD）</h3>
 <p>SPD 可描述光强在不同波长处的分布，SPD 存在可加性。</p>
 <h3 id="heading-118"><a class="anchor" href="#heading-118">#</a> 颜色</h3>
-<p>颜色是人眼的感知，并非SPD，因此也存在个体差异。</p>
+<p>颜色是人眼的感知，并非 SPD，因此也存在个体差异。</p>
 <p>视网膜上存在感光细胞，分为棒状细胞和锥形细胞。棒状细胞感知光的强度，锥形细胞感知颜色。锥形细胞又分为 S、M、L，其感知光的波长不同，用数值表示如下：</p>
 <p><img src="https://picdl.sunbangyan.cn/2023/06/23/p3gibr.png" alt=""></p>
 <h3 id="heading-119"><a class="anchor" href="#heading-119">#</a> 同色异谱现象</h3>
@@ -1048,7 +1040,7 @@ void bezier(const std::vector&lt;cv::Point2f&gt; &amp;control_points, cv::Mat &a
 <ul>
 <li>HSV：颜色拾取器，色调（Hue）、饱和度（Saturation）、亮度（Value）</li>
 <li>CIELAB：定义互补色，L（亮度）、a 轴（红或绿）、b 轴（蓝或黄）</li>
-<li>CMYK：三种彩色+黑色</li>
+<li>CMYK：三种彩色 + 黑色</li>
 </ul>
 <h2 id="heading-123"><a class="anchor" href="#heading-123">#</a> 计算机动画</h2>
 <h3 id="heading-124"><a class="anchor" href="#heading-124">#</a> 动画的定义</h3>
@@ -1120,7 +1112,7 @@ void bezier(const std::vector&lt;cv::Point2f&gt; &amp;control_points, cv::Mat &a
 <p>由于参数并非线性，所以求解困难；但能够提供更好的稳定性。</p>
 <h4 id="heading-139"><a class="anchor" href="#heading-139">#</a> 误差的衡量方法</h4>
 <p>局部截断误差：每一步产生的误差整体误差：全局的误差</p>
-<p>隐式欧拉方法的误差是一阶，局部误差是O(h^2)，整体误差是O(h)</p>
+<p>隐式欧拉方法的误差是一阶，局部误差是 O(h^2)，整体误差是 O(h)</p>
 <h4 id="heading-140"><a class="anchor" href="#heading-140">#</a> 隆戈库塔方法</h4>
 <p>用来解常微分方程，特别适用于求解非线性方程，最常用的是四阶。</p>
 <p><img src="https://picdc.sunbangyan.cn/2023/06/24/s51tjt.png" alt=""></p>

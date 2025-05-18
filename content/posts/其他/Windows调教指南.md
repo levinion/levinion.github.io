@@ -29,7 +29,7 @@ reg add HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS /v UserDef
 
 ## 原始的右键菜单
 
-Win11新的右键菜单虽然优化了ui，但是隐藏了许多内容，导致效率降低，以下命令能够恢复原始的右键菜单：
+Win11 新的右键菜单虽然优化了 ui，但是隐藏了许多内容，导致效率降低，以下命令能够恢复原始的右键菜单：
 
 ```batch
 reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f
@@ -37,7 +37,7 @@ taskkill /F /IM explorer.exe
 explorer.exe
 ```
 
-如果想要恢复成Win11的右键菜单，执行：
+如果想要恢复成 Win11 的右键菜单，执行：
 
 ```batch
 reg delete "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f
@@ -47,7 +47,7 @@ explorer.exe
 
 ## 启用 UTC
 
-Windows默认使用RTC（Real-Time Clock），而如果是多系统，则其它系统（Linux）使用UTC（Universal Time Coordinated），可能导致系统时间出现错乱，一般执行以下命令修改注册表以启用 UTC ：
+Windows 默认使用 RTC（Real-Time Clock），而如果是多系统，则其它系统（Linux）使用 UTC（Universal Time Coordinated），可能导致系统时间出现错乱，一般执行以下命令修改注册表以启用 UTC ：
 
 ```powershell\
 Reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsUniversal /t REG_DWORD /d 1
@@ -58,6 +58,7 @@ Reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsU
 ```powershell\
 Reg add HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System /v HiberbootEnabled /t REG_DWORD /d 0
 ```
+
 ## WSL
 
 ### 安装
@@ -91,5 +92,3 @@ Windows 有着一组快捷键的预设值，而且无法修改。特别是 Win �
 ### 窗口
 
 Windows 自带的快捷键实现了部分窗口控制能力，如 alt+f4 关闭窗口等，但其他窗口控制，如最大化、最小化并未实现，且 alt+f4 并非对所有窗口都有效。因此我基于 winapi 写了个工具包，实现了一些包括窗口和虚拟桌面控制的基本命令：[wtools](https://github.com/levinion/wtools)
-
-

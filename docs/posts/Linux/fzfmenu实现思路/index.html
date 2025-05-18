@@ -125,14 +125,14 @@
         <h1>fzfmenu实现思路</h1>
         <p>2025-02-15 14:48:25</p>
       </div>
-      <article><p>app launcher的模型很简单，基本就是一个输入框加上一个列表。使用比较多的app launcher，像是rofi，虽然灵活快速，但是难以定制。受到这篇帖子鼓舞：<a href="https://www.reddit.com/r/commandline/comments/jatyek/using_fzf_as_a_dmenurofi_replacement/">using_fzf_as_a_dmenurofi_replacement</a>，决定用fzf代替rofi实现一个app launcher，同时支持一些基本的操作。</p>
-<p>fzf是一个模糊搜索工具，但是只支持终端，因此需要搭配像是alacritty这样的终端来使用。界面很美观，而且支持定制，同时支持bind操作调用脚本和获取用户输入，因此具备了一切app launcher需要的元素。</p>
+      <article><p>app launcher 的模型很简单，基本就是一个输入框加上一个列表。使用比较多的 app launcher，像是 rofi，虽然灵活快速，但是难以定制。受到这篇帖子鼓舞：<a href="https://www.reddit.com/r/commandline/comments/jatyek/using_fzf_as_a_dmenurofi_replacement/">using_fzf_as_a_dmenurofi_replacement</a>，决定用 fzf 代替 rofi 实现一个 app launcher，同时支持一些基本的操作。</p>
+<p>fzf 是一个模糊搜索工具，但是只支持终端，因此需要搭配像是 alacritty 这样的终端来使用。界面很美观，而且支持定制，同时支持 bind 操作调用脚本和获取用户输入，因此具备了一切 app launcher 需要的元素。</p>
 <h2 id="heading"><a class="anchor" href="#heading">#</a> 界面</h2>
-<p>GUI使用alacritty提供。alacritty支持通过<code>--class</code>参数设置窗口类型，因此搭配i3可以获得我们想要的窗口样式，比如：</p>
+<p>GUI 使用 alacritty 提供。alacritty 支持通过 <code>--class</code> 参数设置窗口类型，因此搭配 i3 可以获得我们想要的窗口样式，比如：</p>
 <pre><code class="language-shell">for_window [class=&quot;fzfmenu&quot;] floating enable, resize set height 400, resize set width 1200, move position center, focus
 </code></pre>
-<p>以上操作分别是：对于类型为fzfmenu的窗口，启用浮动功能（也就是类堆叠），将尺寸调整为<code>1200x400</code>,居中，聚焦。</p>
-<p>fzf同样可以进行主题定制，添加以下环境变量以启用<code>catppuccin</code>主题：</p>
+<p>以上操作分别是：对于类型为 fzfmenu 的窗口，启用浮动功能（也就是类堆叠），将尺寸调整为 <code>1200x400</code>,居中，聚焦。</p>
+<p>fzf 同样可以进行主题定制，添加以下环境变量以启用 <code>catppuccin</code> 主题：</p>
 <pre><code class="language-shell">set -Ux FZF_DEFAULT_OPTS &quot;\
 --color=bg+:#313244,bg:#1e1e2e,spinner:#f5e0dc,hl:#f38ba8 \
 --color=fg:#cdd6f4,header:#f38ba8,info:#cba6f7,pointer:#f5e0dc \
@@ -157,9 +157,9 @@ subprocess.call(
     ]
 )
 </code></pre>
-<p>在这里，我们规定了alacritty的窗口类型，以在i3中设置它的窗口样式。</p>
-<p><code>--bind 'start,change:reload:python {path} picker {{q}}'</code>设置了在fzf启动和输入发生改变时重新运行该命令。其中<code>{path}</code>是该脚本的路径，此处可忽略。该脚本的标准输出即为fzf上显示的选项。</p>
-<p><code>--bind 'enter:become(nohup python {path} run {{}} &gt; /dev/null 2&gt;&amp;1 &amp;)'</code>设置了在选择项目后运行的命令。由于脚本运行结束后alacritty终端窗口自动关闭，因此需要使用nohup，并将标准输出重定向到<code>/devnull</code>当中。此处的<code>{}</code>即为选中项目的字符串结果，将其传入脚本中以运行。</p>
+<p>在这里，我们规定了 alacritty 的窗口类型，以在 i3 中设置它的窗口样式。</p>
+<p><code>--bind 'start,change:reload:python {path} picker {{q}}'</code> 设置了在 fzf 启动和输入发生改变时重新运行该命令。其中 <code>{path}</code> 是该脚本的路径，此处可忽略。该脚本的标准输出即为 fzf 上显示的选项。</p>
+<p><code>--bind 'enter:become(nohup python {path} run {{}} &gt; /dev/null 2&gt;&amp;1 &amp;)'</code> 设置了在选择项目后运行的命令。由于脚本运行结束后 alacritty 终端窗口自动关闭，因此需要使用 nohup，并将标准输出重定向到 <code>/devnull</code> 当中。此处的 <code>{}</code> 即为选中项目的字符串结果，将其传入脚本中以运行。</p>
 <p>由于这只是个简单的脚本，不想分成太多的文件，因此按照如下方式做判断，从而进行递归调用：</p>
 <pre><code class="language-python">def main():
     argv = sys.argv
@@ -172,7 +172,7 @@ subprocess.call(
             run_plugins(&quot; &quot;.join(argv[2:]))
 
 </code></pre>
-<p>在<code>run_plugins_picker</code>函数中，根据输入的前缀判断该启用哪个插件：</p>
+<p>在 <code>run_plugins_picker</code> 函数中，根据输入的前缀判断该启用哪个插件：</p>
 <pre><code class="language-python">def run_plugins_picker(input: str):
     if input.startswith(&quot;wd &quot;):
         window_jump_picker(input)
@@ -201,17 +201,17 @@ def killer_runner(output: str):
     subprocess.call([&quot;bash&quot;, &quot;-c&quot;, f&quot;kill -9 {pid}&quot;])
 
 </code></pre>
-<p>上面的插件可以根据输入列举出当前存在的进程，并且可以根据用户选择杀掉它。很简单但很实用的一个模式。在<code>picker</code>中，我们调用命令，并将存在的选项打印到标准输出中。</p>
-<p>为什么要在输出前面加一个<code>kl </code>？这就是fzf不灵活的一个地方，因为fzf只能根据传入的所有关键词进行模糊搜索，因此输入字符一定要包含在我们想要的结果中，否则无法被列出。</p>
-<p>当用户选择后，递归调用了<code>run_plugins</code>函数，根据前缀选择执行<code>killer_runner</code>。此处传输的output即为选择的内容。在<code>picker</code>中，我们打印了前缀+<code>pgrep -fa xxx</code>输出的内容，因此我们的output的内容格式如下：</p>
+<p>上面的插件可以根据输入列举出当前存在的进程，并且可以根据用户选择杀掉它。很简单但很实用的一个模式。在 <code>picker</code> 中，我们调用命令，并将存在的选项打印到标准输出中。</p>
+<p>为什么要在输出前面加一个 <code>kl </code>？这就是 fzf 不灵活的一个地方，因为 fzf 只能根据传入的所有关键词进行模糊搜索，因此输入字符一定要包含在我们想要的结果中，否则无法被列出。</p>
+<p>当用户选择后，递归调用了 <code>run_plugins</code> 函数，根据前缀选择执行 <code>killer_runner</code>。此处传输的 output 即为选择的内容。在 <code>picker</code> 中，我们打印了前缀 +<code>pgrep -fa xxx</code> 输出的内容，因此我们的 output 的内容格式如下：</p>
 <pre><code class="language-shell">kl 7755 alacritty
 </code></pre>
-<p>其中<code>kl</code>是插件前缀，<code>7755</code>是进程pid，<code>alacritty</code>是进程名称。</p>
+<p>其中 <code>kl</code> 是插件前缀，<code>7755</code> 是进程 pid，<code>alacritty</code> 是进程名称。</p>
 <p>因此对于创建一个插件，有以下步骤：</p>
 <ol>
-<li>新建<code>plugin_name_picker(input: str)</code>函数，列举所有表单选项；</li>
-<li>新建<code>plugin_name_runner(output: str)</code>函数，确定具体执行逻辑；</li>
-<li>将上面两个函数分别补充到<code>run_plugins_picker</code>以及<code>run_plugins</code>函数中。</li>
+<li>新建 <code>plugin_name_picker(input: str)</code> 函数，列举所有表单选项；</li>
+<li>新建 <code>plugin_name_runner(output: str)</code> 函数，确定具体执行逻辑；</li>
+<li>将上面两个函数分别补充到 <code>run_plugins_picker</code> 以及 <code>run_plugins</code> 函数中。</li>
 </ol>
 <p>后续如果需要改进，大概就是可以将插件抽象出来，分散到独立文件中，并且在主函数中实现插件的读取了。但就当前来说，目前的代码已经足够实现我的需求了。</p>
 </article>

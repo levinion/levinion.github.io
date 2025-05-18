@@ -7,6 +7,7 @@ created: 2025-01-01 19:54:00
 最近想要玩玩吃灰很久的 esp32s3 单片机，于是着手搭建开发环境。官方的[文档](https://docs.espressif.com/projects/esp-idf/zh_CN/v5.3.2/esp32/get-started/)几经比较完善，但是由于个人开发习惯，使用 wsl 以及 nvim，踩坑点比较多，因此简单记录下。
 
 写文章时所使用的具体环境如下：
+
 - 发行版：Archlinux（ArchWSL）
 - Shell：fish
 - 单片机：esp32s3
@@ -37,7 +38,7 @@ sudo paru -S esp-idf
 
 如果使用 bash 或 zsh，将 .fish 替换成 .sh 即可。esp32s3 可根据需要替换成自己的板子型号。
 
-4. 开发esp32程序前需先导入环境变量，在终端加入类似：
+4. 开发 esp32 程序前需先导入环境变量，在终端加入类似：
 
 ```shell
 alias get_idf ". /opt/esp-idf/export.fish"
@@ -68,6 +69,7 @@ idf.py set-target esp32s3
 ```
 
 默认 target 为 esp32，注意替换成自己的板子型号
+
 ### .clangd
 
 我们需要在项目根目录下创建一个 clangd 配置文件以解决一些头文件错误。
@@ -96,7 +98,6 @@ code .
 但是 nvim 则不然，需要一些额外的配置，这就是我们后面的主要工作。
 
 ## nvim 配置
-
 
 ### compile_commands.json
 
@@ -131,7 +132,6 @@ idf_tools.py install esp-clang
 ```
 
 下载到的默认路径类似 `HOME/.espressif/tools/esp-clang/16.0.1-fe4f10a809/esp-clang/bin/clangd`(注意这里的路径可能有变), 然后替换 nvim 使用的 lsp 命令即可：
-
 
 ```lua
 cmd = {
@@ -199,7 +199,7 @@ idf.py flash monitor
 
 然后使用 `ctrl + ]` 退出监视器。
 
-如果你使用 Linux ，并遇到权限问题，将用户加入dialout（大多数发行版）或uucp（ArchLinux）组当中：
+如果你使用 Linux ，并遇到权限问题，将用户加入 dialout（大多数发行版）或 uucp（ArchLinux）组当中：
 
 ```shell
 sudo usermod -aG dialout $USER

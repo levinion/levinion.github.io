@@ -37,7 +37,7 @@ tar --zstd -cf build/nimo-v0.1.0-x86_64.tar.zst -C build nimo
 └── PKGBUILD
 ```
 
-一个PKGBUILD的最小文件大致如下：
+一个 PKGBUILD 的最小文件大致如下：
 
 ```shell
 # Maintainer: levinion <levinnion@gmail.com>
@@ -61,7 +61,7 @@ package() {
 - Maintainer 顾名思义是包的维护者，有时还需要加上贡献者
 - pkgname 即包的名称，注意不能与 aur 中已有的包名重复
 - pkgver 即包内项目/可执行文件的版本
-- pkgrel 即当前 PKGBUILD 的版本，如果在上次发布后 pkgver 没变，但优化了 PKGBUILD，则 pkgrel 需要+1；当 pkgver 变化，则 pkgrel 置 1
+- pkgrel 即当前 PKGBUILD 的版本，如果在上次发布后 pkgver 没变，但优化了 PKGBUILD，则 pkgrel 需要 +1；当 pkgver 变化，则 pkgrel 置 1
 - pkgdesc 为包的描述，尽可能言简意赅地表达出包的用处即可
 - url 为项目代码的原地址
 - source 为提取构建文件的路径，如果和平台相关，则需要在后面额外添加 arch
@@ -114,7 +114,7 @@ Host aur.archlinux.org
   User <User Name>
 ```
 
-4. 然后就可以拉取项目了，让我们先clone一下。
+4. 然后就可以拉取项目了，让我们先 clone 一下。
 
 ```shell
   git -c init.defaultBranch=master clone ssh://aur@aur.archlinux.org/nimo-bin.git
@@ -156,7 +156,7 @@ pkgname = nimo-bin
 
 `.SRCINFO` 在每次修改 PKGBUILD 之后均需重新生成。
 
-6. 然后按照 git 的一般流程提交即可：
+6. 然后按照 Git 的一般流程提交即可：
 
 ```shell
 git add .
@@ -176,7 +176,3 @@ git push
 │   └── PKGBUILD
 └── PKGBUILD
 ```
-
-
-
-

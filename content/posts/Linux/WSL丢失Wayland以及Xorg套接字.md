@@ -11,7 +11,6 @@ WSL 启用 systemd，有时会发生丢失套接字的问题，这导致 wslg �
 ## 步骤
 
 1. 首先确保 wslg 正确启用，并且能在 `/mnt/wslg/runtime-dir` 以及 `/mnt/wslg/.X11-unix` 目录下分别找到 `Wayland-0` 和 `X0` 套接字。
-
 2. 然后在指定位置创建如下脚本和服务，并启用：
 
 ```shell
@@ -38,5 +37,5 @@ WantedBy=default.target
 
 ## 参考
 
-1.  [Wayland socket is missing when Systemd enabled](https://github.com/yuk7/ArchWSL/issues/357)
+1. [Wayland socket is missing when Systemd enabled](https://github.com/yuk7/ArchWSL/issues/357)
 2. [wslg: Can't open display: :0 + X11 server is not running](https://github.com/microsoft/wslg/issues/558)

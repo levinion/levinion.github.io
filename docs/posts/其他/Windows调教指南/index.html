@@ -144,18 +144,18 @@
 <pre><code class="language-batch">reg add HKEY_CURRENT_USER\Software\Microsoft\InputMethod\Settings\CHS /v UserDefinedDoublePinyinScheme0 /t reg_sz /d &quot;小鹤双拼*2*^*iuvdjhcwfg^xmlnpbksqszxkrltvyovt&quot;
 </code></pre>
 <h2 id="heading-3"><a class="anchor" href="#heading-3">#</a> 原始的右键菜单</h2>
-<p>Win11新的右键菜单虽然优化了ui，但是隐藏了许多内容，导致效率降低，以下命令能够恢复原始的右键菜单：</p>
+<p>Win11 新的右键菜单虽然优化了 ui，但是隐藏了许多内容，导致效率降低，以下命令能够恢复原始的右键菜单：</p>
 <pre><code class="language-batch">reg add &quot;HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32&quot; /f
 taskkill /F /IM explorer.exe
 explorer.exe
 </code></pre>
-<p>如果想要恢复成Win11的右键菜单，执行：</p>
+<p>如果想要恢复成 Win11 的右键菜单，执行：</p>
 <pre><code class="language-batch">reg delete &quot;HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32&quot; /f
 taskkill /F /IM explorer.exe
 explorer.exe
 </code></pre>
 <h2 id="-utc"><a class="anchor" href="#-utc">#</a> 启用 UTC</h2>
-<p>Windows默认使用RTC（Real-Time Clock），而如果是多系统，则其它系统（Linux）使用UTC（Universal Time Coordinated），可能导致系统时间出现错乱，一般执行以下命令修改注册表以启用 UTC ：</p>
+<p>Windows 默认使用 RTC（Real-Time Clock），而如果是多系统，则其它系统（Linux）使用 UTC（Universal Time Coordinated），可能导致系统时间出现错乱，一般执行以下命令修改注册表以启用 UTC ：</p>
 <pre><code class="language-powershell\">Reg add HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation /v RealTimeIsUniversal /t REG_DWORD /d 1
 </code></pre>
 <h2 id="heading-4"><a class="anchor" href="#heading-4">#</a> 永久关闭快速启动</h2>

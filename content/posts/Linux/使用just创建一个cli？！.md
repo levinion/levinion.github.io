@@ -2,7 +2,6 @@
 title: 使用just创建一个cli？！
 created: 2025-01-07 20:01:14
 ---
-
 ## 前言
 
 Just 是一个类似于 Make 的 command runner，但和 Make 不同，它并不希望成为一个复杂的构建工具。相反，Just 提供了一种非常人体工学的命令创建方式，相比 Make 也更容易上手，并且能实现一些意想不到的功能（比如创建一个 cli）。
@@ -117,4 +116,4 @@ other:
     # do other things here
 ```
 
-`chmod +x`后，将我们的文件放到任意一个在Path中的目录，然后就能愉快地运行了。
+`chmod +x` 后，将我们的文件放到任意一个在 Path 中的目录，然后就能愉快地运行了。

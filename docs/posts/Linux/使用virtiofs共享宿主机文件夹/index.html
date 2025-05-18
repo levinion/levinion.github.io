@@ -128,27 +128,27 @@
       <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
 <p>将宿主机文件夹共享给虚拟机一般有两种途径：</p>
 <ul>
-<li>通过网络共享，如samba、webdav</li>
-<li>共享内存，如virtiofs</li>
+<li>通过网络共享，如 samba、webdav</li>
+<li>共享内存，如 virtiofs</li>
 </ul>
-<p>如果使用<code>libvirt</code>管理虚拟机，<code>virtiofs</code>就是一个很好的方式。它使用共享内存的方式，因此无需经过网络I/O，延迟可控</p>
+<p>如果使用 <code>libvirt</code> 管理虚拟机，<code>virtiofs</code> 就是一个很好的方式。它使用共享内存的方式，因此无需经过网络 I/O，延迟可控</p>
 <h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 宿主机</h2>
-<p>宿主机需要在<code>virt-manager</code>中添加<code>FileSystem</code>设备，其中：</p>
+<p>宿主机需要在 <code>virt-manager</code> 中添加 <code>FileSystem</code> 设备，其中：</p>
 <ul>
-<li>Driver：选择<code>virtiofs</code></li>
+<li>Driver：选择 <code>virtiofs</code></li>
 <li>Source Path：即要传入的文件夹路径，手动填写即可</li>
-<li>Target Path：即目标路径。需填写子卷名（一般作为Z盘挂载），因此无需绝对路径。</li>
+<li>Target Path：即目标路径。需填写子卷名（一般作为 Z 盘挂载），因此无需绝对路径。</li>
 </ul>
 <h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 虚拟机</h2>
-<p>这里特指Windows虚拟机。为了使虚拟机支持<code>virtiofs</code>，需要安装以下两个驱动：</p>
+<p>这里特指 Windows 虚拟机。为了使虚拟机支持 <code>virtiofs</code>，需要安装以下两个驱动：</p>
 <ul>
 <li><a href="https://pve.proxmox.com/wiki/Windows_VirtIO_Drivers">VirtIO-Win</a></li>
 <li><a href="https://winfsp.dev/">WinFsp</a></li>
 </ul>
-<p>安装完毕后，在开始菜单搜索<code>服务</code>。或<code>Win+R</code>，输入：</p>
+<p>安装完毕后，在开始菜单搜索 <code>服务</code>。或 <code>Win+R</code>，输入：</p>
 <pre><code class="language-bat">Services.msc
 </code></pre>
-<p>找到<code>VirtIO-FS Service</code>，右键选择启动（因为以V开头，所以从下往上翻比较快）。</p>
+<p>找到 <code>VirtIO-FS Service</code>，右键选择启动（因为以 V 开头，所以从下往上翻比较快）。</p>
 <p>为了开机自动启动服务，右键修改属性，将启动类型设为自动。</p>
 <p>现在打开文件管理器，即可看到挂载成功的目录。</p>
 </article>

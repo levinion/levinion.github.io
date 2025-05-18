@@ -126,27 +126,27 @@
         <p>2025-04-09 14:24:43</p>
       </div>
       <article><h2 id="1-"><a class="anchor" href="#1-">#</a> 1. 安装驱动</h2>
-<p>安装<code>libva-nvidia-driver</code>：</p>
+<p>安装 <code>libva-nvidia-driver</code>：</p>
 <pre><code class="language-shell">sudo pacman -S libva-nvidia-driver
 </code></pre>
-<p>查看vaapi支持（可选）：</p>
+<p>查看 vaapi 支持（可选）：</p>
 <pre><code class="language-shell">sudo pacman -S libva-utils
 vainfo
 </code></pre>
 <h2 id="2-"><a class="anchor" href="#2-">#</a> 2. 修改内核参数</h2>
-<p>编辑grub配置。</p>
-<p>编辑<code>/etc/default/grub</code>，在<code>GRUB_CMDLINE_LINUX_DEFAULT</code>中新增：</p>
+<p>编辑 grub 配置。</p>
+<p>编辑 <code>/etc/default/grub</code>，在 <code>GRUB_CMDLINE_LINUX_DEFAULT</code> 中新增：</p>
 <pre><code>nvidia-drm.modeset=1
 </code></pre>
-<p>更新grub配置：</p>
+<p>更新 grub 配置：</p>
 <pre><code class="language-shell">sudo grub-mkconfig -o /boot/grub/grub.cfg
 </code></pre>
-<h2 id="3-firefox"><a class="anchor" href="#3-firefox">#</a> 3. firefox配置</h2>
+<h2 id="3-firefox-"><a class="anchor" href="#3-firefox-">#</a> 3. Firefox 配置</h2>
 <ul>
-<li>修改<code>media.ffmpeg.vaapi.enabled</code>为<code>true</code></li>
-<li>修改<code>media.rdd-ffmpeg.enabled</code>为<code>true</code></li>
-<li>修改<code>gfx.x11-egl.force-enabled</code>为<code>true</code></li>
-<li>修改<code>widget.dmabuf.force-enabled</code>为<code>true</code></li>
+<li>修改 <code>media.ffmpeg.vaapi.enabled</code> 为 <code>true</code></li>
+<li>修改 <code>media.rdd-ffmpeg.enabled</code> 为 <code>true</code></li>
+<li>修改 <code>gfx.x11-egl.force-enabled</code> 为 <code>true</code></li>
+<li>修改 <code>widget.dmabuf.force-enabled</code> 为 <code>true</code></li>
 </ul>
 <h2 id="4-"><a class="anchor" href="#4-">#</a> 4. 环境变量</h2>
 <pre><code class="language-shell">set -gx MOZ_DISABLE_RDD_SANDBOX 1
@@ -154,7 +154,7 @@ set -gx LIBVA_DRIVER_NAME nvidia
 set -gx __EGL_VENDOR_LIBRARY_FILENAMES /usr/share/glvnd/egl_vendor.d/10_nvidia.json
 </code></pre>
 <h2 id="5-"><a class="anchor" href="#5-">#</a> 5. 检查</h2>
-<p>完成以上步骤后重启。在火狐中打开<code>about:support</code>，查看当前硬件解码支持。</p>
+<p>完成以上步骤后重启。在火狐中打开 <code>about:support</code>，查看当前硬件解码支持。</p>
 </article>
     </div>
   </body>

@@ -2,20 +2,19 @@
 title: libmpv实现推帧
 created: 2025-05-18 00:11:56
 ---
-
 ## 什么是推帧
 
-libmpv是一个嵌入的mpv播放器，可以直接将mpv播放器渲染到窗口或fbo/texture上。
+libmpv 是一个嵌入的 mpv 播放器，可以直接将 mpv 播放器渲染到窗口或 fbo/texture 上。
 
 推帧也就意味着，每当我们向播放器传入一个图片/纹理时，播放器播放一帧。这在需要实时更新播放器显示的图像时很有用。
 
-## 为何要利用libmpv推帧
+## 为何要利用 libmpv 推帧
 
-推帧，也就是传入和显示一个纹理，一般可以直接通过OpenGL实现。利用libmpv主要是利用其一些副作用：比如图像后处理。它可以通过mpv user shader对图像进行一些后处理（锐化、超分等）。
+推帧，也就是传入和显示一个纹理，一般可以直接通过 OpenGL 实现。利用 libmpv 主要是利用其一些副作用：比如图像后处理。它可以通过 mpv user shader 对图像进行一些后处理（锐化、超分等）。
 
 ## 自定义流
 
-libmpv默认不支持推帧，因此需要利用自定义流（[streamcb](https://github.com/mpv-player/mpv-examples/blob/master/libmpv/streamcb/simple-streamcb.c)）手动实现推帧方法。
+libmpv 默认不支持推帧，因此需要利用自定义流（[streamcb](https://github.com/mpv-player/mpv-examples/blob/master/libmpv/streamcb/simple-streamcb.c)）手动实现推帧方法。
 
 推帧一般有以下方法：
 
@@ -28,9 +27,9 @@ void terminate();
 
 ### 初始化
 
-首先是init，在此处进行播放器的初始化。
+首先是 init，在此处进行播放器的初始化。
 
-在此之前，先创建一些要用到的hook和工具函数：
+在此之前，先创建一些要用到的 hook 和工具函数：
 
 ```cpp
 // 读取流的大小，如果是视频流，那么就是视频解码后的大小，此处由于是实时推帧，因此返回不支持长度读取
@@ -78,7 +77,7 @@ static void* get_proc_address_mpv(void* fn_ctx, const char* name) {
 }
 ```
 
-以上比较重要的有`open_fn`和`read_fn`。
+以上比较重要的有 `open_fn` 和 `read_fn`。
 
 ```cpp
 static int open_fn(void* user_data, char* uri, mpv_stream_cb_info* info) {
@@ -92,7 +91,7 @@ static int open_fn(void* user_data, char* uri, mpv_stream_cb_info* info) {
 }
 ```
 
-在`open_fn`中传入需要用到的钩子，另外可以将一个指针传递给cookie，用来作为主线程和libmpv线程之间交流的工具（即共享内存）。这里我们传入了一个FrameStream指针，它的定义如下：
+在 `open_fn` 中传入需要用到的钩子，另外可以将一个指针传递给 cookie，用来作为主线程和 libmpv 线程之间交流的工具（即共享内存）。这里我们传入了一个 FrameStream 指针，它的定义如下：
 
 ```cpp
 class Frame {
@@ -109,7 +108,7 @@ public:
 };
 ```
 
-FrameStream中包含一个线程安全的无锁队列，因此可以向它推帧或读取。
+FrameStream 中包含一个线程安全的无锁队列，因此可以向它推帧或读取。
 
 ```cpp
 static int64_t read_fn(void* cookie, char* buf, uint64_t nbytes) {
@@ -127,13 +126,13 @@ static int64_t read_fn(void* cookie, char* buf, uint64_t nbytes) {
 }
 ```
 
-在`read_fn`中实现libmpv读取逻辑，实际流程大概如下所述：
+在 `read_fn` 中实现 libmpv 读取逻辑，实际流程大概如下所述：
 
 1. 向队列中推了一帧，唤醒读取线程
 2. 读取线程被唤醒，从队列获取输入的帧
-3. 将帧中的数据拷贝到libmpv的缓冲区当中
+3. 将帧中的数据拷贝到 libmpv 的缓冲区当中
 4. 返回拷贝数据的长度
-5. libmpv执行一系列后处理，并将帧渲染到fbo/屏幕上
+5. libmpv 执行一系列后处理，并将帧渲染到 fbo/屏幕上
 
 之后就可以进行实际初始化工作了：
 
@@ -248,7 +247,7 @@ void Video::update(unsigned char* data, int size) {
 }
 ```
 
-更新的逻辑很简单，向队列中推流，并且唤醒读取线程。顺便打印libmpv日志。
+更新的逻辑很简单，向队列中推流，并且唤醒读取线程。顺便打印 libmpv 日志。
 
 ### 渲染
 
@@ -266,9 +265,9 @@ void Video::render() {
 }
 ```
 
-渲染比较关键的是两个函数：`mpv_render_context_update`以及`mpv_render_context_render`。`mpv_render_context_update`通知内容更新，`mpv_render_context_render`负责绘制。
+渲染比较关键的是两个函数：`mpv_render_context_update` 以及 `mpv_render_context_render`。`mpv_render_context_update` 通知内容更新，`mpv_render_context_render` 负责绘制。
 
-此外，需要在执行`mpv_render_context_render`函数前将视口大小设置为传入纹理的大小，否则使得渲染结果不正确。
+此外，需要在执行 `mpv_render_context_render` 函数前将视口大小设置为传入纹理的大小，否则使得渲染结果不正确。
 
 ### 销毁
 
@@ -283,11 +282,11 @@ void Video::terminate() {
 }
 ```
 
-首先通知libmpv，使其从等待读取状态中退出，然后依次释放渲染器和libmpv handle。如果不在释放handle前释放renderer的话，可能导致core dump。
+首先通知 libmpv，使其从等待读取状态中退出，然后依次释放渲染器和 libmpv handle。如果不在释放 handle 前释放 renderer 的话，可能导致 core dump。
 
 ## 运行时命令
 
-还可以在运行时向libmpv发送一些指令，以控制libmpv的渲染流程（启用/停用自定义shader、显示文本等都可以通过这种方式做到）：
+还可以在运行时向 libmpv 发送一些指令，以控制 libmpv 的渲染流程（启用/停用自定义 shader、显示文本等都可以通过这种方式做到）：
 
 ```cpp
 void Video::send_command(std::vector<std::string> cmd) {

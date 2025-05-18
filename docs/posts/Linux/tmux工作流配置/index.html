@@ -125,12 +125,12 @@
         <h1>tmux工作流配置</h1>
         <p>2025-03-05 23:11:53</p>
       </div>
-      <article><h2 id="tmux"><a class="anchor" href="#tmux">#</a> 为什么是tmux</h2>
-<p>终端复用器主流的选择大概只有两个：tmux和zellij。zellij相对更新一点，配置更容易上手，并且有一个相对好用的键位提示（<del>更重要的是，它是用Rust写的</del>）。那么为什么选tmux？</p>
-<p>zellij很好用，但其缺点在于插件系统。相比tmux，zellij的生态更差，这也是所有新项目的一个通病，它的生态需要时间积累。另外，相比tmux配置和插件所采用的类shell语法，zellij的wasm上手门槛更高。我曾经也尝试过使用rust编写插件，但导致zellij罢工（真的是一个非常简单的插件，它只在插件加载时创建一个tab），因此放弃了。而且，tmux的配置比预想更加灵活简单。</p>
+      <article><h2 id="-tmux"><a class="anchor" href="#-tmux">#</a> 为什么是 tmux</h2>
+<p>终端复用器主流的选择大概只有两个：tmux 和 zellij。zellij 相对更新一点，配置更容易上手，并且有一个相对好用的键位提示（<del>更重要的是，它是用 Rust 写的</del>）。那么为什么选 tmux？</p>
+<p>zellij 很好用，但其缺点在于插件系统。相比 tmux，zellij 的生态更差，这也是所有新项目的一个通病，它的生态需要时间积累。另外，相比 tmux 配置和插件所采用的类 shell 语法，zellij 的 wasm 上手门槛更高。我曾经也尝试过使用 rust 编写插件，但导致 zellij 罢工（真的是一个非常简单的插件，它只在插件加载时创建一个 tab），因此放弃了。而且，tmux 的配置比预想更加灵活简单。</p>
 <h2 id="heading"><a class="anchor" href="#heading">#</a> 基础选项</h2>
 <h3 id="heading-1"><a class="anchor" href="#heading-1">#</a> 颜色</h3>
-<p>默认的颜色选项可能会导致一些TUI界面，如neovim等变得很奇怪，因此添加以下配置：</p>
+<p>默认的颜色选项可能会导致一些 TUI 界面，如 neovim 等变得很奇怪，因此添加以下配置：</p>
 <pre><code class="language-shell">set -g default-terminal &quot;tmux-256color&quot;
 set -ag terminal-overrides &quot;,xterm-256color:RGB&quot;
 </code></pre>
@@ -142,7 +142,7 @@ set -ag terminal-overrides &quot;,xterm-256color:RGB&quot;
 <pre><code class="language-shell">set -g mode-keys vi
 set -g status-keys vi
 </code></pre>
-<p>这样就可以在命令模式中使用vi快捷键进行操作。</p>
+<p>这样就可以在命令模式中使用 vi 快捷键进行操作。</p>
 <h3 id="heading-3"><a class="anchor" href="#heading-3">#</a> 将会话与窗口关联</h3>
 <p>会话会在窗口关闭时自动销毁，这对于不想打开很多会话很有用：</p>
 <pre><code class="language-shell">set -g destroy-unattached on
@@ -152,21 +152,21 @@ set -g status-keys vi
 <pre><code class="language-shell">unbind -a
 set -g prefix C-b
 </code></pre>
-<p>最简单的命令大概像这样，这时按t键就能创建一个新的标签页：</p>
+<p>最简单的命令大概像这样，这时按 t 键就能创建一个新的标签页：</p>
 <pre><code class="language-shell">bind-key t new-window
 </code></pre>
 <p>而这等同于：</p>
 <pre><code class="language-shell">bind-key -T prefix t new-window
 </code></pre>
-<p>tmux的键位表有一个分组的概念，相当于vim中的模式。默认的模式为<code>root</code>。如果我们想要连续执行多个命令却不想要敲很多次前缀：</p>
+<p>tmux 的键位表有一个分组的概念，相当于 VIM 中的模式。默认的模式为 <code>root</code>。如果我们想要连续执行多个命令却不想要敲很多次前缀：</p>
 <pre><code class="language-shell">bind-key h previous-window \; switch-client -T prefix
 </code></pre>
-<p><code>;</code>为命令的分隔符，需要转义（不清楚原因），使用这种方式可以将多个命令绑定到一个键位。在前面一条命令结束后，会自动将模式切换到<code>root</code>，而<code>switch-client -T</code>可以显式切换当前模式，取代了按前缀的工作。</p>
-<p>而这个分组比起zellij灵活在它可以自定义，下面就定义了一个自定义分组<code>group</code>：</p>
+<p><code>;</code> 为命令的分隔符，需要转义（不清楚原因），使用这种方式可以将多个命令绑定到一个键位。在前面一条命令结束后，会自动将模式切换到 <code>root</code>，而 <code>switch-client -T</code> 可以显式切换当前模式，取代了按前缀的工作。</p>
+<p>而这个分组比起 zellij 灵活在它可以自定义，下面就定义了一个自定义分组 <code>group</code>：</p>
 <pre><code class="language-shell">bind-key g switch-client -T group
 bind-key -T group h select-window -t 0
 </code></pre>
-<p>这允许我们按<code>&lt;prefix&gt;gh</code>切换到第一个标签页（灵感来源于helix的键位）。</p>
+<p>这允许我们按 <code>&lt;prefix&gt;gh</code> 切换到第一个标签页（灵感来源于 helix 的键位）。</p>
 <p>其他就是一些常用操作的键位设置：</p>
 <pre><code class="language-shell">bind-key t new-window
 bind-key h previous-window \; switch-client -T prefix
@@ -183,7 +183,7 @@ bind-key ? list-keys
 bind-key f display-popup -b none -E &quot;python ~/.config/tmux/scripts/fzf.py&quot;
 </code></pre>
 <h2 id="heading-5"><a class="anchor" href="#heading-5">#</a> 外观</h2>
-<p>对于外观，可以搜索下tmux主题，找到自己喜欢的主题，根据README进行配置即可。tmux没有模式指示，因此显示当前是否按下prefix会是个好主意。一些插件提供了这一功能，但tmux本身也支持，只需设置以下选项：</p>
+<p>对于外观，可以搜索下 tmux 主题，找到自己喜欢的主题，根据 README 进行配置即可。tmux 没有模式指示，因此显示当前是否按下 prefix 会是个好主意。一些插件提供了这一功能，但 tmux 本身也支持，只需设置以下选项：</p>
 <pre><code class="language-shell">set -g status-right '#{?client_prefix,#[reverse]&lt;Prefix&gt;#[noreverse] ,}&quot;#{=21:pane_title}&quot;'
 </code></pre>
 </article>

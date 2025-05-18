@@ -154,7 +154,7 @@
 </code></pre>
 <p>如果使用 bash 或 zsh，将 .fish 替换成 .sh 即可。esp32s3 可根据需要替换成自己的板子型号。</p>
 <ol start="4">
-<li>开发esp32程序前需先导入环境变量，在终端加入类似：</li>
+<li>开发 esp32 程序前需先导入环境变量，在终端加入类似：</li>
 </ol>
 <pre><code class="language-shell">alias get_idf &quot;. /opt/esp-idf/export.fish&quot;
 </code></pre>
@@ -263,7 +263,7 @@ return {
 <pre><code class="language-shell">idf.py flash monitor
 </code></pre>
 <p>然后使用 <code>ctrl + ]</code> 退出监视器。</p>
-<p>如果你使用 Linux ，并遇到权限问题，将用户加入dialout（大多数发行版）或uucp（ArchLinux）组当中：</p>
+<p>如果你使用 Linux ，并遇到权限问题，将用户加入 dialout（大多数发行版）或 uucp（ArchLinux）组当中：</p>
 <pre><code class="language-shell">sudo usermod -aG dialout $USER
 # 或
 sudo usermod -aG uucp $USER

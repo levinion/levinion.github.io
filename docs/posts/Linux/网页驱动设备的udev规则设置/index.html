@@ -125,22 +125,22 @@
         <h1>网页驱动设备的udev规则设置</h1>
         <p>2025-02-23 22:37:18</p>
       </div>
-      <article><h2 id="idvendor"><a class="anchor" href="#idvendor">#</a> 获取idVendor</h2>
-<p>Linux默认是禁止USB访问的，需要创建udev规则才能使用网页驱动进行配置。第一步，需要找到设备的idVendor。</p>
+      <article><h2 id="-idvendor"><a class="anchor" href="#-idvendor">#</a> 获取 idVendor</h2>
+<p>Linux 默认是禁止 USB 访问的，需要创建 udev 规则才能使用网页驱动进行配置。第一步，需要找到设备的 idVendor。</p>
 <pre><code class="language-shell">lsusb
 </code></pre>
-<p>如果没有<code>lsusb</code>，安装<code>usbutils</code>：</p>
+<p>如果没有 <code>lsusb</code>，安装 <code>usbutils</code>：</p>
 <pre><code class="language-shell">sudo pacman -S usbutils
 </code></pre>
 <p>根据名称找到对应设备：</p>
 <pre><code class="language-shell">Bus 001 Device 006: ID 1915:ae8c Nordic Semiconductor ASA Ninjutso Sora V2 8K
 </code></pre>
-<p>其中<code>1915</code>即为设备的idVendor。</p>
-<p>你也可以通过该ID获取更多设备信息（可选）：</p>
+<p>其中 <code>1915</code> 即为设备的 idVendor。</p>
+<p>你也可以通过该 ID 获取更多设备信息（可选）：</p>
 <pre><code class="language-shell">lsusb -d 1915:ae8c -v
 </code></pre>
-<h2 id="udev"><a class="anchor" href="#udev">#</a> 创建udev规则</h2>
-<p>接着创建udev规则：</p>
+<h2 id="-udev-"><a class="anchor" href="#-udev-">#</a> 创建 udev 规则</h2>
+<p>接着创建 udev 规则：</p>
 <pre><code class="language-shell">sudoedit /etc/udev/rules.d/70-sorav2.rules
 </code></pre>
 <p>填入以下内容：</p>

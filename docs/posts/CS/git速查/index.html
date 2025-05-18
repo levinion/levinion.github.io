@@ -132,7 +132,7 @@ git config --global credential.helper store
 git config --global init.defaultBranch main
 </code></pre>
 <h2 id="basic"><a class="anchor" href="#basic">#</a> basic</h2>
-<p>初始化git：</p>
+<p>初始化 Git：</p>
 <pre><code class="language-shell">git init
 </code></pre>
 <p>克隆：</p>
@@ -152,7 +152,7 @@ git config --global init.defaultBranch main
 <pre><code class="language-shell">git add forgotten_file
 git commit --amend
 </code></pre>
-<p>从暂存区移除文件（用于已跟踪，但想要添加到.gitignore的情况）：</p>
+<p>从暂存区移除文件（用于已跟踪，但想要添加到.gitignore 的情况）：</p>
 <pre><code class="language-shell">git rm --cached &lt;path&gt;
 git commit -m &quot;some comment&quot;
 </code></pre>
@@ -180,16 +180,16 @@ git commit -m &quot;some comment&quot;
 <p>尚未提交时执行，丢弃本地所做的更改，回到上次提交之后的状态。</p>
 <pre><code class="language-shell">git checkout . (or filename)
 </code></pre>
-<p>执行<code>git add</code>，但未提交时执行，可撤回<code>git add</code></p>
+<p>执行 <code>git add</code>，但未提交时执行，可撤回 <code>git add</code></p>
 <pre><code class="language-shell">git reset
 </code></pre>
-<p>回到上一次提交前的状态，所做的更改不会被丢弃。<code>HEAD^</code>表示（第一个）父节点。也可以使用<code>HEAD^2</code>指定第二个父节点（如果存在的话）：</p>
+<p>回到上一次提交前的状态，所做的更改不会被丢弃。<code>HEAD^</code> 表示（第一个）父节点。也可以使用 <code>HEAD^2</code> 指定第二个父节点（如果存在的话）：</p>
 <pre><code class="language-shell">git reset HEAD^
 </code></pre>
 <p>回到上一次提交前的状态，所做的更改会被丢弃：</p>
 <pre><code class="language-shell">git reset --hard HEAD^
 </code></pre>
-<p>回退前两条提交，并且丢弃所有更改。<code>~N</code>表示代数，因此<code>HEAD~2</code>表示上面两代的祖先节点：</p>
+<p>回退前两条提交，并且丢弃所有更改。<code>~N</code> 表示代数，因此 <code>HEAD~2</code> 表示上面两代的祖先节点：</p>
 <pre><code class="language-shell">git reset --hard HEAD~2
 </code></pre>
 <p>回到上一次提交前的状态，但保存工作区和暂存区：</p>
@@ -220,7 +220,7 @@ git log &lt;branch&gt; # 找到待合并提交的哈希
 git cherry-pick &lt;hash&gt;
 </code></pre>
 <h2 id="update-index"><a class="anchor" href="#update-index">#</a> update-index</h2>
-<p>假定所传入路径文件不会发生更改，即git不再跟踪该文件/文件夹的变更情况：</p>
+<p>假定所传入路径文件不会发生更改，即 Git 不再跟踪该文件/文件夹的变更情况：</p>
 <pre><code class="language-shell">git update-index --assume-unchanged &lt;file/folder path&gt;
 </code></pre>
 <p>还原：</p>

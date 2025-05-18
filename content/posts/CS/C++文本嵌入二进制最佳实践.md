@@ -2,18 +2,17 @@
 title: C++文本嵌入二进制最佳实践
 created: 2025-03-07 23:57:42
 ---
-
 ## 前言
 
-文本嵌入在编写着色器时特别有用。它能够使我们将着色器代码从项目代码中剥离出来，从而能够利用相应的lsp进行提示、高亮以及格式化，并且进一步降低代码耦合度。
+文本嵌入在编写着色器时特别有用。它能够使我们将着色器代码从项目代码中剥离出来，从而能够利用相应的 lsp 进行提示、高亮以及格式化，并且进一步降低代码耦合度。
 
-对于Rust而言，嵌入一段字符串十分简单：
+对于 Rust 而言，嵌入一段字符串十分简单：
 
 ```rust
 include!("path_to_file/file")
 ```
 
-对于C++，一般以下有几种方法：
+对于 C++，一般以下有几种方法：
 
 ## 字符串
 
@@ -31,7 +30,7 @@ const char* vertex_shader_code =
 
 ## embed
 
-embed是C的提案，但在C++中也得到支持：
+embed 是 C 的提案，但在 C++ 中也得到支持：
 
 ```cpp
 const char vertex_shader_code[] = {
@@ -39,13 +38,13 @@ const char vertex_shader_code[] = {
 };
 ```
 
-缺点在于目前只有clang得到支持，并且在编译时会显示警告：`#embed is an extension of clang`。在打印时，通过这种方式嵌入的字符会在末尾打印出未知字符（乱码），可以猜到以上数组并不包括字符串末尾的`\0`。但我目前没找到好的填`\0`方法。
+缺点在于目前只有 clang 得到支持，并且在编译时会显示警告：`#embed is an extension of clang`。在打印时，通过这种方式嵌入的字符会在末尾打印出未知字符（乱码），可以猜到以上数组并不包括字符串末尾的 `\0`。但我目前没找到好的填 `\0` 方法。
 
-另外，C++的`std::embed`还在日程中……
+另外，C++ 的 `std::embed` 还在日程中……
 
 ## xxd
 
-在Linux下，有`xxd`命令，它提供了将一个文件转换为C语言头文件的功能，使用方法如下：
+在 Linux 下，有 `xxd` 命令，它提供了将一个文件转换为 C 语言头文件的功能，使用方法如下：
 
 ```shell
 xxd -n variable_name -i input.glsl > output.h 
@@ -76,19 +75,19 @@ unsigned char _vertex_shader_code[] = {
 unsigned int _vertex_shader_code_len = 122;
 ```
 
-可以注意到上面的数组并不是以`\0`结尾，如果需要转换到C字符串，则需要手动填`\0`。或是使用`sed`进行替换：
+可以注意到上面的数组并不是以 `\0` 结尾，如果需要转换到 C 字符串，则需要手动填 `\0`。或是使用 `sed` 进行替换：
 
 ```shell
 xxd -n _vertex_shader_code -i ./assets/shader/vertex.glsl | sed "s/}/,\'\\\0\'}/" > ./include/shader/vertex.h 
 ```
 
-如果对代码格式化有强迫症，使用`clang-format`进行后处理格式化：
+如果对代码格式化有强迫症，使用 `clang-format` 进行后处理格式化：
 
 ```shell
 clang-format -i ./include/hierro/shader/*
 ```
 
-然后在代码中include对应头文件：
+然后在代码中 include 对应头文件：
 
 ```cpp
 #include "hierro/shader/vertex.h"

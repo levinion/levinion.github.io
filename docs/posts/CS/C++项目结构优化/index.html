@@ -126,7 +126,7 @@
         <p>2025-03-09 17:19:13</p>
       </div>
       <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 前言</h2>
-<p>之前在<a href="https://blog.maruka.top/posts/CS/C++%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/">C++项目结构及交叉编译</a>中也有介绍C++的项目结构，本次基于实际工程化做出一些改进，更加适合库的开发流程。</p>
+<p>之前在 <a href="https://blog.maruka.top/posts/CS/C++%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84%E5%8F%8A%E4%BA%A4%E5%8F%89%E7%BC%96%E8%AF%91/">C++ 项目结构及交叉编译</a>中也有介绍 C++ 的项目结构，本次基于实际工程化做出一些改进，更加适合库的开发流程。</p>
 <h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 结构</h2>
 <pre><code class="language-txt">.
 ├── assets
@@ -176,7 +176,7 @@
 </code></pre>
 <p>主要改进如下：</p>
 <ul>
-<li>新增了<code>assets</code>用来存放外部资源，如图片、视频或shader文件。</li>
+<li>新增了 <code>assets</code> 用来存放外部资源，如图片、视频或 shader 文件。</li>
 </ul>
 <pre><code class="language-txt">.
 └── shader
@@ -184,7 +184,7 @@
     └── vertex.glsl
 </code></pre>
 <ul>
-<li>新增了<code>tests</code>用来存放用例或示例，或者新增一个<code>examples</code>以单独存放示例。</li>
+<li>新增了 <code>tests</code> 用来存放用例或示例，或者新增一个 <code>examples</code> 以单独存放示例。</li>
 </ul>
 <pre><code class="language-txt">.
 ├── build
@@ -194,7 +194,7 @@
 </code></pre>
 <p>一个示例程序结构应当符合本文所介绍的规范，但进行简化。</p>
 <ul>
-<li>修改了<code>src</code>目录结构，原本由于项目代码较少采用扁平化结构，在代码量上升后采用树形结构以优化逻辑。</li>
+<li>修改了 <code>src</code> 目录结构，原本由于项目代码较少采用扁平化结构，在代码量上升后采用树形结构以优化逻辑。</li>
 </ul>
 <pre><code class="language-txt">.
 ├── app.cpp
@@ -204,7 +204,7 @@
 └── err.cpp
 </code></pre>
 <ul>
-<li>对于<code>include</code>目录，同理采用树形结构，并且当前项目头文件应当存放在以当前项目名称命名的文件夹中。</li>
+<li>对于 <code>include</code> 目录，同理采用树形结构，并且当前项目头文件应当存放在以当前项目名称命名的文件夹中。</li>
 </ul>
 <pre><code class="language-txt">.
 └── hierro
@@ -218,7 +218,7 @@
         ├── fragment.h
         └── vertex.h
 </code></pre>
-<p>使用这种方式，用户可以以<code>#include &quot;hierro/app.h&quot;</code>的方式引用头文件，从而避免命名冲突。</p>
+<p>使用这种方式，用户可以以 <code>#include &quot;hierro/app.h&quot;</code> 的方式引用头文件，从而避免命名冲突。</p>
 <h2 id="cmakelists"><a class="anchor" href="#cmakelists">#</a> CMakeLists</h2>
 <pre><code class="language-txt"># project
 set(name &quot;hierro&quot;)
@@ -253,10 +253,10 @@ add_subdirectory(./third_party/glad)
 target_link_libraries(${name} glad)
 </code></pre>
 <ul>
-<li>使用<code>target_include_directories(${name} PUBLIC include/)</code>取代<code>include_directories(include/)</code>，以更方便用户使用<code>target_link_libraries</code>引用库项目头文件。</li>
-<li>使用<code>file(GLOB_RECURSE SRC src/*.cpp)</code>取代<code>file(GLOB SRC src/*.cpp)</code>，以包括树形结构下的全部<code>cpp</code>文件</li>
-<li>使用<code>set(CMAKE_CXX_STANDARD 26)</code>显式指定当前使用的C++版本</li>
-<li>使用<code>set(CMAKE_CXX_COMPILER &quot;/usr/bin/clang++&quot; CACHE STRING &quot;C++ compiler&quot; FORCE)</code>显式指定当前所使用的编译器（可选，指定编译器有助于使用特定编译器支持的特性，但不便于在不同机器上编译）</li>
+<li>使用 <code>target_include_directories(${name} PUBLIC include/)</code> 取代 <code>include_directories(include/)</code>，以更方便用户使用 <code>target_link_libraries</code> 引用库项目头文件。</li>
+<li>使用 <code>file(GLOB_RECURSE SRC src/*.cpp)</code> 取代 <code>file(GLOB SRC src/*.cpp)</code>，以包括树形结构下的全部 <code>cpp</code> 文件</li>
+<li>使用 <code>set(CMAKE_CXX_STANDARD 26)</code> 显式指定当前使用的 C++ 版本</li>
+<li>使用 <code>set(CMAKE_CXX_COMPILER &quot;/usr/bin/clang++&quot; CACHE STRING &quot;C++ compiler&quot; FORCE)</code> 显式指定当前所使用的编译器（可选，指定编译器有助于使用特定编译器支持的特性，但不便于在不同机器上编译）</li>
 </ul>
 <h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 构建脚本</h2>
 <pre><code class="language-justfile">name := `cat build/CMakeCache.txt | grep CMAKE_PROJECT_NAME | awk -F '=' '{print $2}'`
@@ -287,8 +287,8 @@ clean:
   rm -rf build
 </code></pre>
 <ul>
-<li>使用justfile变量，以减少<code>Shebang</code>配方的使用</li>
-<li>新增<code>embed</code>，支持快速文本嵌入，具体见<a href="https://blog.maruka.top/posts/CS/C++%E6%96%87%E6%9C%AC%E5%B5%8C%E5%85%A5%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">C++文本嵌入二进制最佳实践</a></li>
+<li>使用 justfile 变量，以减少 <code>Shebang</code> 配方的使用</li>
+<li>新增 <code>embed</code>，支持快速文本嵌入，具体见 <a href="https://blog.maruka.top/posts/CS/C++%E6%96%87%E6%9C%AC%E5%B5%8C%E5%85%A5%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5/">C++ 文本嵌入二进制最佳实践</a></li>
 </ul>
 </article>
     </div>

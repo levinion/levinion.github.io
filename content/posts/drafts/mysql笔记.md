@@ -5,12 +5,16 @@ created: 2022-10-10 09:45:10
 ## MySQL 安装
 
 ## 使用
+
 ### 新建
+
 1. 创建数据库
    `create database [name of database]`
 2. 创建数据表
    `create table [name of table]`
+
 ### 选择
+
 1. 选择全部
    `select * from [table name]`
 2. 选择列

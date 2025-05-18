@@ -126,14 +126,14 @@
         <p>2025-02-13 17:32:50</p>
       </div>
       <article><h2 id="heading"><a class="anchor" href="#heading">#</a> 安装</h2>
-<p>对于安装过程，建议参考：<a href="https://arch.icekylin.online/">archlinux 简明指南</a>以及<a href="https://wiki.archlinux.org/title/Installation_guide">archwiki</a>。</p>
-<p>对于那些想要快速安装的用户，推荐使用我写的脚本：<a href="https://github.com/levinion/iarch-install">iarch-install</a>。具体的安装过程详见README。</p>
+<p>对于安装过程，建议参考：<a href="https://arch.icekylin.online/">archlinux 简明指南</a>以及 <a href="https://wiki.archlinux.org/title/Installation_guide">archwiki</a>。</p>
+<p>对于那些想要快速安装的用户，推荐使用我写的脚本：<a href="https://github.com/levinion/iarch-install">iarch-install</a>。具体的安装过程详见 README。</p>
 <p>本文主要讲解一下进系统后要做的一些设置。</p>
 <h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 一些习惯</h2>
-<p>对于一些常用的软件，都应当维护一份配置文件。对于我来说，喜欢需要维护的配置文件放在一个文件夹中，比如dotfiles，然后将其软链接到具体的路径，比如<code>~/.config/xxx</code>，这样就能方便地使用git进行配置文件的管理和同步。如：</p>
+<p>对于一些常用的软件，都应当维护一份配置文件。对于我来说，喜欢需要维护的配置文件放在一个文件夹中，比如 dotfiles，然后将其软链接到具体的路径，比如 <code>~/.config/xxx</code>，这样就能方便地使用 Git 进行配置文件的管理和同步。如：</p>
 <pre><code class="language-shell">ln -s ~/&lt;path to dotfiles&gt;/dotfiles/xxx ~/.config/xxx
 </code></pre>
-<p>对于环境变量，我喜欢全部放在shell的配置文件中。一方面，前面已经有了<code>/etc/environment</code>被弃用的案例，另一方面也应该为单一用户，而非所有用户，维护一份单独的配置文件，即使这台电脑只有一个人使用。所以你能看见我在后文中将环境变量全部写进shell配置文件（我使用fish，因此你或许会感到语法有些奇怪lol）。</p>
+<p>对于环境变量，我喜欢全部放在 shell 的配置文件中。一方面，前面已经有了 <code>/etc/environment</code> 被弃用的案例，另一方面也应该为单一用户，而非所有用户，维护一份单独的配置文件，即使这台电脑只有一个人使用。所以你能看见我在后文中将环境变量全部写进 shell 配置文件（我使用 fish，因此你或许会感到语法有些奇怪 lol）。</p>
 <p>当然这两点也是仅供参考。下面开始正文。</p>
 <h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 中文输入法</h2>
 <p>安装 fcitx5、rime：</p>
@@ -149,27 +149,27 @@ set -gx SDL_IM_MODULE fcitx5
 set -gx INPUT_METHOD fcitx5
 set -gx GLFW_IM_MODULE ibus
 </code></pre>
-<p>修改fcitx5配置：</p>
+<p>修改 fcitx5 配置：</p>
 <pre><code class="language-shell">fcitx5-configtool
 </code></pre>
-<p>修改rime配置，默认配置文件夹路径为：</p>
+<p>修改 rime 配置，默认配置文件夹路径为：</p>
 <pre><code>~/.local/share/fcitx5/rime/
 </code></pre>
 <h2 id="heading-3"><a class="anchor" href="#heading-3">#</a> 显卡驱动</h2>
 <p>首先查询显卡型号：</p>
 <pre><code class="language-shell">lspci -k -d ::03xx
 </code></pre>
-<p>对于40系之后较新的显卡，建议安装<code>nvidia-open-beta-dkms</code>：</p>
+<p>对于 40 系之后较新的显卡，建议安装 <code>nvidia-open-beta-dkms</code>：</p>
 <pre><code class="language-shell">paru -S nvidia-open-beta-dkms nvidia-utils-beta lib32-nvidia-utils-beta nvidia-settings
 </code></pre>
-<p>修改<code>/etc/mkinitcpio.conf</code>，删除HOOKS数组中的<code>kms</code>，结果如下：</p>
+<p>修改 <code>/etc/mkinitcpio.conf</code>，删除 HOOKS 数组中的 <code>kms</code>，结果如下：</p>
 <pre><code class="language-shell">HOOKS=(base udev autodetect microcode modconf keyboard keymap consolefont block filesystems fsck)
 </code></pre>
-<p>重新生成initramfs</p>
+<p>重新生成 initramfs</p>
 <pre><code class="language-shell">mkinitcpio -P
 </code></pre>
 <h2 id="hidpi"><a class="anchor" href="#hidpi">#</a> HIDPI</h2>
-<p>对于GDK和QT程序，设置如下环境变量：</p>
+<p>对于 GDK 和 QT 程序，设置如下环境变量：</p>
 <pre><code class="language-shell">set -gx GDK_DPI_SCALE -1
 set -gx GDK_SCALE 2
 set -gx XCURSOR_SIZE 32
@@ -177,17 +177,17 @@ set -gx QT_AUTO_SCREEN_SCALE_FACTOR 2
 set -gx QT_ENABLE_HIGHDPI_SCALING 0
 set -gx QT_SCALE_FACTOR 2
 </code></pre>
-<p>对于火狐，进入about:config界面，修改<code>layout.css.devPixelsPerPx</code>属性，调整到满意为止。</p>
-<p>对于electron；</p>
+<p>对于火狐，进入 about:config 界面，修改 <code>layout.css.devPixelsPerPx</code> 属性，调整到满意为止。</p>
+<p>对于 electron；</p>
 <pre><code class="language-shell">echo &quot;--force-device-scale-factor=2&quot; &gt; ~/.config/electron-flags.conf
 </code></pre>
-<p>但是一些electron应用不会读electron-flags，此时修改<code>.desktop</code>文件，路径一般为：<code>/usr/share/applications/</code>。在Exec中修改：</p>
+<p>但是一些 electron 应用不会读 electron-flags，此时修改 <code>.desktop</code> 文件，路径一般为：<code>/usr/share/applications/</code>。在 Exec 中修改：</p>
 <pre><code class="language-shell">Exec=/usr/bin/code --force-device-scale-factor=2 %F
 </code></pre>
 <h2 id="heading-4"><a class="anchor" href="#heading-4">#</a> 更换内核</h2>
 <pre><code class="language-shell">paru -S linux-zen linux-zen-headers
 </code></pre>
-<p>修改<code>/etc/default/grub</code>：</p>
+<p>修改 <code>/etc/default/grub</code>：</p>
 <pre><code class="language-shell">GRUB_DISABLE_SUBMENU=y
 </code></pre>
 <pre><code class="language-shell">sudo grub-mkconfig -o /boot/grub/grub.cfg
@@ -196,7 +196,7 @@ set -gx QT_SCALE_FACTOR 2
 <pre><code class="language-shell">paru -Rsn linux linux-headers
 sudo grub-mkconfig -o /boot/grub/grub.cfg
 </code></pre>
-<h2 id="grub"><a class="anchor" href="#grub">#</a> 禁用GRUB倒计时</h2>
+<h2 id="-grub-"><a class="anchor" href="#-grub-">#</a> 禁用 GRUB 倒计时</h2>
 <pre><code class="language-shell">sudoedit /etc/default/grub
 </code></pre>
 <p>修改配置文件：</p>
@@ -206,17 +206,17 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 </code></pre>
 <h2 id="heading-5"><a class="anchor" href="#heading-5">#</a> 主题</h2>
 <h3 id="gtk"><a class="anchor" href="#gtk">#</a> GTK</h3>
-<p>对于GTK，安装<code>lxappearance</code>以切换主题：</p>
+<p>对于 GTK，安装 <code>lxappearance</code> 以切换主题：</p>
 <pre><code class="language-shell">paru -S lxappearance
 </code></pre>
-<p>然后安装主题，这边推荐<code>tokyonight</code>（主要是<code>catppuccin-gtk</code>已不再维护）：</p>
+<p>然后安装主题，这边推荐 <code>tokyonight</code>（主要是 <code>catppuccin-gtk</code> 已不再维护）：</p>
 <pre><code class="language-shell">paru -S tokyonight-gtk-theme-git
 </code></pre>
-<p>进入lxappearance切换主题：</p>
+<p>进入 lxappearance 切换主题：</p>
 <pre><code class="language-shell">lxappearance
 </code></pre>
 <h3 id="qt"><a class="anchor" href="#qt">#</a> QT</h3>
-<p>QT建议使用<code>kvantum</code>进行管理；</p>
+<p>QT 建议使用 <code>kvantum</code> 进行管理；</p>
 <pre><code class="language-shell">paru -S kvantum
 </code></pre>
 <p>然后添加环境变量：</p>
@@ -225,36 +225,36 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 <p>安装主题：</p>
 <pre><code class="language-shell">paru -S kvantum-theme-catppuccin-git
 </code></pre>
-<p>使用<code>kvantummanager</code>管理主题：</p>
+<p>使用 <code>kvantummanager</code> 管理主题：</p>
 <pre><code class="language-shell">kvantummanager
 </code></pre>
 <h3 id="fcitx5"><a class="anchor" href="#fcitx5">#</a> fcitx5</h3>
-<p>fcitx5的用户配置路径在<code>.local/share/fcitx5/themes</code>文件夹下，这边推荐<a href="https://github.com/catppuccin/fcitx5">catppuccin</a>。</p>
+<p>fcitx5 的用户配置路径在 <code>.local/share/fcitx5/themes</code> 文件夹下，这边推荐 <a href="https://github.com/catppuccin/fcitx5">catppuccin</a>。</p>
 <p>根据文档安装即可：</p>
 <pre><code class="language-shell">git clone https://github.com/catppuccin/fcitx5.git
 mkdir -p ~/.local/share/fcitx5/themes/
 cp -r ./fcitx5/src/* ~/.local/share/fcitx5/themes
 </code></pre>
-<p>然后使用fcitx5配置工具进行配置：</p>
+<p>然后使用 fcitx5 配置工具进行配置：</p>
 <pre><code class="language-shell">fcitx5-configtool
 </code></pre>
 <h3 id="sddm"><a class="anchor" href="#sddm">#</a> sddm</h3>
 <p>依然推荐 catppuccin。</p>
 <pre><code class="language-shell">paru -S catppuccin-sddm-theme-mocha
 </code></pre>
-<p>这个包已经亲切地安装了相应的依赖，因此我们只需要修改sddm配置文件即可。</p>
+<p>这个包已经亲切地安装了相应的依赖，因此我们只需要修改 sddm 配置文件即可。</p>
 <pre><code class="language-shell">printf &quot;\n[Theme]\nCurrent=catppuccin-mocha\n&quot; | sudo tee -a /etc/sddm.conf
 </code></pre>
 <p>如果要启用缩放：</p>
 <pre><code class="language-shell">printf &quot;\n[Wayland]\nEnableHiDPI=true\n[X11]\nEnableHiDPI=true\n[General]\nGreeterEnvironment=QT_SCREEN_SCALE_FACTORS=2,QT_FONT_DPI=192\n&quot; | sudo tee -a /etc/sddm.conf
 </code></pre>
-<h3 id="grub-1"><a class="anchor" href="#grub-1">#</a> grub</h3>
+<h3 id="grub"><a class="anchor" href="#grub">#</a> grub</h3>
 <pre><code class="language-shell">paru -S catppuccin-mocha-grub-theme-git
 </code></pre>
-<p>然后编辑<code>/etc/default/grub</code>，新增或修改以下行：</p>
+<p>然后编辑 <code>/etc/default/grub</code>，新增或修改以下行：</p>
 <pre><code class="language-shell">GRUB_THEME=&quot;/usr/share/grub/themes/catppuccin-mocha/theme.txt&quot;
 </code></pre>
-<p>然后更新grub：</p>
+<p>然后更新 grub：</p>
 <pre><code class="language-shell">sudo grub-mkconfig -o /boot/grub/grub.cfg
 </code></pre>
 <h2 id="steam"><a class="anchor" href="#steam">#</a> steam</h2>
@@ -263,27 +263,27 @@ cp -r ./fcitx5/src/* ~/.local/share/fcitx5/themes
 <p>如果想要静默启动，执行：</p>
 <pre><code class="language-shell">steam -nochatui -nofriendsui -silent
 </code></pre>
-<p>对于linux，建议使用proton-ge，并在兼容性设置中选择：</p>
+<p>对于 Linux，建议使用 proton-ge，并在兼容性设置中选择：</p>
 <pre><code class="language-shell">paru -S proton-ge-custom-bin
 </code></pre>
-<h3 id="ntfs"><a class="anchor" href="#ntfs">#</a> 对于ntfs文件系统</h3>
-<p>一般建议使用ext4或btrfs等文件系统存放游戏文件，因为ntfs上的steam库并非开箱即用的。但通过一定设置，它是可以正常使用的。</p>
+<h3 id="-ntfs-"><a class="anchor" href="#-ntfs-">#</a> 对于 ntfs 文件系统</h3>
+<p>一般建议使用 ext4 或 btrfs 等文件系统存放游戏文件，因为 ntfs 上的 steam 库并非开箱即用的。但通过一定设置，它是可以正常使用的。</p>
 <ol>
-<li>安装ntfs-3g</li>
+<li>安装 ntfs-3g</li>
 </ol>
 <pre><code class="language-shell">paru -S ntfs-3g
 </code></pre>
 <ol start="2">
-<li>获取uuid：</li>
+<li>获取 uuid：</li>
 </ol>
 <pre><code class="language-shell">sudo blkid /dev/&lt;your disk&gt; | awk '{print $3}' | awk -F'&quot;' '{print $2}'
 </code></pre>
 <ol start="3">
-<li>写fstab</li>
+<li>写 fstab</li>
 </ol>
 <pre><code class="language-shell">sudoedit /etc/fstab
 </code></pre>
-<p>新增以下内容，填写上面获取到的uuid：</p>
+<p>新增以下内容，填写上面获取到的 uuid：</p>
 <pre><code class="language-shell">UUID=&lt;your uuid&gt; /media/d lowntfs-3g uid=1000,gid=1000,rw,user,exec,umask=000 0 0
 </code></pre>
 <ol start="4">
@@ -292,18 +292,18 @@ cp -r ./fcitx5/src/* ~/.local/share/fcitx5/themes
 <pre><code class="language-shell">reboot
 </code></pre>
 <ol start="5">
-<li>如果不起作用，链接本地的compatdata到库的steamapps文件夹</li>
+<li>如果不起作用，链接本地的 compatdata 到库的 steamapps 文件夹</li>
 </ol>
 <pre><code class="language-shell">ln -s /&lt;local steam path&gt;/steamapps/compatdata /&lt;remote steam path&gt;/steamapps/
 </code></pre>
-<p>其中，本地steam文件夹路径一般为<code>~/.steam/root</code></p>
-<p>另外，由于驱动的原因，ntfs有时会被搞脏，产生只读无法写的情况，此时需要使用<code>sudo ntfsfix /dev/nvme1nx</code>进行修复。如果遇到ntfsfix无法修复的情况，尝试登录到windows使用<code>chkdsk</code>进行操作，如：</p>
+<p>其中，本地 steam 文件夹路径一般为 <code>~/.steam/root</code></p>
+<p>另外，由于驱动的原因，ntfs 有时会被搞脏，产生只读无法写的情况，此时需要使用 <code>sudo ntfsfix /dev/nvme1nx</code> 进行修复。如果遇到 ntfsfix 无法修复的情况，尝试登录到 windows 使用 <code>chkdsk</code> 进行操作，如：</p>
 <pre><code class="language-shell">chkdsk c: /f
 chkdsk d: /f
 </code></pre>
 <h2 id="heading-6"><a class="anchor" href="#heading-6">#</a> 其他</h2>
-<h3 id="validity-check"><a class="anchor" href="#validity-check">#</a> 跳过validity check</h3>
-<p>对于一些SHA256错误的包，可以使用以下flag跳过验证（保证安全的前提下）：</p>
+<h3 id="-validity-check"><a class="anchor" href="#-validity-check">#</a> 跳过 validity check</h3>
+<p>对于一些 SHA256 错误的包，可以使用以下 flag 跳过验证（保证安全的前提下）：</p>
 <pre><code class="language-shell">paru -S --mflags --skipinteg
 </code></pre>
 </article>
