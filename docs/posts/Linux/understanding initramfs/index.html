@@ -152,6 +152,10 @@ initramfs-linux.img: ASCII cpio archive (SVR4 with no CRC)
 ❯ lsinitcpio -x ../initramfs-linux.img
 </code></pre>
 <p>提取 initramfs-linux.img 后得到：</p>
+<details open>
+<summary>
+点此折叠
+</summary>
 <pre><code class="language-shell">.
 ├── bin -&gt; usr/bin
 ├── buildconfig
@@ -298,6 +302,7 @@ initramfs-linux.img: ASCII cpio archive (SVR4 with no CRC)
 │   └── run -&gt; ../run
 └── VERSION
 </code></pre>
+</details>
 <ul>
 <li>可以看到，在 <code>usr</code> 中，包括了许多 <code>busybox</code> 命令以及依赖的动态库。</li>
 <li>在 <code>etc</code> 下，可以看到 <code>fstab</code>，但此处 <code>fstab</code> 为空，因为真实文件系统会由 init 脚本进行挂载。<code>modprobe.d</code> 中有一些用户配置，在此处设置黑名单，以防黑名单模块在早期用户空间就被载入。</li>
@@ -311,10 +316,12 @@ initramfs-linux.img: ASCII cpio archive (SVR4 with no CRC)
 <p>在所有流程执行完毕后，initramfs 的准备工作也就完成了，init 就从此处开始执行。</p>
 <h2 id="init"><a class="anchor" href="#init">#</a> init</h2>
 <p>在 <code>sbin</code> 下面可以找到 <code>init</code> 文件，这就是接下来要调用的脚本。可以看到它由 <code>busybox</code> 提供。</p>
-<p>具体使用哪种工具作为 init 是由 <code>/etc/mkinitcpio.conf</code> 中定义的 hook 决定的（<code>base</code> 使用 <code>busybox</code>，<code>systemd</code> 使用 <code>systemd</code> 作为 init），默认情况下应该使用的是 <code>busybox</code>。</p>
 <pre><code class="language-shell">❯ file init
 init: symbolic link to busybox
 </code></pre>
+<blockquote>
+<p>具体使用哪种工具作为 init 是由 <code>/etc/mkinitcpio.conf</code> 中定义的 hook 决定的（<code>base</code> 使用 <code>busybox</code>，<code>systemd</code> 使用 <code>systemd</code> 作为 init），默认情况下应该使用的是 <code>busybox</code>。</p>
+</blockquote>
 <p>一旦 init 完成根文件系统挂载，将剩余工作交由 <code>systemd</code> 继续。这个操作由类似以下的命令执行：</p>
 <pre><code class="language-shell">switch_root /new_root /usr/lib/systemd/systemd
 </code></pre>
@@ -323,9 +330,9 @@ init: symbolic link to busybox
 execv(argv[0], argv);
 </code></pre>
 <p>因此，进入系统后的第一个进程即为<code>systemd</code>：</p>
-<pre><code class="language-shell">~ ❯ ps -p 1
-    PID TTY          TIME CMD
-      1 ?        00:00:01 systemd
+<pre><code class="language-shell">❯ ps -p 1
+  PID TTY          TIME CMD
+    1 ?        00:00:01 systemd
 </code></pre>
 </article>
     </div>

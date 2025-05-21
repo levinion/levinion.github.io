@@ -44,6 +44,11 @@ initramfs-linux.img: ASCII cpio archive (SVR4 with no CRC)
 
 提取 initramfs-linux.img 后得到：
 
+<details open>
+<summary>
+点此折叠
+</summary>
+
 ```shell
 .
 ├── bin -> usr/bin
@@ -191,6 +196,7 @@ initramfs-linux.img: ASCII cpio archive (SVR4 with no CRC)
 │   └── run -> ../run
 └── VERSION
 ```
+</details>
 
 - 可以看到，在 `usr` 中，包括了许多 `busybox` 命令以及依赖的动态库。
 - 在 `etc` 下，可以看到 `fstab`，但此处 `fstab` 为空，因为真实文件系统会由 init 脚本进行挂载。`modprobe.d` 中有一些用户配置，在此处设置黑名单，以防黑名单模块在早期用户空间就被载入。
@@ -211,12 +217,12 @@ HOOKS=(base udev autodetect microcode modconf keyboard keymap consolefont block 
 
 在 `sbin` 下面可以找到 `init` 文件，这就是接下来要调用的脚本。可以看到它由 `busybox` 提供。
 
-具体使用哪种工具作为 init 是由 `/etc/mkinitcpio.conf` 中定义的 hook 决定的（`base` 使用 `busybox`，`systemd` 使用 `systemd` 作为 init），默认情况下应该使用的是 `busybox`。
-
 ```shell
 ❯ file init
 init: symbolic link to busybox
 ```
+
+> 具体使用哪种工具作为 init 是由 `/etc/mkinitcpio.conf` 中定义的 hook 决定的（`base` 使用 `busybox`，`systemd` 使用 `systemd` 作为 init），默认情况下应该使用的是 `busybox`。
 
 一旦 init 完成根文件系统挂载，将剩余工作交由 `systemd` 继续。这个操作由类似以下的命令执行：
 
@@ -234,8 +240,8 @@ execv(argv[0], argv);
 因此，进入系统后的第一个进程即为`systemd`：
 
 ```shell
-~ ❯ ps -p 1
-    PID TTY          TIME CMD
-      1 ?        00:00:01 systemd
+❯ ps -p 1
+  PID TTY          TIME CMD
+    1 ?        00:00:01 systemd
 ```
 
