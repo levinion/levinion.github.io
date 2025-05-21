@@ -1,0 +1,333 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>understanding initramfs</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>understanding initramfs</h1>
+        <p>2025-05-21 18:22:48</p>
+      </div>
+      <article><h2 id="ramfs"><a class="anchor" href="#ramfs">#</a> ramfs</h2>
+<p>要理解 initramfs，首先需要理解 ramfs。</p>
+<p>ramfs 是一个非常简单的、基于内存的文件系统。tempfs 是 ramfs 的衍生版本。</p>
+<p>也就是说，当加载内核后，内核将 initramfs 中的文件解压进内存，然后进行早期用户空间的初始化工作。</p>
+<h2 id="heading"><a class="anchor" href="#heading">#</a> 作用</h2>
+<p>initramfs 用作早期用户空间根文件系统，负责内核加载后、执行 init 之前的一些准备工作。在有 grub（或其他引导加载器）的系统中，它由 grub 调用。</p>
+<p>早期用户空间初始化流程如下：</p>
+<ul>
+<li>加载必要的内核模块：磁盘控制器、文件系统驱动、网络驱动</li>
+<li>挂载真实根文件系统</li>
+<li>执行 init</li>
+</ul>
+<p>当执行 init 后，进入后期用户空间，initramfs 也就没用了。</p>
+<p>另外，如果磁盘经过加密，需要在 initramfs 阶段进行解密，之后再挂载经解密后的磁盘。</p>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 文件树</h2>
+<p>可以在/boot/下找到 initramfs-linux.img 文件。用 file 查看一下格式，发现是一个 cpio 格式的归档文件。</p>
+<blockquote>
+<p>initramfs-linux.image 也可能经过压缩，这取决于生成 initramfs 的软件的配置。在 archlinux 中则是/etc/mkinitcpio.conf</p>
+</blockquote>
+<pre><code class="language-shell">❯ file initramfs-linux.img
+initramfs-linux.img: ASCII cpio archive (SVR4 with no CRC)
+</code></pre>
+<p>然后使用 <code>lsinitcpio</code> 命令提取：</p>
+<pre><code class="language-shell">❯ mkdir fakefs &amp;&amp; cd fakefs
+❯ lsinitcpio -x ../initramfs-linux.img
+</code></pre>
+<p>提取 initramfs-linux.img 后得到：</p>
+<pre><code class="language-shell">.
+├── bin -&gt; usr/bin
+├── buildconfig
+├── config
+├── dev
+├── early_cpio
+├── etc
+│   ├── fstab
+│   ├── initrd-release -&gt; ../usr/lib/os-release
+│   ├── ld.so.cache
+│   ├── ld.so.conf
+│   ├── modprobe.d
+│   │   ├── blacklist.conf
+│   │   └── vmware-fuse.conf
+│   ├── mtab -&gt; ../proc/self/mounts
+│   └── os-release -&gt; ../usr/lib/os-release
+├── hooks
+│   ├── keymap
+│   └── udev
+├── init
+├── init_functions
+├── keymap.bin
+├── keymap.utf8
+├── lib -&gt; usr/lib
+├── lib64 -&gt; usr/lib
+├── new_root
+├── proc
+├── run
+├── sbin -&gt; usr/bin
+├── sys
+├── tmp
+├── usr
+│   ├── bin
+│   │   ├── [ -&gt; busybox
+│   │   ├── arch -&gt; busybox
+│   │   ├── ascii -&gt; busybox
+│   │   ├── ash -&gt; busybox
+│   │   ├── awk -&gt; busybox
+│   │   ├── base32 -&gt; busybox
+│   │   ├── base64 -&gt; busybox
+│   │   ├── basename -&gt; busybox
+│   │   ├── bc -&gt; busybox
+│   │   ├── blkdiscard -&gt; busybox
+│   │   ├── blkid
+│   │   ├── busybox
+│   │   ├── bzip2 -&gt; busybox
+│   │   ├── cat -&gt; busybox
+│   │   ├── chgrp -&gt; busybox
+│   │   ├── chmod -&gt; busybox
+│   │   ├── chown -&gt; busybox
+│   │   ├── 
+...
+│   │   └── yes -&gt; busybox
+│   ├── lib
+│   │   ├── ld-linux-x86-64.so.2
+│   │   ├── libacl.so.1 -&gt; libacl.so.1.1.2302
+│   │   ├── libacl.so.1.1.2302
+│   │   ├── libaudit.so.1 -&gt; libaudit.so.1.0.0
+│   │   ├── libaudit.so.1.0.0
+│   │   ├── libblkid.so.1 -&gt; libblkid.so.1.1.0
+│   │   ├── libblkid.so.1.1.0
+│   │   ├── libc.so.6
+│   │   ├── libcap-ng.so.0 -&gt; libcap-ng.so.0.0.0
+│   │   ├── libcap-ng.so.0.0.0
+│   │   ├── libcap.so.2 -&gt; libcap.so.2.76
+│   │   ├── libcap.so.2.76
+│   │   ├── libcrypt.so.2 -&gt; libcrypt.so.2.0.0
+│   │   ├── libcrypt.so.2.0.0
+│   │   ├── libcrypto.so.3
+│   │   ├── libgcc_s.so.1
+│   │   ├── libkmod.so.2 -&gt; libkmod.so.2.5.1
+│   │   ├── libkmod.so.2.5.1
+│   │   ├── liblzma.so.5 -&gt; liblzma.so.5.8.1
+│   │   ├── liblzma.so.5.8.1
+│   │   ├── libm.so.6
+│   │   ├── libmount.so.1 -&gt; libmount.so.1.1.0
+│   │   ├── libmount.so.1.1.0
+│   │   ├── libpam.so.0 -&gt; libpam.so.0.85.1
+│   │   ├── libpam.so.0.85.1
+│   │   ├── libseccomp.so.2 -&gt; libseccomp.so.2.5.6
+│   │   ├── libseccomp.so.2.5.6
+│   │   ├── libz.so.1 -&gt; libz.so.1.3.1
+│   │   ├── libz.so.1.3.1
+│   │   ├── libzstd.so.1 -&gt; libzstd.so.1.5.7
+│   │   ├── libzstd.so.1.5.7
+│   │   ├── modprobe.d
+│   │   │   ├── 99-opentabletdriver.conf
+│   │   │   ├── nvdimm-security.conf
+│   │   │   ├── nvidia-sleep.conf
+│   │   │   ├── nvidia-utils.conf
+│   │   │   └── systemd.conf
+│   │   ├── modules
+│   │   │   └── 6.14.6-arch1-1
+│   │   │       ├── kernel
+│   │   │       │   └── drivers
+│   │   │       │       ├── hid
+│   │   │       │       │   ├── hid-generic.ko.zst
+│   │   │       │       │   └── usbhid
+│   │   │       │       │       └── usbhid.ko.zst
+│   │   │       │       ├── misc
+│   │   │       │       │   └── rpmb-core.ko.zst
+│   │   │       │       ├── mmc
+│   │   │       │       │   └── core
+│   │   │       │       │       ├── mmc_block.ko.zst
+│   │   │       │       │       └── mmc_core.ko.zst
+│   │   │       │       ├── nvme
+│   │   │       │       │   ├── common
+│   │   │       │       │   │   └── nvme-auth.ko.zst
+│   │   │       │       │   └── host
+│   │   │       │       │       ├── nvme-core.ko.zst
+│   │   │       │       │       └── nvme.ko.zst
+│   │   │       │       ├── scsi
+│   │   │       │       │   └── virtio_scsi.ko.zst
+│   │   │       │       └── usb
+│   │   │       │           └── storage
+│   │   │       │               ├── uas.ko.zst
+│   │   │       │               └── usb-storage.ko.zst
+│   │   │       ├── modules.alias.bin
+│   │   │       ├── modules.builtin.alias.bin
+│   │   │       ├── modules.builtin.bin
+│   │   │       ├── modules.dep.bin
+│   │   │       ├── modules.devname
+│   │   │       ├── modules.softdep
+│   │   │       └── modules.symbols.bin
+│   │   ├── os-release
+│   │   ├── systemd
+│   │   │   ├── libsystemd-shared-257.5-3.so
+│   │   │   └── systemd-udevd -&gt; /usr/bin/udevadm
+│   │   └── udev
+│   │       ├── ata_id
+│   │       ├── rules.d
+│   │       │   ├── 50-udev-default.rules
+│   │       │   ├── 60-persistent-storage.rules
+│   │       │   ├── 64-btrfs.rules
+│   │       │   └── 80-drivers.rules
+│   │       └── scsi_id
+│   ├── lib64 -&gt; lib
+│   ├── local
+│   │   ├── bin
+│   │   ├── lib
+│   │   └── sbin
+│   └── sbin -&gt; bin
+├── var
+│   └── run -&gt; ../run
+└── VERSION
+</code></pre>
+<ul>
+<li>可以看到，在 <code>usr</code> 中，包括了许多 <code>busybox</code> 命令以及依赖的动态库。</li>
+<li>在 <code>etc</code> 下，可以看到 <code>fstab</code>，但此处 <code>fstab</code> 为空，因为真实文件系统会由 init 脚本进行挂载。<code>modprobe.d</code> 中有一些用户配置，在此处设置黑名单，以防黑名单模块在早期用户空间就被载入。</li>
+<li>在 <code>usr/lib/modprobe.d</code> 中，可以看到早期用户空间加载的模块，主要包括 systemd 和显卡。</li>
+<li>在 <code>usr/lib/modules</code> 中，可以看到有关磁盘设备的驱动。</li>
+</ul>
+<p>在 <code>initramfs</code> 中执行具体操作被称为 hook，这可以在 <code>/etc/mkinitcpio.conf</code> 中找到：</p>
+<pre><code class="language-shell">HOOKS=(base udev autodetect microcode modconf keyboard keymap consolefont block filesystems fsck)
+</code></pre>
+<p>大致就是加载 initramfs，识别和挂载设备（包括键盘等），加载微码、模块、终端字体、存储设备，加载文件系统驱动，运行文件系统检查工具等。具体做了什么可以查看：<a href="https://wiki.archlinux.org/title/Mkinitcpio#Common_hooks">Common_hooks</a></p>
+<p>在所有流程执行完毕后，initramfs 的准备工作也就完成了，init 就从此处开始执行。</p>
+<h2 id="init"><a class="anchor" href="#init">#</a> init</h2>
+<p>在 <code>sbin</code> 下面可以找到 <code>init</code> 文件，这就是接下来要调用的脚本。可以看到它由 <code>busybox</code> 提供。</p>
+<p>具体使用哪种工具作为 init 是由 <code>/etc/mkinitcpio.conf</code> 中定义的 hook 决定的（<code>base</code> 使用 <code>busybox</code>，<code>systemd</code> 使用 <code>systemd</code> 作为 init），默认情况下应该使用的是 <code>busybox</code>。</p>
+<pre><code class="language-shell">❯ file init
+init: symbolic link to busybox
+</code></pre>
+<p>一旦 init 完成根文件系统挂载，将剩余工作交由 <code>systemd</code> 继续。这个操作由类似以下的命令执行：</p>
+<pre><code class="language-shell">switch_root /new_root /usr/lib/systemd/systemd
+</code></pre>
+<p>具体代码可以查看 <a href="https://github.com/brgl/busybox/blob/abbf17abccbf832365d9acf1c280369ba7d5f8b2/util-linux/switch_root.c#L93-L153">busybox</a>，核心逻辑是一个 exec 系统调用：</p>
+<pre><code class="language-shell">// Exec real init
+execv(argv[0], argv);
+</code></pre>
+<p>因此，进入系统后的第一个进程即为<code>systemd</code>：</p>
+<pre><code class="language-shell">~ ❯ ps -p 1
+    PID TTY          TIME CMD
+      1 ?        00:00:01 systemd
+</code></pre>
+</article>
+    </div>
+  </body>
+</html>

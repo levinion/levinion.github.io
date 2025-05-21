@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "文学/诗年编（二）.md",
+                "file": "Linux/understanding initramfs.md",
                 "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "诗年编（二）"
+              "title": "understanding initramfs"
             }
           }
         ]
@@ -151,6 +151,7 @@
   },
   "active": "1e6a690c48fe3a72",
   "lastOpenFiles": [
+    "文学/诗年编（二）.md",
     "文学/诗年编（三）.md",
     "文学/诗年编（一）.md",
     "CS/一个简单的磁轴键盘.md",
@@ -176,7 +177,6 @@
     "CS/Games101-计算机图形学.md",
     "CS/二叉链表.md",
     "CS/一次力扣爬虫的尝试.md",
-    "drafts/一个好的包管理的特征.md",
     "templates/new_draft.md~",
     "templates/4913",
     "templates",
