@@ -46,7 +46,6 @@ initramfs-linux.img: ASCII cpio archive (SVR4 with no CRC)
 
 <details open>
 <summary>
-点此折叠
 </summary>
 
 ```shell
