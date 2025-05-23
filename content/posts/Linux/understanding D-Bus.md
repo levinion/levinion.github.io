@@ -11,11 +11,11 @@ D-Bus的全称是Desktop Bus，即桌面总线，目的是提供一种标准的�
 
 ```shell
 dbus         860  0.0  0.0   8408  3780 ?        Ss   11:08   0:00 /usr/bin/dbus-broker-launch --scope system --audit
-dbus         862  0.0  0.0   5596  2828 ?        S    11:08   0:01 dbus-broker --log 4 --controller 9 --machine-id b3603f4018b5457a912421051311377e --max-bytes 536870912 --max-fds 4096 --max-matches 131072 --audit
+dbus         862  0.0  0.0   5596  2828 ?        S    11:08   0:01 dbus-broker --log 4 --controller 9 --machine-id <machine id> --max-bytes 536870912 --max-fds 4096 --max-matches 131072 --audit
 maruka      1127  0.0  0.0   7984  3624 ?        Ss   11:08   0:00 /usr/bin/dbus-broker-launch --scope user
-maruka      1128  0.0  0.0   4724  2252 ?        S    11:08   0:00 dbus-broker --log 4 --controller 10 --machine-id b3603f4018b5457a912421051311377e --max-bytes 100000000000000 --max-fds 25000000000000 --max-matches 5000000000
+maruka      1128  0.0  0.0   4724  2252 ?        S    11:08   0:00 dbus-broker --log 4 --controller 10 --machine-id <machine id> --max-bytes 100000000000000 --max-fds 25000000000000 --max-matches 5000000000
 maruka      1411  0.0  0.0   7984  3564 ?        S    11:08   0:00 /usr/bin/dbus-broker-launch --config-file=/usr/share/defaults/at-spi2/accessibility.conf --scope user
-maruka      1412  0.0  0.0   4132  2276 ?        S    11:08   0:00 dbus-broker --log 4 --controller 9 --machine-id b3603f4018b5457a912421051311377e --max-bytes 100000000000000 --max-fds 6400000 --max-matches 5000000000
+maruka      1412  0.0  0.0   4132  2276 ?        S    11:08   0:00 dbus-broker --log 4 --controller 9 --machine-id <machine id> --max-bytes 100000000000000 --max-fds 6400000 --max-matches 5000000000
 ```
 
 可以看到总共有三条`dbus-broker-launch`命令，并且运行了三个`dbus-broker`守护进程。
@@ -29,8 +29,8 @@ maruka      1412  0.0  0.0   4132  2276 ?        S    11:08   0:00 dbus-broker -
 因此，D-Bus可以说是由以下部分组成：
 
 - D-Bus协议：进程如何连接到dbus、如何通信
-- libdbus（或其他实现）：实现了D-Bus协议，使得进程不必关系细节
-- dbus daemon（守护进程）：D-Bus实现的实例
+- libdbus（或其他实现）：实现了D-Bus协议，使得进程不必关心dbus协议的实现细节
+- dbus daemon（守护进程）：D-Bus实例
 
 一般来说，有两个主要的dbus守护进程，分别由以下两条命令开启：
 

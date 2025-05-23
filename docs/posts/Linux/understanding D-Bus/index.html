@@ -129,11 +129,11 @@
 <h2 id="heading"><a class="anchor" href="#heading">#</a> 守护进程</h2>
 <p>让我们执行下<code>ps -aux | grep dbus</code>看一下dbus相关进程：</p>
 <pre><code class="language-shell">dbus         860  0.0  0.0   8408  3780 ?        Ss   11:08   0:00 /usr/bin/dbus-broker-launch --scope system --audit
-dbus         862  0.0  0.0   5596  2828 ?        S    11:08   0:01 dbus-broker --log 4 --controller 9 --machine-id b3603f4018b5457a912421051311377e --max-bytes 536870912 --max-fds 4096 --max-matches 131072 --audit
+dbus         862  0.0  0.0   5596  2828 ?        S    11:08   0:01 dbus-broker --log 4 --controller 9 --machine-id &lt;machine id&gt; --max-bytes 536870912 --max-fds 4096 --max-matches 131072 --audit
 maruka      1127  0.0  0.0   7984  3624 ?        Ss   11:08   0:00 /usr/bin/dbus-broker-launch --scope user
-maruka      1128  0.0  0.0   4724  2252 ?        S    11:08   0:00 dbus-broker --log 4 --controller 10 --machine-id b3603f4018b5457a912421051311377e --max-bytes 100000000000000 --max-fds 25000000000000 --max-matches 5000000000
+maruka      1128  0.0  0.0   4724  2252 ?        S    11:08   0:00 dbus-broker --log 4 --controller 10 --machine-id &lt;machine id&gt; --max-bytes 100000000000000 --max-fds 25000000000000 --max-matches 5000000000
 maruka      1411  0.0  0.0   7984  3564 ?        S    11:08   0:00 /usr/bin/dbus-broker-launch --config-file=/usr/share/defaults/at-spi2/accessibility.conf --scope user
-maruka      1412  0.0  0.0   4132  2276 ?        S    11:08   0:00 dbus-broker --log 4 --controller 9 --machine-id b3603f4018b5457a912421051311377e --max-bytes 100000000000000 --max-fds 6400000 --max-matches 5000000000
+maruka      1412  0.0  0.0   4132  2276 ?        S    11:08   0:00 dbus-broker --log 4 --controller 9 --machine-id &lt;machine id&gt; --max-bytes 100000000000000 --max-fds 6400000 --max-matches 5000000000
 </code></pre>
 <p>可以看到总共有三条<code>dbus-broker-launch</code>命令，并且运行了三个<code>dbus-broker</code>守护进程。</p>
 <p>先来看一下<code>dbus-proker</code>是什么。根据<a href="https://wiki.archlinux.org/title/D-Bus#dbus-broker">dbus-broker</a>，有如下一段话：</p>
@@ -144,8 +144,8 @@ maruka      1412  0.0  0.0   4132  2276 ?        S    11:08   0:00 dbus-broker -
 <p>因此，D-Bus可以说是由以下部分组成：</p>
 <ul>
 <li>D-Bus协议：进程如何连接到dbus、如何通信</li>
-<li>libdbus（或其他实现）：实现了D-Bus协议，使得进程不必关系细节</li>
-<li>dbus daemon（守护进程）：D-Bus实现的实例</li>
+<li>libdbus（或其他实现）：实现了D-Bus协议，使得进程不必关心dbus协议的实现细节</li>
+<li>dbus daemon（守护进程）：D-Bus实例</li>
 </ul>
 <p>一般来说，有两个主要的dbus守护进程，分别由以下两条命令开启：</p>
 <pre><code class="language-shell">/usr/bin/dbus-broker-launch --scope system --audit
