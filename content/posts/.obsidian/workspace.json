@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux/understanding D-Bus.md",
+                "file": "CS/understanding async.md",
                 "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "understanding D-Bus"
+              "title": "understanding async"
             }
           }
         ]
@@ -151,11 +151,21 @@
   },
   "active": "1984143e1e9e9377",
   "lastOpenFiles": [
+    "drafts/understanding uefi & bios.md",
+    "CS/understanding async.md",
+    "Linux/understanding initramfs.md",
+    "drafts/understanding safe boot.md",
+    "drafts/understanding systemd.md",
+    "drafts/understanding ssh.md",
+    "drafts/understanding grub.md",
+    "drafts/understanding xdg-desktop-portal.md",
     "drafts/understanding polkit.md",
+    "drafts/编译原理&新语言的从入门到放弃.md",
+    "drafts/理性与物化.md",
+    "drafts/刻板印象.md",
     "Linux/understanding D-Bus.md",
     "Linux/迁移btrfs磁盘.md",
     "Linux/迁移QEMU虚拟机到VMWARE.md",
-    "Linux/understanding initramfs.md",
     "Linux/understanding udev.md",
     "drafts/ffmpeg的视频基础操作.md",
     "drafts/CS110L学习笔记.md",
@@ -167,16 +177,6 @@
     "drafts/汽车设计学习笔记.md",
     "drafts/编译原理学习笔记.md",
     "drafts/配合使用git submodule和软链接.md",
-    "drafts/如何编写Wayland混成器（使用Rust）.md",
-    "drafts/人机工程学学习笔记.md",
-    "drafts/编译原理&新语言的从入门到放弃.md",
-    "drafts/understanding xdg-desktop-portal.md",
-    "文学/诗年编（二）.md",
-    "文学/诗年编（三）.md",
-    "文学/诗年编（一）.md",
-    "CS/一个简单的磁轴键盘.md",
-    "CS/git速查.md",
-    "CS/libmpv实现推帧.md",
     "templates/new_draft.md~",
     "templates/4913",
     "templates",

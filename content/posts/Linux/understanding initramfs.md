@@ -2,6 +2,7 @@
 title: understanding initramfs
 created: 2025-05-21 18:22:48
 ---
+
 ## ramfs
 
 要理解 initramfs，首先需要理解 ramfs。
