@@ -5,7 +5,7 @@ created: 2025-06-04 00:45:41
 
 异步是个很容易混淆的概念，主要是比较抽象，需要从原理出发才能更好地理解。
 
-对于`cook`和`sweep`，这是不能同时做，但可以打乱顺序的两件事，因此可以使用如下异步代码表示（假设cook需要3s，sweep需要1s，1s表示现实生活中10分钟）：
+对于`cook`和`watchTV`，这是可以同时做，且能够打乱顺序的两件事，因此可以使用如下异步代码表示（假设cook需要3s，sweep需要1s，1s表示现实生活中10分钟）：
 
 ```js
 function SomeTime(time) {
@@ -20,10 +20,10 @@ async function cook() {
   console.log("End cooking...");
 }
 
-async function sweep() {
-  console.log("Start sweeping...");
+async function watchTV() {
+  console.log("Start watching TV...");
   await SomeTime(1);
-  console.log("End sweeping...");
+  console.log("End watching TV...");
 }
 
 cook()
@@ -34,8 +34,8 @@ sweep()
 
 ```shell
 Start cooking...
-Start sweeping...
-End sweeping...
+Start watching TV...
+End watching TV...
 End cooking...
 ```
 
@@ -47,25 +47,25 @@ End cooking...
 1. cook被调用
 2. console.log("Start cooking...");
 3. SomeTime(3) -> cook的计时器开始计时
-4. sweep被调用
-5. console.log("Start sweeping...");
-6. SomeTime(1) -> sweep的计时器开始计时
-7. 1秒，sweep计时器到
-8. console.log("End sweeping...");
+4. watchTV被调用
+5. console.log("Start watching TV...");
+6. SomeTime(1) -> watchTV的计时器开始计时
+7. 1秒，watchTV计时器到
+8. console.log("End watching TV...");
 9. 3秒，cook计时器到
 10. console.log("End cooking...");
 ```
 
-可以看到，在异步代码被调用后，会立即执行代码中的同步部分，然后在遇到第一个await时暂停，跳出函数继续执行下面的代码。当遇到完成信号时，在此返回原函数执行剩余代码。
+可以看到，在异步代码被调用后，会立即执行代码中的同步部分，然后在遇到第一个await时暂停，跳出函数继续执行下面的代码。当遇到完成信号时，再次返回原函数执行剩余代码。这也就是异步函数非阻塞的原因。
 
 这样我们也就能够解释await的作用了：await标志着一个检查点，在代码执行到该点时，可以暂停并保存函数的执行状态。
 
 对于异步代码，需要一个运行时的支持，以保存状态和调度异步任务。当异步任务创建后，会将其推送到一个任务队列，并每次调度时从任务队列中poll一个任务出来执行。poll的行为有两个结果：
 
-- 收到信号，继续执行剩余代码，直到函数结束或遇到下一个await
-- 仍未收到信号，重新放回队列，继续从队列中poll下一个函数
+- Pending：收到信号，继续执行剩余代码，直到遇到下一个await；或仍未收到信号，重新放回队列
+- Finish：异步函数执行完毕
 
-所以await也可以理解为同步行为，可以用来控制异步程序的顺序（表现为等待信号完成/资源获取完毕）。
+所以await也可以按其字面意思（async wait）理解为同步操作。它标志着等待一个异步操作（接收信号或取得资源）的完成，可以用来控制异步函数的执行顺序。
 
 rust异步调度的核心是如下代码：
 
