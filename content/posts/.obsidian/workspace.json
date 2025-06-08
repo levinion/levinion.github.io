@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CS/understanding async.md",
+                "file": "CS/understanding jpeg.md",
                 "mode": "source",
-                "source": true
+                "source": false
               },
               "icon": "lucide-file",
-              "title": "understanding async"
+              "title": "understanding jpeg"
             }
           }
         ]
@@ -151,8 +151,9 @@
   },
   "active": "1984143e1e9e9377",
   "lastOpenFiles": [
-    "drafts/understanding uefi & bios.md",
     "CS/understanding async.md",
+    "CS/understanding jpeg.md",
+    "drafts/understanding uefi & bios.md",
     "Linux/understanding initramfs.md",
     "drafts/understanding safe boot.md",
     "drafts/understanding systemd.md",
@@ -176,7 +177,6 @@
     "drafts/USTC-计算机网络.md",
     "drafts/汽车设计学习笔记.md",
     "drafts/编译原理学习笔记.md",
-    "drafts/配合使用git submodule和软链接.md",
     "templates/new_draft.md~",
     "templates/4913",
     "templates",

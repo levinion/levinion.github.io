@@ -1,0 +1,165 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>understanding jpeg</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>understanding jpeg</h1>
+        <p>2025-06-09 00:31:12</p>
+      </div>
+      <article><blockquote>
+<p>此篇文章主要参考自Reduciable的精彩视频：<a href="https://www.youtube.com/watch?v=0me3guauqOU">The Unreasonable Effectiveness of JPEG: A Signal Processing Approach</a></p>
+</blockquote>
+<p>图像记录了像素的信息。对于未经压缩的原始图像，图像就是一系列像素的集合。如RGB色彩空间中，每个像素使用三个字节表示，这就是图像所包含的主要信息。另外，图像元数据记录了图像的大小（宽和高），用来计算总共有多少个像素和如何呈现到屏幕上。对于RGBA，则增加了一个Alpha通道，用来表示透明度。对于其他色彩空间，除了如何表示像素的方式不同，原理总是相同的。</p>
+<p>jpeg是一种经有损压缩图像格式，因此为了获取原始图像需要经过解码（decode）；同理，为了从原始图像获得jpeg，需要经过编码（encode）。在编码中，jpeg组合使用了多种方法对原始图像进行压缩。</p>
+<h2 id="heading"><a class="anchor" href="#heading">#</a> 色彩空间</h2>
+<p>什么是色彩空间（color space）？以最常见的色彩空间RGB为例。我们知道RGB就是以红、绿、蓝三种像素以及它们的混合表示颜色，每个颜色有256个数值，以0-255表示。当我们将这些小的色块按照三维摆放，那么它们就能形成一个空间（可以想象为一个正方体），这就是色彩空间。而每种颜色就可以用这个空间的一个坐标<code>(x,y,z)</code>表示。</p>
+<h2 id="ycbcr"><a class="anchor" href="#ycbcr">#</a> YCbCr</h2>
+<p>当观察这个正方体的对角线，也就是从(0,0,0)到(255,255,255)的这条线上的颜色，发现它们逐渐变亮（黑-&gt;灰-&gt;白）。这些颜色也就是灰度颜色（grayscale color），或者更直接地，表示为亮度。这也就引出了第二个色彩空间，YCbCr。</p>
+<p>YCbCr也就是用Y（Luma或Brightness，亮度）、Cb（Chroma blue，蓝色色度）、Cr（Chroma red，红色色度）这三个数值表示颜色。C表示色度，可以由Y和原始的RGB值换算过来，具体转换过程可见<a href="https://en.wikipedia.org/wiki/YCbCr">WIKIPEDIA</a>。</p>
+<p>YCbCr的优点是将亮度单独分离出来，而人对颜色的感受主要来自亮度。因此一种有损的图像压缩算法就是保持Y不变，而对CbCr进行下采样或子采样。这种方法被称为色度下采样（chroma down sampling）和色度子采样（chroma subsampling）。</p>
+<p>色度下采样和子采样的方法都是对图像做卷积操作，唯一的区别是下采样取像素的平均值，而子采样取其中一个像素作为结果。</p>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 频率</h2>
+<p>如果取图像一行中的N个像素，将每个像素的亮度值记录在图表上，它就能表示成一个以位置为横坐标，亮度为纵坐标的一条曲线。因此，考虑这条曲线的频率（亮度的变化情况）：频率高的部分亮度变化剧烈，而低频部分则更为平滑。然后，有以下结论：</p>
+<ul>
+<li>真实世界图片一般以低频部分为主</li>
+<li>人眼对高频部分不太敏感（高频部分往往表示边缘，而人眼更关注全局）</li>
+</ul>
+<p>因此可以对图像的高频部分做平滑处理，以减少图像体积。</p>
+<h2 id="dct"><a class="anchor" href="#dct">#</a> DCT</h2>
+<p>为了从原始的曲线（位置作为x轴，亮度作为y轴）计算出每个坐标对应的频率，需要用到傅立叶变换（DCT）。傅里叶变换也就是将原始曲线拆解成一系列三角函数的集合。傅里叶级数可以用下式表示（具体的计算过程就略过了）：</p>
+<p>$$f(x)=\sum_{n=0}^{N-1}x_n\cos[\frac{(2n+1)\pi k}{2N}]$$</p>
+<p>以这些系数绘制一条曲线，此时曲线的纵坐标也就是DCT系数，横坐标则表示第n个余弦函数。</p>
+<pre><code class="language-shell">[x0, x1, x2, x3, x4, ..., xn] -&gt; [k0, k1, k2, k3, k4, ..., kn]
+</code></pre>
+<p>对应余弦函数的DCT系数越高，则说明当前段的频率较高（因为合成原函数的主要的三角函数周期更小）。</p>
+<h2 id="jpeg"><a class="anchor" href="#jpeg">#</a> JPEG编码过程</h2>
+<p>对于实际图像处理，一般取图像灰度图（即Y值）进行处理。</p>
+<p>第一步是分块。jpeg将图像分成8x8大小的块。</p>
+<p>第二步，将每个像素亮度减去128，使得亮度范围在(-128,127)，即平均值约等于0。</p>
+<p>第三步，对于每个块的每一行进行傅里叶变换，得到横向DCT系数。</p>
+<p>第四步，对每个块的每一列再次进行傅里叶变换，得到竖向DCT系数。至此，得到了二维DCT系数。此时每个原始像素都对应64个DCT系数（行8个，列8个，组合之后即为64个），即一个8x8的DCT系数矩阵。对于二维DCT系数矩阵，发现系数较大值集中在块的左上角(0,0)，对应低频部分。这被称为能量压缩现象（Energy Compaction），进一步证明低频部分是图像主要部分。</p>
+<p>第五步，从低频部分开始重新构建图像。在系数较少时，图像较为模糊；但当应用系数逐渐增多，图像越发接近原始图像（一般来说，在应用约1/4个系数时，与原始图像几乎没有差别）。这也表明上面提到的第二个结论：人眼对高频部分不敏感。这一步在jpeg中被称为量化（Quantization）。具体做法是让二维DCT除以一个矩阵再取整。这个矩阵由量化表（Quantization Table）定义（一个写死的表）。这样能够得到一个量化DCT矩阵。将这个矩阵按照z字形排列，即可得到一个向量，其中向量尾部为若干个0。量化的目的也就是在保留重要低频数据的前提下尽可能去除高频，即使得向量末尾的0尽可能得多。</p>
+<p>最后，对这个由量化DCT矩阵排列而成的向量进行可变长编码（JPEG Specific Run-length Encoding以及JPEG Specific Haffman Encoding），从而减少向量的长度。</p>
+</article>
+    </div>
+  </body>
+</html>
