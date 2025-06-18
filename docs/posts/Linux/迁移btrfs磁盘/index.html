@@ -186,8 +186,34 @@ sudo btrfs subvolume delete /@root_old
 sudo btrfs subvolume delete /mnt/@home_old
 sudo btrfs subvolume delete /mnt/@root_old
 </code></pre>
+<h3 id="heading-5"><a class="anchor" href="#heading-5">#</a> 修改自动挂载的磁盘分区</h3>
+<p>如果只是更改 <code>home</code> 分区，直接修改 <code>/etc/fstab</code> 即可。如果涉及到 <code>root</code>，修改fstab是没用的。这是因为要加载哪个磁盘分区作为root是由bootloader决定的。当bootloader读到root分区所在磁盘，启动内核，内核才能读取fstab并加载其他分区。</p>
+<p>此处有两种方法，一种是直接修改bootloader中内核的启动参数。如果使用grub，则在<code>/boot/grub/grub.cfg</code>中有以下启动项：</p>
+<pre><code class="language-shell">menuentry 'Arch Linux, with Linux linux' --class arch --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-linux-advanced-ff608a41-1d92-4e49-9206-412b75e807f8' {
+    load_video
+    set gfxpayload=keep
+    insmod gzio
+    insmod part_gpt
+    insmod fat
+    search --no-floppy --fs-uuid --set=root 1574-9ED5
+    echo    'Loading Linux linux ...'
+    linux   /vmlinuz-linux root=UUID=ff608a41-1d92-4e49-9206-412b75e807f8 rw rootflags=subvol=@  loglevel=5 nowatchdog
+    echo    'Loading initial ramdisk ...'
+    initrd  /amd-ucode.img /initramfs-linux.img
+}
+</code></pre>
+<p>其中，<code>linux   /vmlinuz-linux root=UUID=ff608a41-1d92-4e49-9206-412b75e807f8 rw rootflags=subvol=@  loglevel=5 nowatchdog</code>就是内核的启动参数，它由<code>/etc/default/grub</code>中的<code>GRUB_CMDLINE_LINUX_DEFAULT</code>或<code>GRUB_CMDLINE_LINUX</code>控制，并在<code>grub-mkconfig</code>被调用时自动生成。</p>
+<p>我们需要将参数中的UUID替换成（新的）root分区的uuid。这可以通过<code>sudo btrfs filesystem show</code>得到。</p>
+<p>注意，在重新启动之前不要运行<code>grub-mkconfig</code>，因为这会覆盖掉之前做过的改动。当重启并确认分区挂载无误后，再去更新grub配置文件。</p>
+<p>另外，如果你的/boot分区不在根分区之下（也就是说不在btrfs文件系统中），它就无法同步过去。因此，需要单独将原来/boot分区的所有内容拷贝到新的分区当中。</p>
+<blockquote>
+<p>为了方便快照回滚，最好还是将/boot分区和efi分开，将/boot放到root之下，从而使得内核版本能够与快照的状态保持一致。</p>
+</blockquote>
 <h3 id="archiso"><a class="anchor" href="#archiso">#</a> archiso</h3>
-<p>如果只是更改 <code>home</code> 分区，直接修改 <code>/etc/fstab</code> 即可。如果涉及到 <code>root</code>，就需要上 archiso 重新挂载。</p>
+<blockquote>
+<p>如果做过上面的步骤，可以跳过这步</p>
+</blockquote>
+<p>另一种就是上 archiso 重新挂载，然后更新grub配置文件。</p>
 <p>进入 archiso 后，重新 mount：</p>
 <pre><code class="language-shell"># 挂载efi
 mkdir /mnt/boot
@@ -234,7 +260,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 <pre><code class="language-shell"># /dev/nvme1n1
 UUID=9c012ac6-ba03-4831-88a7-3128df7b828e /media/d ext4 rw,relatime 0 2
 </code></pre>
-<h2 id="heading-5"><a class="anchor" href="#heading-5">#</a> 其他</h2>
+<h2 id="heading-6"><a class="anchor" href="#heading-6">#</a> 其他</h2>
 <p>据仙子所言，可以使用一种非常简便的方式进行磁盘迁移：</p>
 <pre><code class="language-shell">btrfs device add &lt;新磁盘&gt;
 btrfs device delete &lt;旧磁盘&gt;

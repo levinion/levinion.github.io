@@ -1,10 +1,10 @@
-set shell:=["fish","-c"]
-
 serve:
-  watchexec --ignore-nothing -o restart -w content gorush serve
+  watchexec --ignore-nothing -o restart -w content gorush serve || true
 
 build:
   gorush build
 
 push:
-  fastpush "update"
+  git add .
+  git commit -m "update"
+  git push origin main

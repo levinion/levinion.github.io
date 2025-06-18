@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CS/understanding jpeg.md",
+                "file": "Linux/迁移btrfs磁盘.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "understanding jpeg"
+              "title": "迁移btrfs磁盘"
             }
           }
         ]
@@ -126,7 +126,7 @@
               "type": "advanced-tables-toolbar",
               "state": {},
               "icon": "lucide-file",
-              "title": "插件不再活动"
+              "title": "Plugin no longer active"
             }
           }
         ],
@@ -139,9 +139,9 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "canvas:新建白板": false,
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
       "templates:插入模板": false,
       "command-palette:打开命令面板": false,
       "markdown-importer:打开 Markdown 格式转换器": false,
@@ -149,12 +149,15 @@
       "quickadd:QuickAdd": false
     }
   },
-  "active": "1984143e1e9e9377",
+  "active": "1e6a690c48fe3a72",
   "lastOpenFiles": [
-    "CS/understanding async.md",
-    "CS/understanding jpeg.md",
-    "drafts/understanding uefi & bios.md",
+    "Linux/understanding udev.md",
+    "Linux/understanding D-Bus.md",
     "Linux/understanding initramfs.md",
+    "Linux/AUR打包流程.md",
+    "CS/understanding jpeg.md",
+    "CS/understanding async.md",
+    "drafts/understanding uefi & bios.md",
     "drafts/understanding safe boot.md",
     "drafts/understanding systemd.md",
     "drafts/understanding ssh.md",
@@ -164,10 +167,8 @@
     "drafts/编译原理&新语言的从入门到放弃.md",
     "drafts/理性与物化.md",
     "drafts/刻板印象.md",
-    "Linux/understanding D-Bus.md",
     "Linux/迁移btrfs磁盘.md",
     "Linux/迁移QEMU虚拟机到VMWARE.md",
-    "Linux/understanding udev.md",
     "drafts/ffmpeg的视频基础操作.md",
     "drafts/CS110L学习笔记.md",
     "drafts/Games101-计算机图形学.md",
@@ -176,7 +177,6 @@
     "drafts/rCore操作系统学习笔记（一）概述.md",
     "drafts/USTC-计算机网络.md",
     "drafts/汽车设计学习笔记.md",
-    "drafts/编译原理学习笔记.md",
     "templates/new_draft.md~",
     "templates/4913",
     "templates",

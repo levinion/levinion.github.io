@@ -98,9 +98,41 @@ sudo btrfs subvolume delete /mnt/@home_old
 sudo btrfs subvolume delete /mnt/@root_old
 ```
 
+### 修改自动挂载的磁盘分区
+
+如果只是更改 `home` 分区，直接修改 `/etc/fstab` 即可。如果涉及到 `root`，修改fstab是没用的。这是因为要加载哪个磁盘分区作为root是由bootloader决定的。当bootloader读到root分区所在磁盘，启动内核，内核才能读取fstab并加载其他分区。
+
+此处有两种方法，一种是直接修改bootloader中内核的启动参数。如果使用grub，则在`/boot/grub/grub.cfg`中有以下启动项：
+
+```shell
+menuentry 'Arch Linux, with Linux linux' --class arch --class gnu-linux --class gnu --class os $menuentry_id_option 'gnulinux-linux-advanced-ff608a41-1d92-4e49-9206-412b75e807f8' {
+    load_video
+    set gfxpayload=keep
+    insmod gzio
+    insmod part_gpt
+    insmod fat
+    search --no-floppy --fs-uuid --set=root 1574-9ED5
+    echo    'Loading Linux linux ...'
+    linux   /vmlinuz-linux root=UUID=ff608a41-1d92-4e49-9206-412b75e807f8 rw rootflags=subvol=@  loglevel=5 nowatchdog
+    echo    'Loading initial ramdisk ...'
+    initrd  /amd-ucode.img /initramfs-linux.img
+}
+```
+
+其中，`linux   /vmlinuz-linux root=UUID=ff608a41-1d92-4e49-9206-412b75e807f8 rw rootflags=subvol=@  loglevel=5 nowatchdog`就是内核的启动参数，它由`/etc/default/grub`中的`GRUB_CMDLINE_LINUX_DEFAULT`或`GRUB_CMDLINE_LINUX`控制，并在`grub-mkconfig`被调用时自动生成。
+
+我们需要将参数中的UUID替换成（新的）root分区的uuid。这可以通过`sudo btrfs filesystem show`得到。
+
+注意，在重新启动之前不要运行`grub-mkconfig`，因为这会覆盖掉之前做过的改动。当重启并确认分区挂载无误后，再去更新grub配置文件。
+
+另外，如果你的/boot分区不在根分区之下（也就是说不在btrfs文件系统中），它就无法同步过去。因此，需要单独将原来/boot分区的所有内容拷贝到新的分区当中。
+
+> 为了方便快照回滚，最好还是将/boot分区和efi分开，将/boot放到root之下，从而使得内核版本能够与快照的状态保持一致。
 ### archiso
 
-如果只是更改 `home` 分区，直接修改 `/etc/fstab` 即可。如果涉及到 `root`，就需要上 archiso 重新挂载。
+> 如果做过上面的步骤，可以跳过这步
+
+另一种就是上 archiso 重新挂载，然后更新grub配置文件。
 
 进入 archiso 后，重新 mount：
 
