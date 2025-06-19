@@ -163,7 +163,7 @@ nvim中的文件管理同在桌面上使用文件管理器的使用场景不太�
 - [flash.nvim](https://github.com/folke/flash.nvim)：按s在屏幕上使用标签跳转，很方便。
 - [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)：能够显示git diff，用git是必备的
 - [todo_comments](https://github.com/folke/todo-comments.nvim)：高亮显示TODO等标签，还能结合其他插件进行搜索
-- [rainbow-delimiters.nvim](https://github.com/HiPhish/rainbow-delimiters.nvim)：可能略冷门，但相当好用的插件，对不同层次的括号添加不同颜色，方面找到没闭合或多余的括号（开发时很常见但头疼的场合）
+- [rainbow-delimiters.nvim](https://github.com/HiPhish/rainbow-delimiters.nvim)：可能略冷门，但相当好用的插件，对不同层次的括号添加不同颜色，方便找到没闭合或多余的括号（开发时很常见但头疼的场合）
 - [mini.nvim](https://github.com/echasnovski/mini.nvim)：mini的插件集合，可以全部装也可以单独装。我目前只使用了mini.pairs（来自动匹配括号）和mini.ai（一些增强操作）
 - [vim-suda](https://github.com/lambdalisue/vim-suda)：也就是提供了`:w !sudo tee % > /dev/null`同样的功能，但由于一些原因，该命令在nvim中无法奏效，见[Github Issue](https://github.com/neovim/neovim/issues/12103)。而用了这个插件至少能在nvim里输密码了。
 - [barbecue.nvim](https://github.com/utilyre/barbecue.nvim)：今天才发现它已经像名字一样barbecue（archived）了，但是依然能用。作用是在编辑器顶部显示一个顶栏，提示一下代码层次（和vscode那样）。要说有用还真没什么用，更多地是一个装饰作用。
