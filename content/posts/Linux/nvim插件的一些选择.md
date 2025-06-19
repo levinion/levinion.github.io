@@ -146,7 +146,7 @@ nvim中的文件管理同在桌面上使用文件管理器的使用场景不太�
 #### 传统的
 
 - [neo-tree](https://github.com/nvim-neo-tree/neo-tree.nvim)：比较老牌的树状文件管理器，类似vscode的文件树，没什么缺点，我用了很久。
-- [snacks.explorer](https://github.com/folke/snacks.nvim/blob/main/docs/explorer.md)：又是snacks的小组件，它其实是picker伪装成的一个文件树。缺点可能是可定性差了点，上面有个很丑（个人观点）的搜索框，但我没能找到怎么关闭。
+- [snacks.explorer](https://github.com/folke/snacks.nvim/blob/main/docs/explorer.md)：又是snacks的小组件，它其实是picker伪装成的一个文件树。缺点可能是可定制性差了点，上面有个很丑（个人观点）的搜索框，但我没能找到怎么关闭。
 - [yazi.nvim](https://github.com/mikavilpas/yazi.nvim)：将yazi内嵌在nvim的浮动窗口中，界面很好看，同时能够和yazi共用一套配置。搭配neo-tree用过一段时间，体验不错，但有了oil所以放弃了。
 
 #### 特殊的
