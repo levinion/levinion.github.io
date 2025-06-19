@@ -1,0 +1,259 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>nvim插件的一些选择</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>nvim插件的一些选择</h1>
+        <p>2025-06-19 16:32:43</p>
+      </div>
+      <article><p>最近放弃了LazyVim，决定从头开始搓自己的配置。虽然花了约一天的时间，但其实难度并不高，时间主要花在了插件的选择上。本文主要讨论：一个像LazyVim那样成熟，但又足够精简的nvim配置大概需要哪些插件。</p>
+<h2 id="heading"><a class="anchor" href="#heading">#</a> 插件管理器</h2>
+<p>虽然我认为在zsh中，插件管理器可以被系统包管理器代替，因此没有什么作用，但这在nvim中就就不太一样了。nvim需要的插件更多，并且严重依赖懒加载以提高加载速度（相比之下，zsh只需要p10k就好）。因此一个方便且能提供懒加载的包管理是很有必要的，这也就是我为什么选择<a href="https://github.com/folke/lazy.nvim">lazy.nvim</a>的原因。另外，它也是LazyVim使用的插件管理器，而且同样出自<a href="https://github.com/folke">folke</a>之手。</p>
+<p>其他插件管理器的选择包括：</p>
+<ul>
+<li><a href="https://github.com/junegunn/vim-plug">vim-plug</a>，这是一个超级老牌的插件管理器，星数也是最多的</li>
+<li><a href="https://github.com/wbthomason/packer.nvim">packer.nvim</a>：虽然有8k星，但是处于无人维护状态，因此不推荐使用</li>
+<li><a href="https://github.com/lewis6991/pckr.nvim">pckr.nvim</a>：packer.nvim的继任者，只有300+星，见仁见智</li>
+</ul>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 主题</h2>
+<p>主题这边就很个性化了，lazy.nvim的默认配置中所提供的主题<a href="https://github.com/folke/tokyonight.nvim">tokyonight</a>，是一个不错的选择。为什么lazy.nvim会使用这个主题呢，<del>因为它同样出自folke</del>。</p>
+<p>我使用的主题是<a href="https://github.com/catppuccin/nvim">catppuccin-mocha</a>，因为我喜欢catppuccin的配色。</p>
+<p>nvim本身也带了不少颜色方案，这可以通过<code>:colorschema &lt;主题名称&gt;</code>启用。</p>
+<h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 选项</h2>
+<p>选项严格意义上不算插件，但它太重要了，因此在这边提一嘴。nvim的默认选项很多是不合理的（个人观点），虽然对轻度编辑（改改配置文件之类的）没有太大影响，但对写代码这种对编辑器要求比较高的场合就很难受了。因此需要修改不少选项来获得相对良好的体验。</p>
+<p>下面是我修改的一些选项：</p>
+<pre><code class="language-lua">vim.g.mapleader = &quot; &quot;        -- set leader with &lt;Space&gt;
+vim.g.maplocalleader = &quot;\\&quot;
+vim.g.snacks_animate = false -- disable animation provided by snacks
+
+local opt = vim.opt
+opt.spell = false             -- disable spell
+opt.swapfile = false          -- disable swapfile
+opt.clipboard = &quot;unnamedplus&quot; -- sync clipboard with system
+opt.expandtab = true          -- use space instead of tab
+opt.tabstop = 2
+opt.shiftwidth = 0            -- use 2 spaces instead of 4
+opt.confirm = true            -- confirm before exit an editing buffer
+opt.cursorline = true         -- highlight currentline
+opt.number = true             -- show line number
+opt.relativenumber = true     -- use relative line number
+opt.wrap = false              -- disable wrap
+opt.autoread = true           -- auto reload if file changed
+opt.ignorecase = true         -- ignore case when searching
+opt.smartcase = true          -- don't ignore case with capitals
+opt.undofile = true           -- use undo file to save undo history
+opt.undolevels = 10000        -- set undo level to a big value
+opt.signcolumn = &quot;yes&quot;        -- always open signcolumn
+</code></pre>
+<p>其中比较重要的是undofile和undolevels。undofile也就是在磁盘上保存当前编辑状态，从而允许在关闭当前buffer后仍然能找到之前的编辑操作，从而进行撤回。undolevels默认为1，也就是只允许撤回一次，当再次撤回时它就提示已经是最新了（？），因此在这设置一个很大的值即可。</p>
+<h2 id="heading-3"><a class="anchor" href="#heading-3">#</a> 代码补全和格式化</h2>
+<p>代码补全和格式化是编辑器很重要的一环，这边需要设置的东西挺多，因此分开来讲</p>
+<h3 id="heading-4"><a class="anchor" href="#heading-4">#</a> 代码补全</h3>
+<p><a href="https://github.com/mason-org/mason.nvim">mason.nvim</a>是最常用的LSP、Linter等的管理工具，可以很方便地安装、更新和卸载LSP。它常搭配<a href="https://github.com/neovim/nvim-lspconfig">nvim-lspconfig</a>和<a href="https://github.com/mason-org/mason-lspconfig.nvim">mason-lspconfig</a>使用。</p>
+<p>nvim-lspconfig的作用是为已经安装的LSP提供一套合理的默认配置，从而能满足大部分人的需求并且开箱即用。也可以用自定义配置来覆盖它的默认配置，以满足一些个性化需求。比如我的clangd配置如下：</p>
+<pre><code class="language-lua">lspconfig.clangd.setup {
+        cmd = {
+          &quot;clangd&quot;,
+          &quot;--clang-tidy&quot;,
+          &quot;--all-scopes-completion&quot;,
+          &quot;--completion-style=detailed&quot;,
+          &quot;--header-insertion=iwyu&quot;,
+          &quot;--pch-storage=disk&quot;,
+          &quot;--log=error&quot;,
+          &quot;--j=12&quot;,
+          &quot;--background-index&quot;,
+          &quot;--function-arg-placeholders&quot;,
+          &quot;--fallback-style=llvm&quot;,
+          &quot;--query-driver=**&quot;,
+          &quot;--suggest-missing-includes&quot;,
+          &quot;--cross-file-rename&quot;,
+          &quot;--header-insertion-decorators&quot;,
+        },
+        init_options = {
+          compilationDatabasePath = &quot;./build&quot;,
+        },
+      }
+</code></pre>
+<p>mason-lspconfig相当于是mason.nvim和nvim-lspconfig中间的桥梁。它对mason中lsp的名称进行转换以和nvim-lspconfig中的一致。比如，在mason.nvim中有名为<code>lua-language-server</code>的LSP，但它在nvim-lspconfig中的名称则是<code>lua_ls</code>。</p>
+<p>然后，你还需要<a href="https://github.com/Saghen/blink.cmp">blink.cmp</a>，它将LSP的提示以列表的形式呈现到界面上。<a href="https://github.com/hrsh7th/nvim-cmp">nvim-cmp</a>是在blink.cmp出现之前最常用的补全插件，但blink.cmp的性能要比它好得多。</p>
+<h3 id="heading-5"><a class="anchor" href="#heading-5">#</a> 格式化</h3>
+<p>格式化常用<a href="https://github.com/stevearc/conform.nvim">conform.nvim</a>。启用format_on_save后即可在保存时自动格式化：</p>
+<pre><code class="language-lua">return {
+  'stevearc/conform.nvim',
+  opts = {
+    format_on_save = {
+      timeout_ms = 500,
+      lsp_format = &quot;fallback&quot;,
+    },
+  },
+}
+</code></pre>
+<p>或者使用<code>:lua vim.lsp.buf.format()</code>自行格式化。</p>
+<h3 id="linter"><a class="anchor" href="#linter">#</a> Linter</h3>
+<p>另外一个是Linter，实际使用得比较少，一般使用的插件是<a href="https://github.com/mfussenegger/nvim-lint">nvim-lint</a>。</p>
+<h3 id="dap"><a class="anchor" href="#dap">#</a> DAP</h3>
+<p>DAP我不用，所以就让我们跳过这部分吧。（打断点我有gdb）</p>
+<h2 id="heading-6"><a class="anchor" href="#heading-6">#</a> 文件管理</h2>
+<p>核心插件大概就是以上这些，接下来的都是一些不必需，但能极大程度上提高编辑体验的插件。</p>
+<p>nvim中的文件管理同在桌面上使用文件管理器的使用场景不太相同。它的使用场景主要集中在：</p>
+<ul>
+<li>项目内文件的切换，或者说search</li>
+<li>文件和目录的基本操作：rename、delete、create</li>
+</ul>
+<p>因此最好搭配不同插件来分别适配这两种环境。</p>
+<h3 id="heading-7"><a class="anchor" href="#heading-7">#</a> 文件切换和搜索</h3>
+<p>在终端中经常将fzf、fd、ripgrep这几个cli工具搭配使用来进行文件/内容搜索，针对层数不多的目录特别好用。在nvim中一般有以下几个插件都能提供类似的功能：</p>
+<ul>
+<li><a href="https://github.com/folke/snacks.nvim/blob/main/docs/picker.md">snacks.picker</a>：snacks.nvim是folke编写的一系列插件的集合，涵盖了很多场景，后面我们还会看到它。picker是它之中的一个选择器，界面美观，性能也不错，功能全面。</li>
+<li><a href="https://github.com/nvim-telescope/telescope.nvim">telescope.nvim</a>:telescope是这里面最老牌、star数最多，同时功能最全的，但相比其他两个插件性能可能略微逊色了点。</li>
+<li><a href="https://github.com/ibhagwan/fzf-lua">fzf-lua</a>：fzf的lua实现，使用起来没什么问题，但可能功能没另外两个多。</li>
+</ul>
+<h3 id="heading-8"><a class="anchor" href="#heading-8">#</a> 文件操作</h3>
+<p>在进行操作时我们不可能退出去在终端去cp、mv、&hellip;（其实也不是不行），因此还是最好在nvim中做。常规的方式是基于树的，也就是普通文件管理器的方式，但更多地通过一些快捷键完成。另外还有一些特殊的，提出通过文本编辑的方式来进行文件管理（这很vim了），效率会更高一些。</p>
+<h4 id="heading-9"><a class="anchor" href="#heading-9">#</a> 传统的</h4>
+<ul>
+<li><a href="https://github.com/nvim-neo-tree/neo-tree.nvim">neo-tree</a>：比较老牌的树状文件管理器，类似vscode的文件树，没什么缺点，我用了很久。</li>
+<li><a href="https://github.com/folke/snacks.nvim/blob/main/docs/explorer.md">snacks.explorer</a>：又是snacks的小组件，它其实是picker伪装成的一个文件树。缺点可能是可定性差了点，上面有个很丑（个人观点）的搜索框，但我没能找到怎么关闭。</li>
+<li><a href="https://github.com/mikavilpas/yazi.nvim">yazi.nvim</a>：将yazi内嵌在nvim的浮动窗口中，界面很好看，同时能够和yazi共用一套配置。搭配neo-tree用过一段时间，体验不错，但有了oil所以放弃了。</li>
+</ul>
+<h4 id="heading-10"><a class="anchor" href="#heading-10">#</a> 特殊的</h4>
+<ul>
+<li><a href="https://github.com/stevearc/oil.nvim">oil.nvim</a>：这是我目前在使用的插件。好处是文件管理操作类似普通的buffer，因此你可以在里面使用任何你自定义的快捷键。我一般使用<code>open_float</code>在浮动窗口中打开它。</li>
+<li><a href="https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-files.md#demo">mini.files</a>：mini的东西不会不好用。据传这是oil.nvim的更现代的替代品，但我没折腾明白它那个浮动窗口的逻辑，因此放弃。只能说是我不会用。</li>
+</ul>
+<h2 id="heading-11"><a class="anchor" href="#heading-11">#</a> 其他</h2>
+<p>其他就是一些比较零碎，但同样很有用的插件，这边就随便列列：</p>
+<ul>
+<li><a href="https://github.com/nvim-lualine/lualine.nvim">lualine.nvim</a>：一个比较美观的状态栏，用来替代原先的黑框框</li>
+<li><a href="https://github.com/folke/which-key.nvim">which-key.nvim</a>：写到这边才发现这个插件应该提前或者单独开一个标题的。它能够即时地提示快捷键键位，在快捷键多的情况下尤其好用。</li>
+<li><a href="https://github.com/folke/flash.nvim">flash.nvim</a>：按s在屏幕上使用标签跳转，很方便。</li>
+<li><a href="https://github.com/lewis6991/gitsigns.nvim">gitsigns.nvim</a>：能够显示git diff，用git是必备的</li>
+<li><a href="https://github.com/folke/todo-comments.nvim">todo_comments</a>：高亮显示TODO等标签，还能结合其他插件进行搜索</li>
+<li><a href="https://github.com/HiPhish/rainbow-delimiters.nvim">rainbow-delimiters.nvim</a>：可能略冷门，但相当好用的插件，对不同层次的括号添加不同颜色，方面找到没闭合或多余的括号（开发时很常见但头疼的场合）</li>
+<li><a href="https://github.com/echasnovski/mini.nvim">mini.nvim</a>：mini的插件集合，可以全部装也可以单独装。我目前只使用了mini.pairs（来自动匹配括号）和mini.ai（一些增强操作）</li>
+<li><a href="https://github.com/lambdalisue/vim-suda">vim-suda</a>：也就是提供了<code>:w !sudo tee % &gt; /dev/null</code>同样的功能，但由于一些原因，该命令在nvim中无法奏效，见<a href="https://github.com/neovim/neovim/issues/12103">Github Issue</a>。而用了这个插件至少能在nvim里输密码了。</li>
+<li><a href="https://github.com/utilyre/barbecue.nvim">barbecue.nvim</a>：今天才发现它已经像名字一样barbecue（archived）了，但是依然能用。作用是在编辑器顶部显示一个顶栏，提示一下代码层次（和vscode那样）。要说有用还真没什么用，更多地是一个装饰作用。</li>
+</ul>
+</article>
+    </div>
+  </body>
+</html>
