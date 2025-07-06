@@ -1,0 +1,144 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>从一次乌龙事件讲firefox debug</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>从一次乌龙事件讲firefox debug</h1>
+        <p>2025-07-06 22:36:32</p>
+      </div>
+      <article><p>在firefox升级到140后，发现tab栏和很多UI（包括菜单）中的文本都无法显示了。于是对firefox进行debug，主要利用了firefox的浏览器工具箱，它可以用下面的方式打开。</p>
+<ol>
+<li>按F12，打开开发者工具</li>
+<li>点击三个点（<code>...</code>）-&gt; 设置</li>
+<li>在高级设置中勾选「启用远程调试」和上面的选项「启用浏览器界面及附加组件的调试工具箱」</li>
+<li>CTRL+ALT+SHIFT+I，会弹出一个确认窗口，提示「检测到一个要求进行远程调试连接的传入请求。远程客户端可能通过您的浏览器进行完全控制！允许连接？」，点击确定，即可打开浏览器工具箱。</li>
+</ol>
+<p>浏览器工具箱相比普通的开发者工具的优势在于它能对firefox本身的UI进行debug，从而可以更清楚地看到和调整各种UI元素的CSS属性。经过debug发现字体大小（font-size）被设置为了<code>-0.152778</code>。</p>
+<p>为什么说是乌龙呢，因为最后发现这是一个长期存在于我的shell配置文件中的错误的环境变量导致的，也就是：</p>
+<pre><code class="language-shell">export GDK_DPI_SCALE=-1
+</code></pre>
+<p>对于GTK应用缩放有两个环境变量：一个是<code>GDK_SCALE</code>，另一个是<code>GDK_DPI_SCALE</code>。前者控制UI元素的缩放，而后者只影响文本。</p>
+<p>我也不知道当初（很久远）为何会将<code>GDK_DPI_SCALE</code>设置为<code>-1</code>，但是在firefox140之前并没有遇到问题，因此也就没有管它。我猜想是GTK对非法的环境变量做了特殊处理，从而能够fallback到1。在firefox升级到140后，将负数的<code>GDK_DPI_SCALE</code>作为一个正常值去计算最终的文本大小，从而得到了<code>-0.152778</code>这个神奇的数字。至于为何是这个数字就不得而知了。</p>
+</article>
+    </div>
+  </body>
+</html>
