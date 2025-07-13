@@ -1,0 +1,191 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>wayland如何处理事件</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>wayland如何处理事件</h1>
+        <p>2025-07-13 17:25:23</p>
+      </div>
+      <article><p>wayland采用事件回调机制。</p>
+<p>与X在服务端渲染不同，wayland中客户端负责渲染操作，而wayland服务器只负责将客户端渲染的内容同步到屏幕上，也就是合成。所以wayland服务器也可以叫做合成器/混成器，或compositor。</p>
+<p>wayland要使客户端和服务端能够沟通，就需要协商好信息的格式，这也就是协议。协议包括了函数名和参数名称以及格式。一个wayland协议是一个xml文件，它可以通过扫描器（wayland-scanner）转成<code>.h</code>格式的C头文件，从而被C/C++调用。</p>
+<p>协议中，将服务端发往客户端的通知叫做event，而把客户端发往服务端的消息叫做request。</p>
+<p>为了处理客户端请求，服务端需要运行一个event_loop，而在这个循环中的主要工作就是处理事件回调。</p>
+<p>事件回调处理中有几个主要概念：</p>
+<ul>
+<li>wl_listener：事件的监听器。</li>
+<li>wl_signal：信号，通常由协议提供</li>
+<li>callback：也就是回调函数</li>
+</ul>
+<p>通常先将callback传递进wl_listener的notify中，然后用<code>wl_add_signal</code>函数将signal绑定到listener。表明该listener将监听请求，并在请求发生时执行回调函数。</p>
+<p>回调函数的声明大致如下：</p>
+<pre><code class="language-cpp">void callback(wl_listener* listener, void* data);
+</code></pre>
+<p>在编写一个callback时，需要获取与这个事件有关的一些对象，并对这些对象执行操作。我们可以使用一个神奇的宏<code>wl_container_of(listener, sample, member)</code>来获取到存放着这个listener的结构体/类的实例指针。宏的定义如下：</p>
+<pre><code class="language-cpp">#define wl_container_of(ptr, sample, member)				\
+	(WL_TYPEOF(sample))((char *)(ptr) -				\
+			     offsetof(WL_TYPEOF(*sample), member))
+</code></pre>
+<p>虽然很神奇但也很简单，就是传入的listener地址减去listener在对象中的偏移，从而获取到这个对象的地址。</p>
+<p><code>data</code>也就是客户端的传参，根据事件不同，一般可以将其强转成协议头文件提供的某个结构体指针。</p>
+<p>在实际代码中，使用这个宏需要将事件的listener和所有事件需要用到的成员包裹在同一个结构体当中，因此一旦事件一多，就会导致代码冗长，样板代码多，且很难抽象。</p>
+<p>为了应对这种情况，可以使用一个对象，可以取名叫做EventManager（或其他的什么东西），然后创建一些方法：</p>
+<pre><code class="language-cpp">class EventManager {
+public:
+
+  static std::unique_ptr&lt;EventManager&gt; init();
+
+  template&lt;typename F&gt;
+  void register_signal(wl_signal* signal, F f, void* data) {
+    auto handler = std::make_unique&lt;EventHandler&gt;();
+    auto listener = wl_listener {};
+
+    handler-&gt;listener = listener;
+    handler-&gt;listener.notify = f;
+    wl_signal_add(signal, &amp;handler-&gt;listener);
+
+    this-&gt;handlers[&amp;handler-&gt;listener] = std::move(handler);
+  }
+
+  template&lt;typename T&gt;
+  T get(wl_listener* listener) {
+    return static_cast&lt;T&gt;(this-&gt;handlers[listener]);
+  }
+
+private:
+  std::unordered_map&lt;wl_listener*, std::unique_ptr&lt;EventHandler&gt;&gt; handlers;
+};
+
+</code></pre>
+<p>其中EventHandler如下：</p>
+<pre><code class="language-cpp">class EventHandler {
+public:
+  wl_listener listener;
+  void* data;
+};
+
+</code></pre>
+<p>这样做的好处在于无需在结构体中创建很多的listener，而只需要在注册回调时指定关联的结构体即可。</p>
+</article>
+    </div>
+  </body>
+</html>

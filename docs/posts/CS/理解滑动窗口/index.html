@@ -1,0 +1,175 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>理解滑动窗口</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>理解滑动窗口</h1>
+        <p>2025-07-08 21:54:06</p>
+      </div>
+      <article><p>滑动窗口是一种数据结构，常用于流量控制。</p>
+<h2 id="heading"><a class="anchor" href="#heading">#</a> 流量控制</h2>
+<p>流量控制的目的是使得发送方和接收方的速度统一。为此，需要接收方能够通过某种方式来对发送方发送速度做出反馈。</p>
+<p>最简单的一种方式也就是停止-等待，简称停等。</p>
+<p>停等的流程大概如下：</p>
+<ul>
+<li>发送方发送一个分组，然后等待</li>
+<li>一段时间后，接收方收到分组，然后向发送方发送ACK</li>
+<li>发送方收到确认消息，继续发送下一个分组</li>
+</ul>
+<p>可以预见到的是，这种方式效率很低。</p>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 滑动窗口控制原理</h2>
+<p>对于流量控制，需要维持两个滑动窗口，分别是发送窗口和接收窗口。</p>
+<p>只有当分组在发送窗口当中时，发送方才能发送该分组。当接收方收到分组时，将接收窗口向后移动，并向发送方发送确认消息。当发送方收到接收消息时，向后移动发送窗口。</p>
+<h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 滑动窗口协议分类</h2>
+<h3 id="-"><a class="anchor" href="#-">#</a> 停止-等待协议</h3>
+<p>其实停止-等待协议在上面已经讲过。如果使用滑动窗口来实现的话，也就是发送窗口和滑动窗口大小都为1。此时只有发送方只有等到确认消息到达才能继续发送，而接收方一次只能收到一个分组。</p>
+<p>停止等待协议的缺点是信道利用率很低：</p>
+<p>$$U=\frac{数据传输时间T_D}{数据传输时间T_D+RTT+确认消息传输时间T_A}$$</p>
+<p>特别是在传输距离很长（RTT大）和带宽很大（发送时间短）的情况下，信道利用率尤其低下。</p>
+<p>为此，产生了连续ARQ协议，即一次发送多帧，分为后退N帧协议和选择重传协议。</p>
+<h3 id="arq"><a class="anchor" href="#arq">#</a> 连续ARQ协议</h3>
+<p>由于一次发送多个分组，因此无法保证到达分组的次序，为此需要对分组编号。因此，需要一个额外的字段来捎带编号信息，这就是确认号。</p>
+<p>对于ARQ协议的确认号，有$$发送窗口大小+接收窗口大小&lt;=2^n$$
+其中n是确认号的二进制位数。</p>
+<h4 id="n"><a class="anchor" href="#n">#</a> 后退N帧协议</h4>
+<p>后退N帧协议（GBN）的接收窗口仍为1，但发送窗口为N。因此所有到达的帧需要一个缓存区，并对所有接收的帧依次进行确认。</p>
+<p>由于后退N帧协议的接收窗口为1，则GBN发送窗口大小遵循：</p>
+<p>$$发送窗口大小&lt;=2^{n}-1$$</p>
+<p>在后退N帧协议中，一次性发送等同于发送窗口的分组。接收方对收到的分组进行缓存，然后根据接收窗口当前指向的分组依次进行确认，然后发送一条确认消息给发送方。如<code>ACK10</code>表示第十个分组和之前的所有分组均已收到。</p>
+<p>为了减少开销，接收方可以进行累计确认，也就是不需要对每一个收到的分组都发送一条确认消息。如接收方成功接收了<code>0-4</code>的5个分组，而只需要发送一条<code>ACK5</code>。</p>
+<p>当接收方分组有误，会丢弃这个分组及之后收到的所有分组。发送方未收到确认消息，会重发成功分组后的N个分组，因此表现为回退了N个帧，故称为回退N帧协议。</p>
+<p>回退N帧协议信道利用率较高，但当信道质量极差时，会导致频繁回退和连续重发，在这种情况下效率可能低于停等协议。</p>
+<h4 id="heading-3"><a class="anchor" href="#heading-3">#</a> 选择重传协议</h4>
+<p>另一个连续ARQ协议是选择重传协议。它的发送窗口和接收窗口大小均不为1，并且有如下规则。</p>
+<ol>
+<li>发送窗口和接收窗口大小加起来不超过2的n次方（即连续ARQ协议的规则）</li>
+<li>接收窗口大小不大于发送窗口大小（发送的帧一次最多有N个，接受窗口不会收到比这个更多的帧，因此没有意义）</li>
+</ol>
+<p>大多数情况下，选择重传协议的发送窗口和接收窗口等大。</p>
+<p>相比后退N帧协议，选择重传协议并不依次确认，而是将收到的帧和接收窗口中的帧进行比较，当分组有误时，向发送方发送NAK消息。如<code>NAK10</code>表示第10个分组有误，需要发送方重新发送该帧。</p>
+<p>对于一次性发送多帧的协议，都有如下的信道利用率计算公式：</p>
+<p>$$U=\frac{发送窗口大小N*数据传输时间T_D}{数据传输时间T_D+RTT+确认消息传输时间T_A}$$</p>
+<p>因此当发送窗口大小很大时，能够使信道利用率为1（即发送方一刻不停地在发送）。另外，从这个公式中也可以看出，信道利用率和发送窗口大小成正比。因此，在滑动窗口总大小（确认号位数）一致时，回退N帧协议在理想情况下的效率要高于选择重传协议。但在误码率较高的情况下，选择重传协议更有优势（因为重传成本要低于回退）。</p>
+</article>
+    </div>
+  </body>
+</html>
