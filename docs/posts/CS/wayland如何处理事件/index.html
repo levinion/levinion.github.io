@@ -168,7 +168,7 @@ public:
 
   template&lt;typename T&gt;
   T get(wl_listener* listener) {
-    return static_cast&lt;T&gt;(this-&gt;handlers[listener]);
+    return static_cast&lt;T&gt;(this-&gt;handlers[listener]-&gt;data);
   }
 
 private:

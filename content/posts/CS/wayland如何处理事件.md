@@ -62,7 +62,7 @@ public:
 
   template<typename T>
   T get(wl_listener* listener) {
-    return static_cast<T>(this->handlers[listener]);
+    return static_cast<T>(this->handlers[listener]->data);
   }
 
 private:
