@@ -13,15 +13,30 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "CS/wayland如何处理事件.md",
+                "file": "CS/Wayland合成器相关概念（Wlroots）.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "wayland如何处理事件"
+              "title": "Wayland合成器相关概念（Wlroots）"
+            }
+          },
+          {
+            "id": "94dd0b5028c4470f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CS/Wayland合成器相关概念（Wlroots）.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Wayland合成器相关概念（Wlroots）"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -139,6 +154,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
+      "bases:创建新数据库": false,
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
       "canvas:新建白板": false,
@@ -149,10 +165,16 @@
       "quickadd:QuickAdd": false
     }
   },
-  "active": "1e6a690c48fe3a72",
+  "active": "94dd0b5028c4470f",
   "lastOpenFiles": [
-    "CS/理解滑动窗口.md",
     "CS/wayland如何处理事件.md",
+    "CS/Wayland合成器相关概念（Wlroots）.md",
+    "drafts/bimap.md",
+    "drafts/cpp实现hash.md",
+    "CS/理解滑动窗口.md",
+    "drafts/bwrap hacks.md",
+    "drafts/Ura README.md",
+    "drafts/Ura.md",
     "Linux/从一次乌龙事件讲firefox debug.md",
     "Linux/nvim插件的一些选择.md",
     "drafts/Docker-and-Kubernetes-学习笔记.md",
@@ -170,13 +192,7 @@
     "drafts/understanding systemd.md",
     "drafts/understanding ssh.md",
     "drafts/understanding grub.md",
-    "drafts/bwrap hacks.md",
     "drafts/yt-dlp hacks.md",
-    "drafts/加速zsh.md",
-    "Linux/迁移btrfs磁盘.md",
-    "Linux/understanding udev.md",
-    "Linux/understanding D-Bus.md",
-    "Linux/understanding initramfs.md",
     "templates/new_draft.md~",
     "templates/4913",
     "templates",

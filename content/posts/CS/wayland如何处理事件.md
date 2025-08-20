@@ -45,41 +45,46 @@ void callback(wl_listener* listener, void* data);
 ```cpp
 class EventManager {
 public:
-
-  static std::unique_ptr<EventManager> init();
-
   template<typename F>
-  void register_signal(wl_signal* signal, F f, void* data) {
-    auto handler = std::make_unique<EventHandler>();
-    auto listener = wl_listener {};
+  void register_callback(wl_signal* signal, F f, void* data) {
+    auto listener = std::make_unique<wl_listener>();
+    listener->notify = f;
+    wl_signal_add(signal, listener.get());
 
-    handler->listener = listener;
-    handler->listener.notify = f;
-    wl_signal_add(signal, &handler->listener);
-
-    this->handlers[&handler->listener] = std::move(handler);
+    this->storage[listener.get()] = data;
+    if (!this->listeners.contains(data)) {
+      this->listeners[data] = std::vector<std::unique_ptr<wl_listener>> {};
+    }
+    this->listeners[data].push_back(std::move(listener));
   }
 
+  inline static std::unique_ptr<UraRuntime> init() {
+    return std::make_unique<UraRuntime>();
+  }
+
+  // fetch resource by listener
   template<typename T>
-  T get(wl_listener* listener) {
-    return static_cast<T>(this->handlers[listener]->data);
+  inline T fetch(wl_listener* listener) {
+    return static_cast<T>(this->storage[listener]);
+  }
+
+  // remove all items linked with data, this will also delete data itself
+  template<typename T>
+  void remove(T data) {
+    for (auto& listener : this->listeners[data]) {
+      wl_list_remove(&listener->link);
+      this->storage.erase(listener.get());
+    }
+    this->listeners.erase(data);
   }
 
 private:
-  std::unordered_map<wl_listener*, std::unique_ptr<EventHandler>> handlers;
+  // listener to data
+  std::unordered_map<wl_listener*, void*> storage;
+  // data to listeners
+  std::unordered_map<void*, std::vector<std::unique_ptr<wl_listener>>>
+    listeners;
 };
-
-```
-
-其中EventHandler如下：
-
-```cpp
-class EventHandler {
-public:
-  wl_listener listener;
-  void* data;
-};
-
 ```
 
 这样做的好处在于无需在结构体中创建很多的listener，而只需要在注册回调时指定关联的结构体即可。

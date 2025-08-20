@@ -151,38 +151,46 @@
 <p>为了应对这种情况，可以使用一个对象，可以取名叫做EventManager（或其他的什么东西），然后创建一些方法：</p>
 <pre><code class="language-cpp">class EventManager {
 public:
-
-  static std::unique_ptr&lt;EventManager&gt; init();
-
   template&lt;typename F&gt;
-  void register_signal(wl_signal* signal, F f, void* data) {
-    auto handler = std::make_unique&lt;EventHandler&gt;();
-    auto listener = wl_listener {};
+  void register_callback(wl_signal* signal, F f, void* data) {
+    auto listener = std::make_unique&lt;wl_listener&gt;();
+    listener-&gt;notify = f;
+    wl_signal_add(signal, listener.get());
 
-    handler-&gt;listener = listener;
-    handler-&gt;listener.notify = f;
-    wl_signal_add(signal, &amp;handler-&gt;listener);
-
-    this-&gt;handlers[&amp;handler-&gt;listener] = std::move(handler);
+    this-&gt;storage[listener.get()] = data;
+    if (!this-&gt;listeners.contains(data)) {
+      this-&gt;listeners[data] = std::vector&lt;std::unique_ptr&lt;wl_listener&gt;&gt; {};
+    }
+    this-&gt;listeners[data].push_back(std::move(listener));
   }
 
+  inline static std::unique_ptr&lt;UraRuntime&gt; init() {
+    return std::make_unique&lt;UraRuntime&gt;();
+  }
+
+  // fetch resource by listener
   template&lt;typename T&gt;
-  T get(wl_listener* listener) {
-    return static_cast&lt;T&gt;(this-&gt;handlers[listener]-&gt;data);
+  inline T fetch(wl_listener* listener) {
+    return static_cast&lt;T&gt;(this-&gt;storage[listener]);
+  }
+
+  // remove all items linked with data, this will also delete data itself
+  template&lt;typename T&gt;
+  void remove(T data) {
+    for (auto&amp; listener : this-&gt;listeners[data]) {
+      wl_list_remove(&amp;listener-&gt;link);
+      this-&gt;storage.erase(listener.get());
+    }
+    this-&gt;listeners.erase(data);
   }
 
 private:
-  std::unordered_map&lt;wl_listener*, std::unique_ptr&lt;EventHandler&gt;&gt; handlers;
+  // listener to data
+  std::unordered_map&lt;wl_listener*, void*&gt; storage;
+  // data to listeners
+  std::unordered_map&lt;void*, std::vector&lt;std::unique_ptr&lt;wl_listener&gt;&gt;&gt;
+    listeners;
 };
-
-</code></pre>
-<p>其中EventHandler如下：</p>
-<pre><code class="language-cpp">class EventHandler {
-public:
-  wl_listener listener;
-  void* data;
-};
-
 </code></pre>
 <p>这样做的好处在于无需在结构体中创建很多的listener，而只需要在注册回调时指定关联的结构体即可。</p>
 </article>
