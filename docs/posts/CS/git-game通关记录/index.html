@@ -1,0 +1,588 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>git-game通关记录</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>git-game通关记录</h1>
+        <p>2025-08-26 20:59:07</p>
+      </div>
+      <article><p><a href="https://github.com/git-game/git-game">git-game</a> 是个很有意思的项目，能够锻炼一些常用的 Git 技能。本文简单做下通关记录。</p>
+<h2 id="level-1"><a class="anchor" href="#level-1">#</a> Level 1</h2>
+<h3 id="heading"><a class="anchor" href="#heading">#</a> 问题</h3>
+<p>Your first task is to checkout the commit whose commit message is the answer to this question:</p>
+<blockquote>
+<p>When a programmer is born, what is the first thing he/she learns to say?</p>
+</blockquote>
+<h3 id="heading-1"><a class="anchor" href="#heading-1">#</a> 分析</h3>
+<p>本关需要我们切换到对应问题答案的提交：</p>
+<blockquote>
+<p>当一个程序员出生之后，他学会说的第一件事是什么？</p>
+</blockquote>
+<pre><code class="language-shell">master ❯ git log
+commit d851edda3009332dd5d3f8f949a102f279dad809 (HEAD -&gt; master, origin/master, origin/HEAD)                                                                                                          
+Author: Henry Garcia &lt;hgarc014@ucr.edu&gt;                                                                                                                                                               
+Date:   Wed Jun 10 21:03:04 2015 -0700                                                                                                                                                                
+                                                                                                                                                                                                      
+    updated README for badge notification                                                                                                                                                             
+                                                                                                                                                                                                      
+commit 7c8c3ccc2f4bb118a657f1f7a7ab4e163d1b7a30                                                                                                                                                       
+Author: Henry Garcia &lt;hgarc014@ucr.edu&gt;                                                                                                                                                               
+Date:   Wed Jun 10 20:57:08 2015 -0700                                                                                                                                                                
+                                                                                                                                                                                                      
+    added level1                                                                                                                                                                                      
+                                                                                                                                                                                                      
+commit 228389a54073ed1e6ec98e3bfa59039b416efd4d                                                                                                                                                       
+Author: Henry Garcia &lt;hgarc014@ucr.edu&gt;                                                                                                                                                               
+Date:   Wed Jun 10 20:56:34 2015 -0700
+
+    added welcome screen
+
+commit db99f2d9df4b2288d29a97d2d04a1703b4f3c107
+Author: Henry Garcia &lt;hgarc014@ucr.edu&gt;
+Date:   Wed Jun 10 20:55:35 2015 -0700
+
+    updated README
+
+commit 640273807f9bac8af03575f82b788663d4b99927
+Author: Henry Garcia &lt;hgarc014@ucr.edu&gt;
+Date:   Wed Jun 10 20:55:07 2015 -0700
+
+    Hello World!
+
+commit 8cafb7c87b129686da362b14c3f3c750c1fe4bf5 (origin/vector, origin/map, origin/SteveJobs2014, origin/Kevin, origin/KenThompson2014, origin/Daniel, origin/BillGates2014)
+Author: Henry Garcia &lt;hgarc014@ucr.edu&gt;
+Date:   Sun Nov 30 18:29:35 2014 -0800
+
+    Initial commit
+</code></pre>
+<p>当然是 Hello World！所以使用哈希（可以只是开头的一部分）切到对应的提交。</p>
+<pre><code class="language-shell">❯ git checkout 640273807f
+Note: switching to '640273807f'.
+</code></pre>
+<h2 id="level-2"><a class="anchor" href="#level-2">#</a> Level 2</h2>
+<h3 id="heading-2"><a class="anchor" href="#heading-2">#</a> 问题</h3>
+<p>We want to get to a branch whose name is the answer to this riddle:
+I am a creature that is smaller than man, but many times more in number.
+In code, my appearance can be subtle and no matter where I am found, I am unwanted.</p>
+<p>What am I?</p>
+<h3 id="heading-3"><a class="anchor" href="#heading-3">#</a> 分析</h3>
+<p>谜题的翻译大概是：</p>
+<blockquote>
+<p>我是一种生物，比人类小，但数量多得多。 在代码中，我的出现可能很微妙，无论在哪里被发现，我都不受欢迎。</p>
+</blockquote>
+<p>不需要查看 branch 都知道它是 bug。但我们最好还是看看。</p>
+<pre><code class="language-shell">@64027380 ❯ git branch
+* (HEAD detached at 6402738)
+  master
+</code></pre>
+<p>可以看到此时并没有其他分支，但这只是本地。让我们看看远程分支。</p>
+<pre><code class="language-shell"> @64027380 ❯ git branch -r
+  origin/BillGates2014
+  origin/Daniel
+  origin/HEAD -&gt; origin/master
+  origin/Henry
+  origin/KenThompson2014
+  origin/Kevin
+  origin/LinusTorvalds2014
+  origin/Mike
+  origin/SteveJobs2014
+  origin/array
+  origin/bug
+  origin/code4life
+  origin/keyboard
+  origin/map
+  origin/master
+  origin/mouse
+  origin/tree
+  origin/trees
+  origin/vector
+</code></pre>
+<p>这下有了，所以切到 bug 分支。</p>
+<pre><code class="language-shell">@64027380 ❯ git checkout origin/bug
+Previous HEAD position was 6402738 Hello World!
+HEAD is now at 98491ed Update README.md
+</code></pre>
+<h2 id="level-3"><a class="anchor" href="#level-3">#</a> Level 3</h2>
+<h3 id="heading-4"><a class="anchor" href="#heading-4">#</a> 问题</h3>
+<p>Sometimes we like to blame others for introducing bugs in our code.
+Think you can find out who introduced a bug into our file cool.cpp?
+We think he had something to do with the development of git.
+And from what we hear he also made a branch under his name.
+Checkout to that branch after you find out who the culprit is.</p>
+<p>If you are still confused, this link might <a href="http://git-scm.com/docs/git-blame">help</a></p>
+<h3 id="heading-5"><a class="anchor" href="#heading-5">#</a> 分析</h3>
+<p>问题翻译如下：</p>
+<blockquote>
+<p>有时候我们喜欢责怪别人，说他们往我们的代码里引入了 bug。</p>
+<p>你能找到是谁在我们的 cool.cpp 文件里引入了一个 bug 吗？ 我们觉得他与 Git 的开发有关系。</p>
+<p>而且我们听说，他还用自己的名字创建了一个分支。</p>
+<p>找到这个罪魁祸首之后，请切换到那个分支。</p>
+</blockquote>
+<p>我们可以看到当前路径下的文件：</p>
+<pre><code class="language-shell">@98491edb ❯ ls
+cool.cpp  LICENSE  README.md  remember
+</code></pre>
+<p>让我们看一下 <code>cool.cpp</code> 的内容：</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+
+using namespace std;
+
+int main()
+{
+   string mesg = &quot;Hello! Who are you?&quot;;
+   string input;
+   cout &lt;&lt; mesg &lt;&lt; endl;
+   cin &gt;&gt; input;
+   cout &lt;&lt; &quot;Loops are fun!&quot; &lt;&lt; endl;
+   while(1);
+   string reply = &quot;Well, &quot; + input + &quot;, we hope you are having fun with our git-game!&quot;;
+   cout &lt;&lt; reply &lt;&lt; endl; 
+}
+</code></pre>
+<p>可见，问题出现在 <code>while(1)</code>。</p>
+<p>然后可以 blame 一下 <code>cool.cpp</code>，看看是哪个小傻瓜写了这句代码：</p>
+<pre><code class="language-shell">@98491edb ❯ git blame cool.cpp
+ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800  1) #include &lt;iostream&gt;
+ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800  2) 
+ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800  3) using namespace std;
+ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800  4) 
+ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800  5) int main()
+ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800  6) {
+ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800  7)    string mesg = &quot;Hello! Who are you?&quot;;
+ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800  8)    string input;
+ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800  9)    cout &lt;&lt; mesg &lt;&lt; endl;
+ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800 10)    cin &gt;&gt; input;
+3922a6d8 (LinusTorvalds2014 2014-12-09 12:37:10 -0800 11)    cout &lt;&lt; &quot;Loops are fun!&quot; &lt;&lt; endl;
+3922a6d8 (LinusTorvalds2014 2014-12-09 12:37:10 -0800 12)    while(1);
+ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800 13)    string reply = &quot;Well, &quot; + input + &quot;, we hope you are having fun with our git-game!&quot;;
+ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800 14)    cout &lt;&lt; reply &lt;&lt; endl; 
+ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800 15) }
+ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800 16) 
+</code></pre>
+<pre><code class="language-shell">3922a6d8 (LinusTorvalds2014 2014-12-09 12:37:10 -0800 12)    while(1);
+</code></pre>
+<p><code>LinusTorvalds2014</code>，哦，是 Linus，那没事了。</p>
+<p>然后根据题目指示切换到 Linus 的分支：</p>
+<pre><code class="language-shell">@98491edb ❯ git checkout origin/LinusTorvalds2014
+Previous HEAD position was 98491ed Update README.md
+HEAD is now at 1254268 added level 5
+</code></pre>
+<h2 id="level-4"><a class="anchor" href="#level-4">#</a> Level 4</h2>
+<h3 id="heading-6"><a class="anchor" href="#heading-6">#</a> 题目</h3>
+<p>Looks like you found the branch of the evil Mastermind.
+Things may start to get a little more challenging&hellip;</p>
+<p>The next clue you are looking for &ndash;
+is in a file you choose to ignore!</p>
+<h3 id="heading-7"><a class="anchor" href="#heading-7">#</a> 分析</h3>
+<p>不太需要翻译了。我们要找的是一个被忽略的文件，我想这应该是 <code>.gitignore</code>。</p>
+<p>看下文件内容，啥，我们通关了？</p>
+<h2 id="level-5"><a class="anchor" href="#level-5">#</a> Level 5</h2>
+<h3 id="heading-8"><a class="anchor" href="#heading-8">#</a> 题目</h3>
+<p>上关的 <code>.gitignore</code> 内容为：</p>
+<pre><code class="language-.gitignore"># welcome to the ignore file!!
+
+#``Level 5``
+
+# This file is hidden by default, 
+# but did you know you have some branches that aren't shown to you,
+# when you check the list of branches?
+#
+# For your next clue...
+# Which abstract data type tends to implement sets and maps?? 
+# The answer is the same answer to this riddle:
+#
+#   I am both mother and father.
+#   I am seldom still
+#   yet I never wander.
+#   I never birth nor nurse.
+#   
+#   What am I?
+#
+# Afterwards... well, you
+# know, checkout to the answer. 
+
+*.rem
+a.out
+</code></pre>
+<h3 id="heading-9"><a class="anchor" href="#heading-9">#</a> 分析</h3>
+<p>问题翻译如下：</p>
+<blockquote>
+<p>你的下一个线索是……</p>
+<p>哪种抽象数据类型倾向于实现集合（sets）和映射（maps）？</p>
+<p>答案也同样是这个谜语的答案：</p>
+<p>我既是母亲也是父亲。 我很少静止，但我从不游荡。 我从不生育或哺乳。
+我是什么？</p>
+<p>然后……你懂的，切换到答案。</p>
+</blockquote>
+<p>有点抽象，但这是树。让我们切换到对应树的分支。</p>
+<pre><code class="language-shell">@12542687 ❯ git checkout origin/tree
+Previous HEAD position was 1254268 added level 5
+HEAD is now at f5c5727 added git merge resource
+</code></pre>
+<h2 id="level-6"><a class="anchor" href="#level-6">#</a> Level 6</h2>
+<h3 id="heading-10"><a class="anchor" href="#heading-10">#</a> 问题</h3>
+<p>Welcome to the &ldquo;tree&rdquo; branch.
+Looks like good ol&rsquo; Linus modified the &ldquo;nextclue_input.cpp&rdquo; file.
+Normally, when ran with the shell script &ldquo;outputclue.sh&rdquo;, the &ldquo;nextclue_input.cpp&rdquo; file would give us the next hint.</p>
+<p>Maybe, you should try running the shell script with the &ldquo;nextclue_input.cpp&rdquo; file and see what happens&hellip;</p>
+<p>You can run the script by running the command &ldquo;./outputclue.sh FILE&rdquo; .
+If you are on Windows, it&rsquo;s okey to use <code>git-bash</code> that is installed with <a href="https://msysgit.github.io/">msysgit</a>.</p>
+<h3 id="heading-11"><a class="anchor" href="#heading-11">#</a> 分析</h3>
+<p>翻译如下：</p>
+<blockquote>
+<p>欢迎来到 &ldquo;tree&rdquo; 分支。</p>
+<p>看来是老朋友林纳斯（Linus）修改了 &ldquo;nextclue_input.cpp&rdquo; 文件。</p>
+<p>通常，当和 &ldquo;outputclue.sh&rdquo; 这个 shell 脚本一起运行时，&ldquo;nextclue_input.cpp&rdquo; 文件会给出我们的下一个提示。</p>
+<p>或许，你应该试着运行这个脚本，并使用 &ldquo;nextclue_input.cpp&rdquo; 文件，看看会发生什么……</p>
+<p>你可以使用命令 &ldquo;./outputclue.sh FILE&rdquo; 来运行这个脚本。</p>
+</blockquote>
+<p>虽然它让我们运行某个 shell 脚本，但最好在运行前审查下内容：</p>
+<pre><code class="language-shell">#!/bin/bash
+if [ -z $1 ]; then 
+  echo &quot;well, someone didn't want to run the script with a file...&quot;;
+  exit;
+fi
+
+file=$1
+bug=7c85d987a917c2a555d1391426978f05
+mesg=&quot;Level 7: \n Linus has been here...\nI love messing with these amateur programmers!!\nIf you want some real fun, then you should try resolving a conflict between this branch (tree) and code4life.\nI introduced a little bug that you should fix in the conflict. &gt;:)\nAfter you merge these 2 files you should run the shell script again!!\n\nGood Luck!!!\n\n Hint: https://help.github.com/articles/resolving-a-merge-conflict-from-the-command-line/ &quot;
+merges=$(git log --format=%h --merges | head -1)
+csum=&quot;md5sum&quot;
+if [ $(echo &quot;$OSTYPE&quot; | grep darwin) ];then
+    csum=&quot;md5&quot;
+fi
+
+if [ &quot;$file&quot; = &quot;nextclue_input.cpp&quot; ];then 
+  if [ ${merges} ]; then 
+    while read p; do 
+      for w in $p;do 
+        if [ `echo $w | $csum | awk '{print $1}'` = $bug ];then 
+          echo -e $mesg; 
+          exit; 
+        fi; 
+      done;
+    done &lt; $file ;
+    echo -e &quot;Well, congratulations!! You fixed my conflict!!\nIf you would like to continue, then you should checkout to the $(echo 90mP8ouQHsNe | tr -d '0-9A-Z') branch!!\n&quot; ;
+   else 
+     echo -e $mesg; 
+     exit;
+   fi; 
+else 
+  echo &quot;Looks like you passed in the wrong file&quot;;
+fi
+</code></pre>
+<p>看上去它没做什么坏事，让我们执行下。很好，通关了。</p>
+<h2 id="level-7"><a class="anchor" href="#level-7">#</a> Level 7</h2>
+<h3 id="heading-12"><a class="anchor" href="#heading-12">#</a> 问题</h3>
+<p>上关的执行结果如下：</p>
+<pre><code class="language-shell">@f5c57273 ❯ ./outputclue.sh nextclue_input.cpp
+Level 7: 
+ Linus has been here...
+I love messing with these amateur programmers!!
+If you want some real fun, then you should try resolving a conflict between this branch (tree) and code4life.
+I introduced a little bug that you should fix in the conflict. &gt;:)
+After you merge these 2 files you should run the shell script again!!
+
+Good Luck!!!
+
+ Hint: https://help.github.com/articles/resolving-a-merge-conflict-from-the-command-line/
+</code></pre>
+<h3 id="heading-13"><a class="anchor" href="#heading-13">#</a> 分析</h3>
+<p>大意是叫我们解决当前分支（tree）和 <code>code4life</code> 分支的冲突，Linus 还好心地引入了一个 bug。<del>Fuck u Linus</del>。</p>
+<p>先将 <code>code4life</code> 分支 merge 到当前分支上。</p>
+<pre><code class="language-shell">@f5c57273 ❯ git merge origin/code4life
+Auto-merging nextclue_input.cpp
+CONFLICT (content): Merge conflict in nextclue_input.cpp
+Automatic merge failed; fix conflicts and then commit the result.
+</code></pre>
+<p>提示有冲突需要解决，这里就用 <code>vim/nvim</code> 简单解决下。看到是 <code>nextclue_input.cpp</code> 中存在冲突：</p>
+<pre><code class="language-cpp">#include &lt;iostream&gt;
+
+using namespace std;
+//Level 9
+int main()
+{
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+
+    cout &lt;&lt; &quot;This file was useless, so I made it better...&quot; &lt;&lt; endl;
+    while(1);
+||||||| cf7fc90
+    cout &lt;&lt; &quot;This file was useless, so I made it better...&quot; &lt;&lt; endl;
+    while(1);
+=======
+    cout &lt;&lt; &quot;hope you resolved all your conflicts!!&quot; &lt;&lt; endl;
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/code4life
+    return 0;
+}
+</code></pre>
+<p>因为我设置了 <code>conflictstyle = diff3</code>，所以可能看起来有点奇怪。不过无所谓，让我们把它们全删了就行。</p>
+<p>PS：上面有个 <code>//Level 9</code>，看来将来我们还会用到这个文件。</p>
+<p>结果如下：</p>
+<pre><code class="language-shell">#include &lt;iostream&gt;
+
+using namespace std;
+// Level 9
+int main() {
+  cout &lt;&lt; &quot;hope you resolved all your conflicts!!&quot; &lt;&lt; endl;
+  return 0;
+}
+</code></pre>
+<p>然后提交。</p>
+<pre><code class="language-shell">~/cloned/git-game @f5c57273 merge ~1 ❯ git add nextclue_input.cpp
+~/cloned/git-game @f5c57273 merge +1 ❯ git commit -m &quot;fix merge conflict&quot;
+[detached HEAD 7d0f3e2] fix merge conflict
+</code></pre>
+<p>再次执行下上面的脚本，输出如下：</p>
+<pre><code class="language-shell">@7d0f3e29 ❯ ./outputclue.sh nextclue_input.cpp
+Well, congratulations!! You fixed my conflict!!
+If you would like to continue, then you should checkout to the mouse branch!!
+</code></pre>
+<p>好的，让我们切到 mouse 分支。</p>
+<pre><code class="language-shell">git checkout origin/mouse                                                                                                                                      20:28:23
+Warning: you are leaving 1 commit behind, not connected to
+any of your branches:
+
+  7d0f3e2 fix merge conflict
+
+If you want to keep it by creating a new branch, this may be a good time
+to do so with:
+
+ git branch &lt;new-branch-name&gt; 7d0f3e2
+
+HEAD is now at 9cc552e added level 8
+</code></pre>
+<h2 id="level-8"><a class="anchor" href="#level-8">#</a> Level 8</h2>
+<h3 id="heading-14"><a class="anchor" href="#heading-14">#</a> 问题</h3>
+<p>Looks like you resolved your conflict and found our branch, congrats!!</p>
+<p>Hmm&hellip;it seems this branch has a file that was seen before in another branch.
+Do you &ldquo;remember&rdquo; what it is?
+I think this file has something to do with the next clue, but it seems to be very ugly looking.
+Maybe if we compare the &ldquo;diff&quot;erences between this file and the file from before we&rsquo;ll know where to go next&hellip;</p>
+<h3 id="heading-15"><a class="anchor" href="#heading-15">#</a> 分析</h3>
+<blockquote>
+<p>嗯……这个分支好像有一个文件，我们在另一个分支见过。 你“记得”它是什么吗？</p>
+<p>我觉得这个文件跟下一个线索有关，但它看起来非常难看。</p>
+<p>也许我们比较一下这个文件和之前那个文件之间的“差异”（diff），就会知道下一步该去哪里了……</p>
+</blockquote>
+<p>题目中所指的文件是 <code>remember</code>。幸好我有做笔记，它在 <code>bug</code> 分支中出现过。先 diff 一下。</p>
+<pre><code class="language-shell">@9cc552e7 ❯ git diff origin/bug:remember remember
+diff --git a/remember b/remember
+index 584a931..76bd37c 100644
+--- a/remember
++++ b/remember
+@@ -2312,7 +2312,7 @@ C7EpVk1Cth5p2tKx0w58i ytUWbvyeysGWv jS4QWZkzlAN2m3EqLffpZiy1XM izQzulpiV Q5eNfJ7
+ mrLDUvQK6M 2bREkk3RREZe6Ulawm3SU KHtoKj6jzKwhFYPzhcx1O4Culugp 0UzKqH9CjHM8akQ156fOYAeUUFp McAAI BHuGYzuoqoTSY 7Rby9YLfIMMcysFELGcL1rLD QAo0CaRo22ZfTaf2k iu9KM9ukJ67 EtoBFF9N2Dup5prFQ1 B51i0Kr8 E0 DMNSoaoxG82QQ8moaDFXDP78adKHF zJOCaIjmJQI uAJIAjoPRXXeTY0RrjEPCf 6CPhhKGqtW0KJiZsQk C Wn38v CjzwY4IRYr7W gvlFT6Ng6vmQxLrQEoK
+ 5NKuMyGGyQum5oQkvP8Am08 OeNWMuTPJIpaBkK LupcmcIO4axxMfp8KnAo m7PFvaY9M5fAn9lfo7Bkm4PBvJJ01 ii2LvkHC8gJ EsHtRTZToBKe pA7ij1m1 bkgGGuQjorQhc0l3bkb7XUoJjII 5ul hxlFoWzySnS M nUlxc5wg2VNIz7lSuuCCG0WL DLeEp7X KsxntcYrDTeV 1psLl YTRf qxrKwPDzSEHbWaxVmXKYpM2dq jV7WELrcHoOQ9D0YQsyQhbtrtp0 Nws3h8dR9ZHAfw0Q2FFvoQd kZFclOzunHHX0k7HWEqS
+ 57EyTqwnFMX 3CmavTItFa9yjtSIjZ i1VTU06u9rj HShUtnwlqL7ZUZP0i8o7hq U0cS Cr9 sTRitmSvJ7pSDPdd5Emzh xKPGY7mUWTn972NHq HjtdwgQN45QNSZr fyYf 1kBsF5xzcRoyv5K08jlAfoc oG Byz6CAD G4rpwi7HbWlxa0tge moM1Mz9J522wnDDPfOKaj dfL1Mm0G 4k1mQ0P9wAkKiKtLXvj9 fFy2cyfV1c7wzv4uoIQa7fwntk0 rDBPY6sXDNxgAgUIYCwav oVMxzApB5BhLCpvWlIn
+-Sn In a branch named: Henry YtrydjKsYqebDoI3h bTINUeV6 pTVY8jnK2re HRwwNy25Ps6 u0YChCo5Jtw N3xkH3G nx aGo6yQTW RVZMsf3xk tBL0sG9GAR HQbyGYdqs i6dx1fyIPGJVciz8Z1NzdrvGE CKgkFauXqfKJmas cDLerWvBTRzUikmP2 0sqk2Xhie2DcIv KtCyYTlNx7WxJp6A2yox3r aJX4r7FpUhgsyGIwc prCCNx46GKVgzaerab3gXS7ieoOf1 Jp
++Sn The next clue is: YtrydjKsYqebDoI3h bTINUeV6 pTVY8jnK2re HRwwNy25Ps6 u0YChCo5Jtw N3xkH3G nx aGo6yQTW RVZMsf3xk tBL0sG9GAR HQbyGYdqs i6dx1fyIPGJVciz8Z1NzdrvGE CKgkFauXqfKJmas cDLerWvBTRzUikmP2 0sqk2Xhie2DcIv KtCyYTlNx7WxJp6A2yox3r aJX4r7FpUhgsyGIwc prCCNx46GKVgzaerab3gXS7ieoOf1 Jp
+ n9ec28c7rYYGTF W933ju5 pyH8PXHnKhlwLU0C2akSaPrlpprD spXXhVp6X A6dTg1fBfNBwSvp1sw91Dav67x8f8b Q DAUTWahNriDlArXunXMJ3b489 lcgvI2SViBLrCulZCwsi4kog 4rDVp 90SWto6WkU4Qj gANCojbKr1omMS3hm6p1csqHHdNqy Pw2DzY 0pbPL3KVDW uAUcbE65VsxI 84ZEhEm93tTliegI6tdEPZe H9BV dMk jf1pA12qB8v8 8ep8vfgV9Z a7WqNF5b
+ lDSkBLh Sy7L w4X8QJuiL yJ 9KjSn2C12NV 5E7H9S4M7LrV lgxJn1Q8xcnyprQ34g2tC7 Doc36AAsmi58xKa0 kRQntjBdrPfD0QLOj1m ChzWh7JLGBRU Xs446EYE71sHMjtbSsOW4LeVK hzcX391c0Kpyj5bL7sSI5NmE ZrBux2YhJypFB07T03xNWHnLSjXg vbtc3kwd Bkffu aQKZiKBMDgzNBYPnurwpk8 npGXcjZOa9TxIkobUwM8WzApgE pwPwX m7amF juCYRog
+ lMrAVrH6 ZzHYozHGN f fE5ficRh2 pMQ6rpXtT49gijgjsO5eykZ9A o 30Tz1Agt5XgV 6odhdhHyYpV8U ZV qc3xnKKPYmjkeJwNGlAtXj f65vcbrsDI7od0E 50EVbGO7iT8Nk2Tilx52wRddM9HeA U8pEHg21Y5CfYjtI5Mnz GZ4lwoqno2Yi13ca2346CG SdoH4FjPUwqidWnZJdDUgqXH2FhpRn lTAPlp8KmiDc2cSEPVMnfzSeSSRC xq57ui lULf1lPpSJ x2 ZgpBp6qzX2v4tI
+</code></pre>
+<p>很抽象：</p>
+<pre><code class="language-shell">-Sn In a branch named: Henry YtrydjKsYqebDoI3h bTINUeV6 pTVY8jnK2re HRwwNy25Ps6 u0YChCo5Jtw N3xkH3G nx aGo6yQTW RVZMsf3xk tBL0sG9GAR HQbyGYdqs i6dx1fyIPGJVciz8Z1NzdrvGE CKgkFauXqfKJmas cDLerWvBTRzUikmP2 0sqk2Xhie2DcIv KtCyYTlNx7WxJp6A2yox3r aJX4r7FpUhgsyGIwc prCCNx46GKVgzaerab3gXS7ieoOf1 Jp
++Sn The next clue is: YtrydjKsYqebDoI3h bTINUeV6 pTVY8jnK2re HRwwNy25Ps6 u0YChCo5Jtw N3xkH3G nx aGo6yQTW RVZMsf3xk tBL0sG9GAR HQbyGYdqs i6dx1fyIPGJVciz8Z1NzdrvGE CKgkFauXqfKJmas cDLerWvBTRzUikmP2 0sqk2Xhie2DcIv KtCyYTlNx7WxJp6A2yox3r aJX4r7FpUhgsyGIwc prCCNx46GKVgzaerab3gXS7ieoOf1 Jp
+</code></pre>
+<p>但上面出现了一个名字 <code>Henry</code>，我猜这就是分支名。让我们切到它。</p>
+<pre><code class="language-shell">@9cc552e7 ❯ git checkout origin/Henry
+Previous HEAD position was 9cc552e added level 8
+HEAD is now at 51e4359 Update README.md
+</code></pre>
+<p>嗯？怎么直接来到了第十关？</p>
+<h2 id="level-10"><a class="anchor" href="#level-10">#</a> Level 10</h2>
+<h3 id="heading-16"><a class="anchor" href="#heading-16">#</a> 问题</h3>
+<p>Welcome!! It looks like you made it to my Branch!!!
+Generally you want to refrain from making tags the same name as branches, unless you have a good reason.
+The tag is more like the stable release.
+While the branch is more like the in progress feature, which will be added soon.</p>
+<p>You&rsquo;re almost done!! Excited?? Hope you are! You have one more thing to do!</p>
+<p>Now its time to update the master branch, updating is really useful when you fork a repository and your forked repo starts to get behind on commits. The repository to update from is: <a href="https://github.com/drami025/git-game.git">https://github.com/drami025/git-game.git</a></p>
+<p>Don&rsquo;t cheat!!</p>
+<p>Here is a <a href="https://help.github.com/articles/configuring-a-remote-for-a-fork/">link</a> that explains how to fork a remote repository.</p>
+<h3 id="heading-17"><a class="anchor" href="#heading-17">#</a> 分析</h3>
+<p>不翻译了，大体意思是让我们更新 master 分支。</p>
+<p>首先切换到 master 分支。</p>
+<pre><code class="language-shell">@51e4359b ❯ git checkout master
+Previous HEAD position was 51e4359 Update README.md
+Switched to branch 'master'
+Your branch is up to date with 'origin/master'.
+</code></pre>
+<p>然后添加一个上游仓库：</p>
+<pre><code class="language-shell">git remote add upstream https://github.com/drami025/git-game.git
+</code></pre>
+<p>拉取上游仓库：</p>
+<pre><code class="language-shell">git fetch upstream
+remote: Enumerating objects: 38, done.
+remote: Counting objects: 100% (14/14), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 38 (delta 11), reused 11 (delta 11), pack-reused 24 (from 1)
+Unpacking objects: 100% (38/38), 4.45 KiB | 4.45 MiB/s, done.
+From https://github.com/drami025/git-game
+ * [new branch]      master     -&gt; upstream/master
+</code></pre>
+<p>然后 merge 一下：</p>
+<pre><code class="language-shell">master ❯ git merge upstream/master
+Updating d851edd..de79125
+Fast-forward
+ README.md | 51 +++++++++++++++++++++++++--------------------------
+ 1 file changed, 25 insertions(+), 26 deletions(-)
+</code></pre>
+<p>通关啦：</p>
+<pre><code class="language-shell">Git Game Finish Line
+==========
+
+If you did not update the main git-game repository, then we are disappointed in you!!
+=======
+
+However, if you did, then great Job!!
+You completed our Git Game!
+
+
+Well you:
+
+- viewed previous commits using &quot;git log&quot;
+- traversed to previous commits
+- checked out to different branches
+- ran &quot;git blame&quot; to see who made changes to a file
+- ran the diff command to see differences between branches
+- saw what .gitignore included and how it works
+- resolved merged conflicts
+- saw issues with naming tags and branches the same name
+- updated a local repository from a remote repository
+ 
+ Version control systems like git are extremely important tools to learn and use, 
+ Especially when collaborating on projects with other developers. 
+ It is our hope that you continue to practice your git skills so that you can one day become the ultimate git master!
+
+ Thanks for playing!
+
+ email gitgame.hgarc014@gmail.com with subject: “git-game completion” to get a badge of completion!!
+ please note you will not get a response from this email!
+
+ **Please allow up to 2 weeks for the badge to be delivered!!**
+ **I try to send badges as soon as possible, Thank You!!**
+</code></pre>
+</article>
+    </div>
+  </body>
+</html>

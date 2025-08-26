@@ -66,7 +66,7 @@ Toplevel（下面称为顶层窗口）的管理是窗口管理器的主要工作
 
 ### LayerShell
 
-LayerShell 是根据 `layershell` 协议创建的一类表面，主要用于桌面组件。相比普通窗口，它会被创建在几个由协议确定的固定的层之上，从上到下依次是 Overlay、Top、Bottom、Background。实现了 `layershell` 的客户端程序会将它们的窗口放在这几个层上，从而方便合成器对齐进行管理。
+LayerShell 是根据 `layershell` 协议创建的一类表面，主要用于桌面组件。相比普通窗口，它会被创建在几个由协议确定的固定的层之上，从上到下依次是 Overlay、Top、Bottom、Background。实现了 `layershell` 的客户端程序会将它们的窗口放在这几个层上，从而方便合成器对其进行管理。
 
 一个 LayerShell 有一个属性决定它是否独占。独占是指不允许有其它表面覆盖在它之上。因此在布局其他窗口之前，应当先确定 LayerShell 独占的显示区域，并将顶层窗口布局在这之外的可用区域中。
 

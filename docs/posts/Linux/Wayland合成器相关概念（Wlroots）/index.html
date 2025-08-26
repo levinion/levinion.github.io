@@ -168,7 +168,7 @@
 <p>平铺窗口管理器一般会在顶层窗口创建/销毁时根据布局去主动调整窗口的位置和大小，从而将窗口平铺在屏幕上。另外，根据实现，它可能还会实现浮动、栈布局，以及全屏、最大化、最小化等等（后两者在平铺窗口管理器上并不算常见）。</p>
 <p>堆叠管理器相对简单些，它一般无需主动调整窗口位置/大小，但大多需要处理窗口与鼠标的交互（对于平铺并非一个硬性要求），如拖动标题栏以调整位置，拖动窗口边缘/角落以调整大小。</p>
 <h3 id="layershell"><a class="anchor" href="#layershell">#</a> LayerShell</h3>
-<p>LayerShell 是根据 <code>layershell</code> 协议创建的一类表面，主要用于桌面组件。相比普通窗口，它会被创建在几个由协议确定的固定的层之上，从上到下依次是 Overlay、Top、Bottom、Background。实现了 <code>layershell</code> 的客户端程序会将它们的窗口放在这几个层上，从而方便合成器对齐进行管理。</p>
+<p>LayerShell 是根据 <code>layershell</code> 协议创建的一类表面，主要用于桌面组件。相比普通窗口，它会被创建在几个由协议确定的固定的层之上，从上到下依次是 Overlay、Top、Bottom、Background。实现了 <code>layershell</code> 的客户端程序会将它们的窗口放在这几个层上，从而方便合成器对其进行管理。</p>
 <p>一个 LayerShell 有一个属性决定它是否独占。独占是指不允许有其它表面覆盖在它之上。因此在布局其他窗口之前，应当先确定 LayerShell 独占的显示区域，并将顶层窗口布局在这之外的可用区域中。</p>
 <h3 id="popup"><a class="anchor" href="#popup">#</a> Popup</h3>
 <p>弹窗可以由 Toplevel、LayerShell 或是 Popup 创建，它通常是一个比较小的窗口，用来临时显示一些信息。常见的弹窗有：浏览器的右键菜单、Bar（如 waybar）的 tooltip 等。一级菜单可能还会创建一个二级菜单，它就是由另一个弹窗（一级菜单）创建的弹窗。</p>
