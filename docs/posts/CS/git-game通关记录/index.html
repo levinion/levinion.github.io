@@ -125,7 +125,7 @@
         <h1>git-game通关记录</h1>
         <p>2025-08-26 20:59:07</p>
       </div>
-      <article><p><a href="https://github.com/git-game/git-game">git-game</a> 是个很有意思的项目，能够锻炼一些常用的 Git 技能。本文简单做下通关记录。</p>
+      <article><p><a href="https://github.com/git-game/git-game">git-game</a> 是个很有意思的项目，能够锻炼一些常用的git技能。本文简单作下通关记录。</p>
 <h2 id="level-1"><a class="anchor" href="#level-1">#</a> Level 1</h2>
 <h3 id="heading"><a class="anchor" href="#heading">#</a> 问题</h3>
 <p>Your first task is to checkout the commit whose commit message is the answer to this question:</p>
@@ -174,7 +174,7 @@ Date:   Sun Nov 30 18:29:35 2014 -0800
 
     Initial commit
 </code></pre>
-<p>当然是 Hello World！所以使用哈希（可以只是开头的一部分）切到对应的提交。</p>
+<p>当然是Hello World！所以使用哈希（可以只是开头的一部分）切到对应的提交。</p>
 <pre><code class="language-shell">❯ git checkout 640273807f
 Note: switching to '640273807f'.
 </code></pre>
@@ -189,7 +189,7 @@ In code, my appearance can be subtle and no matter where I am found, I am unwant
 <blockquote>
 <p>我是一种生物，比人类小，但数量多得多。 在代码中，我的出现可能很微妙，无论在哪里被发现，我都不受欢迎。</p>
 </blockquote>
-<p>不需要查看 branch 都知道它是 bug。但我们最好还是看看。</p>
+<p>不需要查看branch都知道它是bug。但我们最好还是看看。</p>
 <pre><code class="language-shell">@64027380 ❯ git branch
 * (HEAD detached at 6402738)
   master
@@ -216,7 +216,7 @@ In code, my appearance can be subtle and no matter where I am found, I am unwant
   origin/trees
   origin/vector
 </code></pre>
-<p>这下有了，所以切到 bug 分支。</p>
+<p>这下有了，所以切到bug分支。</p>
 <pre><code class="language-shell">@64027380 ❯ git checkout origin/bug
 Previous HEAD position was 6402738 Hello World!
 HEAD is now at 98491ed Update README.md
@@ -232,8 +232,8 @@ Checkout to that branch after you find out who the culprit is.</p>
 <h3 id="heading-5"><a class="anchor" href="#heading-5">#</a> 分析</h3>
 <p>问题翻译如下：</p>
 <blockquote>
-<p>有时候我们喜欢责怪别人，说他们往我们的代码里引入了 bug。</p>
-<p>你能找到是谁在我们的 cool.cpp 文件里引入了一个 bug 吗？ 我们觉得他与 Git 的开发有关系。</p>
+<p>有时候我们喜欢责怪别人，说他们往我们的代码里引入了bug。</p>
+<p>你能找到是谁在我们的 cool.cpp 文件里引入了一个bug吗？ 我们觉得他与Git的开发有关系。</p>
 <p>而且我们听说，他还用自己的名字创建了一个分支。</p>
 <p>找到这个罪魁祸首之后，请切换到那个分支。</p>
 </blockquote>
@@ -241,7 +241,7 @@ Checkout to that branch after you find out who the culprit is.</p>
 <pre><code class="language-shell">@98491edb ❯ ls
 cool.cpp  LICENSE  README.md  remember
 </code></pre>
-<p>让我们看一下 <code>cool.cpp</code> 的内容：</p>
+<p>让我们看一下<code>cool.cpp</code>的内容：</p>
 <pre><code class="language-cpp">#include &lt;iostream&gt;
 
 using namespace std;
@@ -258,8 +258,8 @@ int main()
    cout &lt;&lt; reply &lt;&lt; endl; 
 }
 </code></pre>
-<p>可见，问题出现在 <code>while(1)</code>。</p>
-<p>然后可以 blame 一下 <code>cool.cpp</code>，看看是哪个小傻瓜写了这句代码：</p>
+<p>可见，问题出现在<code>while(1)</code>。</p>
+<p>然后可以blame一下<code>cool.cpp</code>，看看是哪个小傻瓜写了这句代码：</p>
 <pre><code class="language-shell">@98491edb ❯ git blame cool.cpp
 ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800  1) #include &lt;iostream&gt;
 ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800  2) 
@@ -280,8 +280,8 @@ ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800 16)
 </code></pre>
 <pre><code class="language-shell">3922a6d8 (LinusTorvalds2014 2014-12-09 12:37:10 -0800 12)    while(1);
 </code></pre>
-<p><code>LinusTorvalds2014</code>，哦，是 Linus，那没事了。</p>
-<p>然后根据题目指示切换到 Linus 的分支：</p>
+<p><code>LinusTorvalds2014</code>，哦，是Linus，那没事了。</p>
+<p>然后根据题目指示切换到Linus的分支：</p>
 <pre><code class="language-shell">@98491edb ❯ git checkout origin/LinusTorvalds2014
 Previous HEAD position was 98491ed Update README.md
 HEAD is now at 1254268 added level 5
@@ -293,11 +293,11 @@ Things may start to get a little more challenging&hellip;</p>
 <p>The next clue you are looking for &ndash;
 is in a file you choose to ignore!</p>
 <h3 id="heading-7"><a class="anchor" href="#heading-7">#</a> 分析</h3>
-<p>不太需要翻译了。我们要找的是一个被忽略的文件，我想这应该是 <code>.gitignore</code>。</p>
-<p>看下文件内容，啥，我们通关了？</p>
+<p>不太需要翻译了。我们要找的是一个被忽略的文件，我想这应该是<code>.gitignore</code>。</p>
+<p>看下文件内容，啥，我们过关了？</p>
 <h2 id="level-5"><a class="anchor" href="#level-5">#</a> Level 5</h2>
 <h3 id="heading-8"><a class="anchor" href="#heading-8">#</a> 题目</h3>
-<p>上关的 <code>.gitignore</code> 内容为：</p>
+<p>上关的<code>.gitignore</code>内容为：</p>
 <pre><code class="language-.gitignore"># welcome to the ignore file!!
 
 #``Level 5``
@@ -355,7 +355,7 @@ If you are on Windows, it&rsquo;s okey to use <code>git-bash</code> that is inst
 <p>或许，你应该试着运行这个脚本，并使用 &ldquo;nextclue_input.cpp&rdquo; 文件，看看会发生什么……</p>
 <p>你可以使用命令 &ldquo;./outputclue.sh FILE&rdquo; 来运行这个脚本。</p>
 </blockquote>
-<p>虽然它让我们运行某个 shell 脚本，但最好在运行前审查下内容：</p>
+<p>虽然它让我们运行某个shell脚本，但最好在运行前审查下内容：</p>
 <pre><code class="language-shell">#!/bin/bash
 if [ -z $1 ]; then 
   echo &quot;well, someone didn't want to run the script with a file...&quot;;
@@ -407,14 +407,14 @@ Good Luck!!!
  Hint: https://help.github.com/articles/resolving-a-merge-conflict-from-the-command-line/
 </code></pre>
 <h3 id="heading-13"><a class="anchor" href="#heading-13">#</a> 分析</h3>
-<p>大意是叫我们解决当前分支（tree）和 <code>code4life</code> 分支的冲突，Linus 还好心地引入了一个 bug。<del>Fuck u Linus</del>。</p>
-<p>先将 <code>code4life</code> 分支 merge 到当前分支上。</p>
+<p>大意是叫我们解决当前分支（tree）和<code>code4life</code>分支的冲突，Linus还好心地引入了一个bug。<del>Fuck u Linus</del>。</p>
+<p>先将<code>code4life</code>分支merge到当前分支上。</p>
 <pre><code class="language-shell">@f5c57273 ❯ git merge origin/code4life
 Auto-merging nextclue_input.cpp
 CONFLICT (content): Merge conflict in nextclue_input.cpp
 Automatic merge failed; fix conflicts and then commit the result.
 </code></pre>
-<p>提示有冲突需要解决，这里就用 <code>vim/nvim</code> 简单解决下。看到是 <code>nextclue_input.cpp</code> 中存在冲突：</p>
+<p>提示有冲突需要解决，这里就用<code>vim/nvim</code>简单解决下。看到是<code>nextclue_input.cpp</code>中存在冲突：</p>
 <pre><code class="language-cpp">#include &lt;iostream&gt;
 
 using namespace std;
@@ -434,10 +434,10 @@ int main()
     return 0;
 }
 </code></pre>
-<p>因为我设置了 <code>conflictstyle = diff3</code>，所以可能看起来有点奇怪。不过无所谓，让我们把它们全删了就行。</p>
-<p>PS：上面有个 <code>//Level 9</code>，看来将来我们还会用到这个文件。</p>
+<p>因为我设置了<code>conflictstyle = diff3</code>，所以可能看起来有点奇怪。不过无所谓，让我们把它们全删了就行。</p>
+<p>PS：上面有个<code>//Level 9</code>，看来将来我们还会用到这个文件。</p>
 <p>结果如下：</p>
-<pre><code class="language-shell">#include &lt;iostream&gt;
+<pre><code class="language-cpp">#include &lt;iostream&gt;
 
 using namespace std;
 // Level 9
@@ -483,7 +483,7 @@ Maybe if we compare the &ldquo;diff&quot;erences between this file and the file 
 <p>我觉得这个文件跟下一个线索有关，但它看起来非常难看。</p>
 <p>也许我们比较一下这个文件和之前那个文件之间的“差异”（diff），就会知道下一步该去哪里了……</p>
 </blockquote>
-<p>题目中所指的文件是 <code>remember</code>。幸好我有做笔记，它在 <code>bug</code> 分支中出现过。先 diff 一下。</p>
+<p>题目中所指的文件是<code>remember</code>。幸好我有做笔记，它在<code>bug</code>分支中出现过。先diff一下。</p>
 <pre><code class="language-shell">@9cc552e7 ❯ git diff origin/bug:remember remember
 diff --git a/remember b/remember
 index 584a931..76bd37c 100644
@@ -503,7 +503,7 @@ index 584a931..76bd37c 100644
 <pre><code class="language-shell">-Sn In a branch named: Henry YtrydjKsYqebDoI3h bTINUeV6 pTVY8jnK2re HRwwNy25Ps6 u0YChCo5Jtw N3xkH3G nx aGo6yQTW RVZMsf3xk tBL0sG9GAR HQbyGYdqs i6dx1fyIPGJVciz8Z1NzdrvGE CKgkFauXqfKJmas cDLerWvBTRzUikmP2 0sqk2Xhie2DcIv KtCyYTlNx7WxJp6A2yox3r aJX4r7FpUhgsyGIwc prCCNx46GKVgzaerab3gXS7ieoOf1 Jp
 +Sn The next clue is: YtrydjKsYqebDoI3h bTINUeV6 pTVY8jnK2re HRwwNy25Ps6 u0YChCo5Jtw N3xkH3G nx aGo6yQTW RVZMsf3xk tBL0sG9GAR HQbyGYdqs i6dx1fyIPGJVciz8Z1NzdrvGE CKgkFauXqfKJmas cDLerWvBTRzUikmP2 0sqk2Xhie2DcIv KtCyYTlNx7WxJp6A2yox3r aJX4r7FpUhgsyGIwc prCCNx46GKVgzaerab3gXS7ieoOf1 Jp
 </code></pre>
-<p>但上面出现了一个名字 <code>Henry</code>，我猜这就是分支名。让我们切到它。</p>
+<p>但上面出现了一个名字<code>Henry</code>，我猜这就是分支名。让我们切到它。</p>
 <pre><code class="language-shell">@9cc552e7 ❯ git checkout origin/Henry
 Previous HEAD position was 9cc552e added level 8
 HEAD is now at 51e4359 Update README.md
@@ -520,8 +520,8 @@ While the branch is more like the in progress feature, which will be added soon.
 <p>Don&rsquo;t cheat!!</p>
 <p>Here is a <a href="https://help.github.com/articles/configuring-a-remote-for-a-fork/">link</a> that explains how to fork a remote repository.</p>
 <h3 id="heading-17"><a class="anchor" href="#heading-17">#</a> 分析</h3>
-<p>不翻译了，大体意思是让我们更新 master 分支。</p>
-<p>首先切换到 master 分支。</p>
+<p>不翻译了，大体意思是让我们更新master分支。</p>
+<p>首先切换到master分支。</p>
 <pre><code class="language-shell">@51e4359b ❯ git checkout master
 Previous HEAD position was 51e4359 Update README.md
 Switched to branch 'master'
@@ -540,7 +540,7 @@ Unpacking objects: 100% (38/38), 4.45 KiB | 4.45 MiB/s, done.
 From https://github.com/drami025/git-game
  * [new branch]      master     -&gt; upstream/master
 </code></pre>
-<p>然后 merge 一下：</p>
+<p>然后merge一下：</p>
 <pre><code class="language-shell">master ❯ git merge upstream/master
 Updating d851edd..de79125
 Fast-forward
