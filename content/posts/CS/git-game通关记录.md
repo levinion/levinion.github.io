@@ -2,13 +2,13 @@
 title: git-game通关记录
 created: 2025-08-26 20:59:07
 ---
-[git-game](https://github.com/git-game/git-game) 是个很有意思的项目，能够锻炼一些常用的 Git 技能。本文简单做下通关记录。
+[git-game](https://github.com/git-game/git-game) 是个很有意思的项目，能够锻炼一些常用的git技能。本文简单作下通关记录。
 
 ## Level 1
 
 ### 问题
 
-Your first task is to checkout the commit whose commit message is the answer to this question:
+Your first task is to checkout the commit whose commit message is the answer to this question: 
 
 > When a programmer is born, what is the first thing he/she learns to say?
 
@@ -57,7 +57,7 @@ Date:   Sun Nov 30 18:29:35 2014 -0800
     Initial commit
 ```
 
-当然是 Hello World！所以使用哈希（可以只是开头的一部分）切到对应的提交。
+当然是Hello World！所以使用哈希（可以只是开头的一部分）切到对应的提交。
 
 ```shell
 ❯ git checkout 640273807f
@@ -68,9 +68,9 @@ Note: switching to '640273807f'.
 
 ### 问题
 
-We want to get to a branch whose name is the answer to this riddle:
-I am a creature that is smaller than man, but many times more in number.
-In code, my appearance can be subtle and no matter where I am found, I am unwanted.
+We want to get to a branch whose name is the answer to this riddle: 
+I am a creature that is smaller than man, but many times more in number. 
+In code, my appearance can be subtle and no matter where I am found, I am unwanted. 
 
 What am I?
 
@@ -80,7 +80,7 @@ What am I?
 
 > 我是一种生物，比人类小，但数量多得多。 在代码中，我的出现可能很微妙，无论在哪里被发现，我都不受欢迎。
 
-不需要查看 branch 都知道它是 bug。但我们最好还是看看。
+不需要查看branch都知道它是bug。但我们最好还是看看。
 
 ```shell
 @64027380 ❯ git branch
@@ -113,7 +113,7 @@ What am I?
   origin/vector
 ```
 
-这下有了，所以切到 bug 分支。
+这下有了，所以切到bug分支。
 
 ```shell
 @64027380 ❯ git checkout origin/bug
@@ -125,11 +125,11 @@ HEAD is now at 98491ed Update README.md
 
 ### 问题
 
-Sometimes we like to blame others for introducing bugs in our code.
-Think you can find out who introduced a bug into our file cool.cpp?
+Sometimes we like to blame others for introducing bugs in our code. 
+Think you can find out who introduced a bug into our file cool.cpp? 
 We think he had something to do with the development of git.
 And from what we hear he also made a branch under his name.
-Checkout to that branch after you find out who the culprit is.
+Checkout to that branch after you find out who the culprit is. 
 
 If you are still confused, this link might [help](http://git-scm.com/docs/git-blame)
 
@@ -137,12 +137,12 @@ If you are still confused, this link might [help](http://git-scm.com/docs/git-bl
 
 问题翻译如下：
 
-> 有时候我们喜欢责怪别人，说他们往我们的代码里引入了 bug。
->
-> 你能找到是谁在我们的 cool.cpp 文件里引入了一个 bug 吗？ 我们觉得他与 Git 的开发有关系。
->
+> 有时候我们喜欢责怪别人，说他们往我们的代码里引入了bug。
+> 
+> 你能找到是谁在我们的 cool.cpp 文件里引入了一个bug吗？ 我们觉得他与Git的开发有关系。
+> 
 > 而且我们听说，他还用自己的名字创建了一个分支。
->
+> 
 > 找到这个罪魁祸首之后，请切换到那个分支。
 
 我们可以看到当前路径下的文件：
@@ -152,7 +152,7 @@ If you are still confused, this link might [help](http://git-scm.com/docs/git-bl
 cool.cpp  LICENSE  README.md  remember
 ```
 
-让我们看一下 `cool.cpp` 的内容：
+让我们看一下`cool.cpp`的内容：
 
 ```cpp
 #include <iostream>
@@ -172,9 +172,9 @@ int main()
 }
 ```
 
-可见，问题出现在 `while(1)`。
+可见，问题出现在`while(1)`。
 
-然后可以 blame 一下 `cool.cpp`，看看是哪个小傻瓜写了这句代码：
+然后可以blame一下`cool.cpp`，看看是哪个小傻瓜写了这句代码：
 
 ```shell
 @98491edb ❯ git blame cool.cpp
@@ -200,9 +200,9 @@ ce59bbfd (Henry Garcia      2014-12-08 18:22:35 -0800 16)
 3922a6d8 (LinusTorvalds2014 2014-12-09 12:37:10 -0800 12)    while(1);
 ```
 
-`LinusTorvalds2014`，哦，是 Linus，那没事了。
+`LinusTorvalds2014`，哦，是Linus，那没事了。
 
-然后根据题目指示切换到 Linus 的分支：
+然后根据题目指示切换到Linus的分支：
 
 ```shell
 @98491edb ❯ git checkout origin/LinusTorvalds2014
@@ -218,19 +218,19 @@ Looks like you found the branch of the evil Mastermind.
 Things may start to get a little more challenging...
 
 The next clue you are looking for --
-is in a file you choose to ignore!
+   is in a file you choose to ignore!
 
 ### 分析
 
-不太需要翻译了。我们要找的是一个被忽略的文件，我想这应该是 `.gitignore`。
+不太需要翻译了。我们要找的是一个被忽略的文件，我想这应该是`.gitignore`。
 
-看下文件内容，啥，我们通关了？
+看下文件内容，啥，我们过关了？
 
 ## Level 5
 
 ### 题目
 
-上关的 `.gitignore` 内容为：
+上关的`.gitignore`内容为：
 
 ```.gitignore
 # welcome to the ignore file!!
@@ -264,14 +264,14 @@ a.out
 问题翻译如下：
 
 > 你的下一个线索是……
->
+> 
 > 哪种抽象数据类型倾向于实现集合（sets）和映射（maps）？
->
+> 
 > 答案也同样是这个谜语的答案：
->
+> 
 > 我既是母亲也是父亲。 我很少静止，但我从不游荡。 我从不生育或哺乳。
 > 我是什么？
->
+> 
 > 然后……你懂的，切换到答案。
 
 有点抽象，但这是树。让我们切换到对应树的分支。
@@ -286,8 +286,8 @@ HEAD is now at f5c5727 added git merge resource
 
 ### 问题
 
-Welcome to the "tree" branch.
-Looks like good ol' Linus modified the "nextclue_input.cpp" file.
+Welcome to the "tree" branch. 
+Looks like good ol' Linus modified the "nextclue_input.cpp" file. 
 Normally, when ran with the shell script "outputclue.sh", the "nextclue_input.cpp" file would give us the next hint.
 
 Maybe, you should try running the shell script with the "nextclue_input.cpp" file and see what happens...
@@ -300,16 +300,16 @@ If you are on Windows, it's okey to use `git-bash` that is installed with [msysg
 翻译如下：
 
 > 欢迎来到 "tree" 分支。
->
+> 
 > 看来是老朋友林纳斯（Linus）修改了 "nextclue_input.cpp" 文件。
->
+> 
 > 通常，当和 "outputclue.sh" 这个 shell 脚本一起运行时，"nextclue_input.cpp" 文件会给出我们的下一个提示。
->
+> 
 > 或许，你应该试着运行这个脚本，并使用 "nextclue_input.cpp" 文件，看看会发生什么……
->
+> 
 > 你可以使用命令 "./outputclue.sh FILE" 来运行这个脚本。
 
-虽然它让我们运行某个 shell 脚本，但最好在运行前审查下内容：
+虽然它让我们运行某个shell脚本，但最好在运行前审查下内容：
 
 ```shell
 #!/bin/bash
@@ -371,9 +371,9 @@ Good Luck!!!
 
 ### 分析
 
-大意是叫我们解决当前分支（tree）和 `code4life` 分支的冲突，Linus 还好心地引入了一个 bug。~~Fuck u Linus~~。
+大意是叫我们解决当前分支（tree）和`code4life`分支的冲突，Linus还好心地引入了一个bug。~~Fuck u Linus~~。
 
-先将 `code4life` 分支 merge 到当前分支上。
+先将`code4life`分支merge到当前分支上。
 
 ```shell
 @f5c57273 ❯ git merge origin/code4life
@@ -382,7 +382,7 @@ CONFLICT (content): Merge conflict in nextclue_input.cpp
 Automatic merge failed; fix conflicts and then commit the result.
 ```
 
-提示有冲突需要解决，这里就用 `vim/nvim` 简单解决下。看到是 `nextclue_input.cpp` 中存在冲突：
+提示有冲突需要解决，这里就用`vim/nvim`简单解决下。看到是`nextclue_input.cpp`中存在冲突：
 
 ```cpp
 #include <iostream>
@@ -405,13 +405,13 @@ int main()
 }
 ```
 
-因为我设置了 `conflictstyle = diff3`，所以可能看起来有点奇怪。不过无所谓，让我们把它们全删了就行。
+因为我设置了`conflictstyle = diff3`，所以可能看起来有点奇怪。不过无所谓，让我们把它们全删了就行。
 
-PS：上面有个 `//Level 9`，看来将来我们还会用到这个文件。
+PS：上面有个`//Level 9`，看来将来我们还会用到这个文件。
 
 结果如下：
 
-```shell
+```cpp
 #include <iostream>
 
 using namespace std;
@@ -459,22 +459,22 @@ HEAD is now at 9cc552e added level 8
 
 ### 问题
 
-Looks like you resolved your conflict and found our branch, congrats!!
+Looks like you resolved your conflict and found our branch, congrats!! 
 
-Hmm...it seems this branch has a file that was seen before in another branch.
+Hmm...it seems this branch has a file that was seen before in another branch. 
 Do you "remember" what it is?
-I think this file has something to do with the next clue, but it seems to be very ugly looking.
+I think this file has something to do with the next clue, but it seems to be very ugly looking. 
 Maybe if we compare the "diff"erences between this file and the file from before we'll know where to go next...
 
 ### 分析
 
-> 嗯……这个分支好像有一个文件，我们在另一个分支见过。 你“记得”它是什么吗？
->
-> 我觉得这个文件跟下一个线索有关，但它看起来非常难看。
->
+> 嗯……这个分支好像有一个文件，我们在另一个分支见过。 你“记得”它是什么吗？ 
+> 
+> 我觉得这个文件跟下一个线索有关，但它看起来非常难看。 
+> 
 > 也许我们比较一下这个文件和之前那个文件之间的“差异”（diff），就会知道下一步该去哪里了……
 
-题目中所指的文件是 `remember`。幸好我有做笔记，它在 `bug` 分支中出现过。先 diff 一下。
+题目中所指的文件是`remember`。幸好我有做笔记，它在`bug`分支中出现过。先diff一下。
 
 ```shell
 @9cc552e7 ❯ git diff origin/bug:remember remember
@@ -500,7 +500,7 @@ index 584a931..76bd37c 100644
 +Sn The next clue is: YtrydjKsYqebDoI3h bTINUeV6 pTVY8jnK2re HRwwNy25Ps6 u0YChCo5Jtw N3xkH3G nx aGo6yQTW RVZMsf3xk tBL0sG9GAR HQbyGYdqs i6dx1fyIPGJVciz8Z1NzdrvGE CKgkFauXqfKJmas cDLerWvBTRzUikmP2 0sqk2Xhie2DcIv KtCyYTlNx7WxJp6A2yox3r aJX4r7FpUhgsyGIwc prCCNx46GKVgzaerab3gXS7ieoOf1 Jp
 ```
 
-但上面出现了一个名字 `Henry`，我猜这就是分支名。让我们切到它。
+但上面出现了一个名字`Henry`，我猜这就是分支名。让我们切到它。
 
 ```shell
 @9cc552e7 ❯ git checkout origin/Henry
@@ -521,7 +521,7 @@ While the branch is more like the in progress feature, which will be added soon.
 
 You're almost done!! Excited?? Hope you are! You have one more thing to do!
 
-Now its time to update the master branch, updating is really useful when you fork a repository and your forked repo starts to get behind on commits. The repository to update from is: [https://github.com/drami025/git-game.git](https://github.com/drami025/git-game.git)
+Now its time to update the master branch, updating is really useful when you fork a repository and your forked repo starts to get behind on commits. The repository to update from is: https://github.com/drami025/git-game.git
 
 Don't cheat!!
 
@@ -529,9 +529,9 @@ Here is a [link](https://help.github.com/articles/configuring-a-remote-for-a-for
 
 ### 分析
 
-不翻译了，大体意思是让我们更新 master 分支。
+不翻译了，大体意思是让我们更新master分支。
 
-首先切换到 master 分支。
+首先切换到master分支。
 
 ```shell
 @51e4359b ❯ git checkout master
@@ -559,7 +559,7 @@ From https://github.com/drami025/git-game
  * [new branch]      master     -> upstream/master
 ```
 
-然后 merge 一下：
+然后merge一下：
 
 ```shell
 master ❯ git merge upstream/master
