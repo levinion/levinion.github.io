@@ -19,6 +19,17 @@ vainfo
 
 ## 2. 修改内核参数
 
+由于ArchLinux打包已默认启用该参数，因此可以跳过。
+
+这可以通过以下方式确认：
+
+```shell
+> sudo cat /sys/module/nvidia_drm/parameters/modeset
+Y
+```
+
+如果没有，继续执行此节步骤：
+
 编辑 grub 配置。
 
 编辑 `/etc/default/grub`，在 `GRUB_CMDLINE_LINUX_DEFAULT` 中新增：
@@ -43,9 +54,9 @@ sudo grub-mkconfig -o /boot/grub/grub.cfg
 ## 4. 环境变量
 
 ```shell
-set -gx MOZ_DISABLE_RDD_SANDBOX 1
-set -gx LIBVA_DRIVER_NAME nvidia
-set -gx __EGL_VENDOR_LIBRARY_FILENAMES /usr/share/glvnd/egl_vendor.d/10_nvidia.json
+export MOZ_DISABLE_RDD_SANDBOX=1
+export LIBVA_DRIVER_NAME=nvidia
+export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.json
 ```
 
 ## 5. 检查

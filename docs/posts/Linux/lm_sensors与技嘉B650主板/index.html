@@ -96,7 +96,7 @@
         color: rgb(115, 130, 140);
       }
     </style>
-    <title>Firefox启用视频硬件加速解码（Nvidia）</title>
+    <title>lm_sensors与技嘉B650主板</title>
   </head>
 
   
@@ -122,45 +122,41 @@
 
     <div>
       <div class="meta">
-        <h1>Firefox启用视频硬件加速解码（Nvidia）</h1>
-        <p>2025-04-09 14:24:43</p>
+        <h1>lm_sensors与技嘉B650主板</h1>
+        <p>2025-03-04 11:29:05</p>
       </div>
-      <article><h2 id="1-"><a class="anchor" href="#1-">#</a> 1. 安装驱动</h2>
-<p>安装 <code>libva-nvidia-driver</code>：</p>
-<pre><code class="language-shell">sudo pacman -S libva-nvidia-driver
+      <article><p><code>lm_sensors</code> 能够提供主板上传感器信息，对于查看风扇转速、cpu电压等不常见于各类top中的信息很有帮助。</p>
+<p>首先安装 <code>lm_sensors</code>，运行，然后一路回车：</p>
+<pre><code class="language-shell">sudo sensors-detect
 </code></pre>
-<p>查看 vaapi 支持（可选）：</p>
-<pre><code class="language-shell">sudo pacman -S libva-utils
-vainfo
+<p>正常来说这就可以了，但是对于技嘉 B650，提示无法找到传感器：</p>
+<pre><code class="language-shell">Sorry, no sensors were detected.
 </code></pre>
-<h2 id="2-"><a class="anchor" href="#2-">#</a> 2. 修改内核参数</h2>
-<p>由于ArchLinux打包已默认启用该参数，因此可以跳过。</p>
-<p>这可以通过以下方式确认：</p>
-<pre><code class="language-shell">&gt; sudo cat /sys/module/nvidia_drm/parameters/modeset
-Y
+<p>仔细观察日志发现：</p>
+<pre><code class="language-shell">Found unknown chip with ID 0x8689
 </code></pre>
-<p>如果没有，继续执行此节步骤：</p>
-<p>编辑 grub 配置。</p>
-<p>编辑 <code>/etc/default/grub</code>，在 <code>GRUB_CMDLINE_LINUX_DEFAULT</code> 中新增：</p>
-<pre><code>nvidia-drm.modeset=1
+<p>也就是说该主板使用了 ITE8689 芯片，并且内核不支持该芯片。</p>
+<p>安装 <code>it87-dkms-git</code> 包：</p>
+<pre><code class="language-shell">paru -S it87-dkms-git
 </code></pre>
-<p>更新 grub 配置：</p>
-<pre><code class="language-shell">sudo grub-mkconfig -o /boot/grub/grub.cfg
+<p>然后加载指定模块：</p>
+<pre><code class="language-shell">sudo modprobe it87 ignore_resource_conflict=1
 </code></pre>
-<h2 id="3-firefox-"><a class="anchor" href="#3-firefox-">#</a> 3. Firefox 配置</h2>
-<ul>
-<li>修改 <code>media.ffmpeg.vaapi.enabled</code> 为 <code>true</code></li>
-<li>修改 <code>media.rdd-ffmpeg.enabled</code> 为 <code>true</code></li>
-<li>修改 <code>gfx.x11-egl.force-enabled</code> 为 <code>true</code></li>
-<li>修改 <code>widget.dmabuf.force-enabled</code> 为 <code>true</code></li>
-</ul>
-<h2 id="4-"><a class="anchor" href="#4-">#</a> 4. 环境变量</h2>
-<pre><code class="language-shell">export MOZ_DISABLE_RDD_SANDBOX=1
-export LIBVA_DRIVER_NAME=nvidia
-export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/10_nvidia.json
+<p>重新运行 <code>sensors-detect</code>:</p>
+<pre><code class="language-shell">sudo sensors-detect
 </code></pre>
-<h2 id="5-"><a class="anchor" href="#5-">#</a> 5. 检查</h2>
-<p>完成以上步骤后重启。在火狐中打开 <code>about:support</code>，查看当前硬件解码支持。</p>
+<p>现在就可以看到主板传感器参数了：</p>
+<pre><code class="language-shell">❯ sensors
+...
+it8689-isa-0a40
+Adapter: ISA adapter
+...
+</code></pre>
+<p>为了在开机时自动加载该模块，创建以下文件：</p>
+<pre><code class="language-shell">echo &quot;it87&quot; | sudo tee /etc/modules-load.d/it87.conf
+</code></pre>
+<pre><code class="language-shell">echo &quot;options it87 ignore_resource_conflict=1&quot; | sudo tee /etc/modprobe.d/it87.conf
+</code></pre>
 </article>
     </div>
   </body>
