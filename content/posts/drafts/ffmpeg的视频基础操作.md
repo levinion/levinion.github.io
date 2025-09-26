@@ -28,6 +28,13 @@ ffmpeg -ss 00:01:00 -to 00:02:00 -i input.mkv output.mp4
 ffmpeg -ss 00:01:00 -t 1m -i input.mkv output.mp4
 ```
 
+
+## 提取音频
+
+```shell
+ffmpeg -i input.mp4 -map 0:a output.mp3
+```
+
 ## 合并音视频
 
 使用 `-map`:

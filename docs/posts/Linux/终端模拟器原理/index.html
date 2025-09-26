@@ -1,0 +1,216 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>终端模拟器原理</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>终端模拟器原理</h1>
+        <p>2025-09-26 15:15:22</p>
+      </div>
+      <article><p>终端模拟器是一个GUI应用。比较有名的终端模拟器有老牌的xterm，KDE的konsole，Macos的iterm2，硬件加速的kitty、alacritty、ghostty、wezterm，以及wayland下的foot等。终端模拟器作为一个Linux用户日常接触到的东西，其原理并不复杂。</p>
+<p>与终端（tty）不同，终端模拟器主要和pty交互。pty，即一个伪装的tty，或称伪终端，可以在<code>/dev/pts/</code>下找到。</p>
+<p>编写一个终端模拟器的第一步就是创建一个伪终端。</p>
+<h2 id="heading"><a class="anchor" href="#heading">#</a> 创建伪终端</h2>
+<p>伪终端可以通过<code>openpty</code>创建，它返回两个文件描述符，分别是master和slave：</p>
+<pre><code class="language-shell">int master, slave;
+int ret = openpty(&amp;master, &amp;slave, nullptr, nullptr, nullptr);
+</code></pre>
+<p><code>openpty</code>的其他参数均可选。其中第三个参数<code>name</code>可以用来指定创建的pty的名称。在大多数情况下传入一个空指针以让操作系统返回一个可用的pty。</p>
+<p>两个文件描述符，master和slave，我们将其称为主端和从端。终端模拟器与主端交互，shell（bash、zsh等）与从端交互。</p>
+<p>终端模拟器将按键输入写入主端，然后由pty传递给从端。shell接收并处理输入后将其输出写到从端，并由pty返回给主端，此时终端模拟器可以从主端读到消息，并将它更新到屏幕上。这就是终端模拟器的工作原理。</p>
+<p>因此，为了让shell能够和从端交互，终端模拟器会fork一个shell进程，并将其输入输出重定向到从端的文件描述符上。</p>
+<p><code>openpty</code>在<code>&lt;pty.h&gt;</code>中定义。在该头文件中，还有一个高级方法<code>forkpty</code>，它是对<code>openpty</code>的封装，自动处理了<code>fork</code>和重定向输入输出的功能，因此我们更倾向于使用<code>forkpty</code>而不是<code>openpty</code>。</p>
+<pre><code class="language-cpp">  auto pid = forkpty(&amp;master, nullptr, nullptr, nullptr);
+  if (pid &lt; 0)
+    exit(1);
+  if (pid == 0) {
+    auto shell = getenv(&quot;SHELL&quot;);
+    execl(shell, basename(shell), NULL);
+  }
+</code></pre>
+<p>与<code>openpty</code>返回一个状态码不同，<code>forkpty</code>返回一个<code>pid</code>（等同于fork）。在fork出来的子进程中拉起一个shell，这一般可以通过<code>SHELL</code>环境变量获取。当然，一个成熟的终端模拟器往往也支持让用户在配置文件中修改默认的shell，从而允许和登录shell不同。</p>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 读写主端</h2>
+<p>终端模拟器可以通过read系统调用获取到shell的输出：</p>
+<pre><code class="language-cpp">char buf[256];
+auto len = read(master, buf, sizeof(buf));
+assert(len != 0)
+</code></pre>
+<p>为了调试，我们可以简单地将其输出打印到标准输出中：</p>
+<pre><code class="language-shell">write(STDOUT_FILENO, buf, len);
+</code></pre>
+<p>如果你使用一个良好实现的终端模拟器的话（而不是我们的DEMO），将能看到一个shell提示符。</p>
+<p>当终端模拟器收到一个按键时，会对其进行解析。终端模拟器收到的按键值往往是keycode，因此首先需要将其转化为keysym。大部分GUI框架会自动处理这件事，因此无需操心。而如果使用libwayland手搓的话（就像foot那样），我们还需要借助<code>xkbcommon</code>：</p>
+<pre><code class="language-cpp">auto ctx = xkb_context_new(XKB_CONTEXT_NO_FLAGS);
+assert(ctx);
+auto keymap =
+    xkb_keymap_new_from_names(ctx, NULL, XKB_KEYMAP_COMPILE_NO_FLAGS);
+assert(keymap);
+auto xkb_state_ = xkb_state_new(keymap);
+  
+// ...
+
+// 得到按键时
+
+xkb_state_update_key(
+    xkb_state_,
+    keycode,
+    state == WL_KEYBOARD_KEY_STATE_PRESSED ? XKB_KEY_DOWN : XKB_KEY_UP
+);
+
+auto sym = xkb_state_key_get_one_sym(xkb_state_, keycode);
+switch (sym) {
+    case XKB_KEY_a:
+        write(master, &quot;a&quot;, 1);
+        break;
+    case XKB_KEY_A:
+        write(master, &quot;A&quot;, 1);
+        break;
+    case XKB_KEY_b:
+        write(master, &quot;b&quot;, 1);
+        break;
+// ...
+}
+
+</code></pre>
+<p>此时当我们在此按下按键时，应该能够看到来自从端的更新。</p>
+<h2 id="poll"><a class="anchor" href="#poll">#</a> poll</h2>
+<p>在上面我们只从主端读取一次，而在实际的应用中应当是一个循环。另外，作为一个GUI应用还要处理渲染逻辑，这就意味着终端模拟器不能够是阻塞的。它应当在收到消息后及时响应。针对这种场景，linux下有select、poll、epoll、io_uring等可选。它们的共同特点是在事件到来时通知，因此可以有效避免忙等和阻塞。</p>
+<p>这里是一个简单的基于epoll的调度器实现：</p>
+<p><a href="https://github.com/levinion/wlfw/blob/main/include/wlfw/dispatcher.hpp">https://github.com/levinion/wlfw/blob/main/include/wlfw/dispatcher.hpp</a></p>
+<p>因此可以将上面从主端读取的代码改写成下面这样：</p>
+<pre><code class="language-cpp">  auto dispatcher = client-&gt;get_dispatcher();
+  dispatcher-&gt;add_task(master, [=]() {
+    char buf[256];
+    auto len = read(master, buf, sizeof(buf));
+    if (len == 0)
+      return false;
+    write(STDOUT_FILENO, buf, len);
+    return true;
+  });
+
+  while (client-&gt;dispatch());
+</code></pre>
+<h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 其他</h2>
+<p>在完成上面的工作后，我们的终端模拟器已经能够与shell交互，这相当于是完成了它的后端。终端模拟器前端还需要处理渲染和其他交互逻辑，包括渲染文本、滚动、damage等等。基于所选的GUI框架，软/硬件渲染，这方面的处理逻辑、使用的库都有很大不同之处，这方面就已就超出本文的讨论范围了。</p>
+</article>
+    </div>
+  </body>
+</html>

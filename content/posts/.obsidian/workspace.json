@@ -41,12 +41,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "其他/Firefox启用视频硬件加速解码（Nvidia）.md",
+                "file": "Linux/终端模拟器原理.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Firefox启用视频硬件加速解码（Nvidia）"
+              "title": "终端模拟器原理"
             }
           }
         ],
@@ -82,7 +82,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "ffmpeg",
                 "matchingCase": true,
                 "explainSearch": true,
                 "collapseAll": false,
@@ -181,6 +181,10 @@
   },
   "active": "ecc31abab7c26e79",
   "lastOpenFiles": [
+    "drafts/ffmpeg的视频基础操作.md",
+    "Linux/终端模拟器原理.md",
+    "drafts/evdev与手柄事件.md",
+    "其他/Firefox启用视频硬件加速解码（Nvidia）.md",
     "Linux/lm_sensors与技嘉B650主板.md",
     "Linux/Wayland合成器相关概念（Wlroots）.md",
     "Linux/理解Wayland协议.md",
@@ -191,7 +195,6 @@
     "CS/understanding jpeg.md",
     "CS/理解滑动窗口.md",
     "drafts/docker与容器化基础.md",
-    "drafts/ffmpeg的视频基础操作.md",
     "drafts/Docker-and-Kubernetes-学习笔记.md",
     "drafts/Dijkstra算法的一般形式.md",
     "drafts/DKS与whkd实现改键.md",
@@ -204,9 +207,6 @@
     "drafts/WSL网络中断问题.md",
     "drafts/提示工程.md",
     "drafts/宇宙回形针经验谈.md",
-    "drafts/人机工程学学习笔记.md",
-    "drafts/如何编写Wayland混成器（使用Rust）.md",
-    "drafts/汽车设计学习笔记.md",
     "templates/new_draft.md~",
     "templates/4913",
     "templates",
