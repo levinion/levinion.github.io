@@ -87,7 +87,7 @@ ufw allow 80
 
 ## 其他
 
-如果你不使用cloudflare的小云朵服务，则需要一些额外步骤以开启HTTPS支持。这边有一篇很好的文章：https://idcflare.com/t/topic/18769.
+如果你不使用cloudflare的小云朵服务，则需要一些额外步骤以开启HTTPS支持。这边有一篇很好的文章：<https://idcflare.com/t/topic/18769>.
 
 如果你使用小云朵，但按照上面这篇文章去配置nginx，会发现网页无法正常打开，浏览器提示503重定向次数过多。这是由于这部分内容：
 
