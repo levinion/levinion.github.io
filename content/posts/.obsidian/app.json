@@ -4,7 +4,7 @@
   "newFileLocation": "current",
   "attachmentFolderPath": "./素材库",
   "communityPluginSortOrder": "download",
-  "vimMode": false,
+  "vimMode": true,
   "useTab": false,
   "strictLineBreaks": true,
   "showUnsupportedFiles": true,

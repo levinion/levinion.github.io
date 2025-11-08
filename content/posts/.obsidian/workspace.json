@@ -48,9 +48,23 @@
               "icon": "lucide-file",
               "title": "终端模拟器原理"
             }
+          },
+          {
+            "id": "dc1265774b41e673",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "其他/komari部署.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "komari部署"
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -179,8 +193,14 @@
       "quickadd:QuickAdd": false
     }
   },
-  "active": "ecc31abab7c26e79",
+  "active": "1984143e1e9e9377",
   "lastOpenFiles": [
+    "drafts/逆向openrgb.md",
+    "其他/komari部署.md",
+    "drafts/Linux下的各种剪贴板.md",
+    "drafts/一个宽松表实现.md",
+    "drafts/bwrap与overlayfs.md",
+    "drafts/为何漫改动画往往不尽如人意.md",
     "drafts/ffmpeg的视频基础操作.md",
     "Linux/终端模拟器原理.md",
     "drafts/evdev与手柄事件.md",
@@ -201,12 +221,6 @@
     "drafts/CS110L学习笔记.md",
     "drafts/一个好的包管理的特征.md",
     "drafts/mysql笔记.md",
-    "drafts/MIT6.824-分布式系统.md",
-    "drafts/rCore操作系统学习笔记（一）概述.md",
-    "drafts/USTC-计算机网络.md",
-    "drafts/WSL网络中断问题.md",
-    "drafts/提示工程.md",
-    "drafts/宇宙回形针经验谈.md",
     "templates/new_draft.md~",
     "templates/4913",
     "templates",

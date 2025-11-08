@@ -1,0 +1,193 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>komari部署</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>komari部署</h1>
+        <p>2025-11-08 15:03:08</p>
+      </div>
+      <article><p><a href="https://github.com/komari-monitor/komari">komari</a>是一个服务器监控工具（mjj们一般称为探针）面板，对于手持多个服务器的人十分友好。</p>
+<h2 id="komari"><a class="anchor" href="#komari">#</a> 安装komari</h2>
+<p>komari采用一种前后端分离的架构，前端，也就是面板，需要自托管，因此需要一个域名以及一台比较稳定的服务器。</p>
+<p>采用github上提供的一键脚本安装即可，这会自动开启服务：</p>
+<pre><code class="language-shell">curl -fsSL https://raw.githubusercontent.com/komari-monitor/komari/main/install-komari.sh -o install-komari.sh
+chmod +x install-komari.sh
+sudo ./install-komari.sh
+</code></pre>
+<p>然后这可以通过<code>http://&lt;your_server_ip&gt;:25774</code>访问。</p>
+<h2 id="dns"><a class="anchor" href="#dns">#</a> DNS配置</h2>
+<p>然后需要配置DNS，从而通过域名进行访问。这可以通过购买域名的网站进行设置。</p>
+<p>虽然我在spaceship购入，但仍然将其托管到了<a href="https://dash.cloudflare.com/">cloudflare</a>，因为能够使用cloudflare的小云朵（免费的SSL）服务。</p>
+<h2 id="nginx"><a class="anchor" href="#nginx">#</a> Nginx配置</h2>
+<p>设置完毕域名解析后，只需配置nginx，listen 80端口，并将对域名的访问重定向到<code>http://&lt;your_server_ip&gt;:25774</code>。</p>
+<p>如果未安装过nginx，参考：</p>
+<pre><code class="language-shell">apt install nginx
+systemctl enable --now nginx
+</code></pre>
+<p>安装完毕后，创建一个配置文件：<code>/etc/nginx/sites-available/komari</code>，然后填入以下内容：</p>
+<pre><code class="language-nginx">server {
+        listen 80;
+        server_name &lt;your domain name&gt;;
+
+        location / {
+                proxy_pass http://127.0.0.1:25774;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection &quot;Upgrade&quot;;
+                proxy_buffering off;
+                client_max_body_size 50M;
+        }
+}
+</code></pre>
+<p>将其链接到<code>/etc/nginx/sites-enabled/</code>：</p>
+<pre><code class="language-shell">ln -s /etc/nginx/sites-available/komari /etc/nginx/sites-enabled/
+</code></pre>
+<p>测试一下配置：</p>
+<pre><code class="language-shell">nginx -t
+</code></pre>
+<p>重新加载配置文件：</p>
+<pre><code class="language-shell">nginx -s reload
+</code></pre>
+<p>注意，如果配置了防火墙还需放行80端口。以<code>ufw</code>为例：</p>
+<pre><code class="language-shell">ufw allow 80
+</code></pre>
+<p>此时已经可以通过<code>https://&lt;your domain name&gt;/</code>进行访问。</p>
+<p>然后在面板中添加服务器，并按照提示使用bash脚本在服务器上安装agent即可。</p>
+<h2 id="heading"><a class="anchor" href="#heading">#</a> 其他</h2>
+<p>如果你不使用cloudflare的小云朵服务，则需要一些额外步骤以开启HTTPS支持。这边有一篇很好的文章：https://idcflare.com/t/topic/18769.</p>
+<p>如果你使用小云朵，但按照上面这篇文章去配置nginx，会发现网页无法正常打开，浏览器提示503重定向次数过多。这是由于这部分内容：</p>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name tz.linux.do; # 你设置的A解析的域名
+    return 301 https://$server_name$request_uri;
+}
+</code></pre>
+<p>这将http请求重定向到了https请求，如果不开启小云朵，这是正确的。小云朵开启后，当用户发送了一个http请求，在DNS解析阶段，cloudflare将该请求重定向到https给浏览器，但始终向服务器发送http请求。如果此时nginx再将http请求重定向到了https，则又会造成cloudflare的重定向，从而导致重定向的死循环。</p>
+<p>因此，要么不开启小云朵，并申请本地证书；要么就开启小云朵，享受cloudflare的便捷服务吧。</p>
+</article>
+    </div>
+  </body>
+</html>
