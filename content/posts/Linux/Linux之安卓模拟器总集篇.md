@@ -30,7 +30,7 @@ genymotion 也是一个很老牌的安卓模拟器解决方案了，在 Linux �
 
 在浏览无头 waydroid 话题时，偶尔发现有人提到了 redroid，这就是今天的主角了。
 
-redroid 是一个基于 docker 的安卓容器，没有 UI 界面，但提供了 adb 连接；其中内置了 libnhk，从而能够开箱即用地支持 ARM 应用程序。并且不知道它做了什么，似乎对 nvidia gpu 有着相当好的支持，因此 CPU 占用终于下来了，只有个位数的水平。对于以 60HZ 运行的游戏来说，GPU 占用率平均维持在 30% 左右，这算是一个比较正常的水平；另外，核显也开始工作。
+redroid 是一个基于 docker 的安卓容器，没有 UI 界面，但提供了 adb 连接；其中内置了 libnhk，从而能够开箱即用地支持 ARM 应用程序。虽说是docker容器，实际内部打包了一个qemu虚拟机。但由于它做了一些工作，能够自动选择显卡，因此在多显卡环境中能够比较正常地运行。当nvidia独显和amd核显均启用时，会自动选择在核显上运行，因此体验尚可。只有n卡的用户不保证能用。
 
 redroid 的配置很简单，直接修改 docker 运行命令即可。
 
@@ -105,4 +105,14 @@ sudo visudo
 # 然后在文件末新增：
 
 %wheel ALL=(ALL:ALL) NOPASSWD: /usr/bin/podman
+```
+
+### DNS
+
+当不指定DNS服务器时，默认使用的是google的`8.8.8.8`, 对一些国内应用来说并不合适。因此可以添加以下选项自定义DNS：
+
+```shell
+# ...
+androidboot.redroid_net_ndns=1 \
+androidboot.redroid_net_dns1=223.5.5.5
 ```
