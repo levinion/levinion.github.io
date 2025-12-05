@@ -1,0 +1,278 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>使用sing-box给Alice IPv6小鸡加上v4出口</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>使用sing-box给Alice IPv6小鸡加上v4出口</h1>
+        <p>2025-12-05 12:30:47</p>
+      </div>
+      <article><p>昨天收了只Alice IPv6免费小鸡，但是由于没有v4, 导致许多网站访问不了。比如github，直到2025年仍不支持IPv6访问。虽然可以通过更改hosts解决，见 (<a href="https://www.nodeseek.com/post-531425-1">https://www.nodeseek.com/post-531425-1</a>)，但毕竟不是长久之策，我们还需要访问其他网站。</p>
+<p>好在Alice为免费小鸡提供了免费的双栈代理出口，我们可以通过这个出口获取到完整的流媒体解锁和IPv4服务。</p>
+<p>Github上已经有人做出了一键脚本，用来切换出口，它使用tun2socks实现，详见：</p>
+<pre><code>https://github.com/hkfires/onekey-tun2socks
+</code></pre>
+<p>但我们也可以用sing-box来统一实现。</p>
+<h2 id="sing-box"><a class="anchor" href="#sing-box">#</a> 安装sing-box</h2>
+<p>sing-box是一个全平台的代理工具。安装方法也很简单，使用官方提供的一键脚本即可：</p>
+<pre><code class="language-shell">curl -fsSL https://sing-box.app/install.sh | sh
+</code></pre>
+<h2 id="heading"><a class="anchor" href="#heading">#</a> 创建配置文件</h2>
+<p>配置文件应放到<code>/etc/sing-box/config.json</code></p>
+<pre><code class="language-json">{
+  &quot;log&quot;: {
+    &quot;level&quot;: &quot;info&quot;
+  },
+  &quot;inbounds&quot;: [
+    {
+      &quot;type&quot;: &quot;tun&quot;,
+      &quot;address&quot;: [
+        &quot;172.19.0.1/30&quot;,
+        &quot;fdfe:dcba:9876::1/126&quot;
+      ],
+      &quot;route_exclude_address&quot;: &quot;::/0&quot;,
+      &quot;auto_route&quot;: true,
+      &quot;strict_route&quot;: false,
+      &quot;mtu&quot;: 9000,
+      &quot;stack&quot;: &quot;mixed&quot;
+    }
+  ],
+  &quot;outbounds&quot;: [
+    {
+      &quot;type&quot;: &quot;selector&quot;,
+      &quot;tag&quot;: &quot;proxy&quot;,
+      &quot;outbounds&quot;: [
+        &quot;alice&quot;,
+        &quot;direct&quot;
+      ],
+      &quot;default&quot;: &quot;alice&quot;
+    },
+    {
+      &quot;type&quot;: &quot;socks&quot;,
+      &quot;version&quot;: &quot;5&quot;,
+      &quot;tag&quot;: &quot;alice&quot;,
+      &quot;server&quot;: &quot;2a14:67c0:116::1&quot;,
+      &quot;server_port&quot;: 10008,
+      &quot;username&quot;: &quot;alice&quot;,
+      &quot;password&quot;: &quot;alicefofo123..OVO&quot;
+    },
+    {
+      &quot;type&quot;: &quot;direct&quot;,
+      &quot;tag&quot;: &quot;direct&quot;
+    }
+  ],
+  &quot;route&quot;: {
+    &quot;final&quot;: &quot;proxy&quot;,
+    &quot;rules&quot;: [
+      {
+        &quot;action&quot;: &quot;sniff&quot;
+      },
+      {
+        &quot;protocol&quot;: &quot;dns&quot;,
+        &quot;action&quot;: &quot;hijack-dns&quot;
+      },
+      {
+        &quot;ip_is_private&quot;: true,
+        &quot;outbound&quot;: &quot;direct&quot;
+      },
+      {
+        &quot;clash_mode&quot;: &quot;Direct&quot;,
+        &quot;outbound&quot;: &quot;direct&quot;
+      },
+      {
+        &quot;clash_mode&quot;: &quot;Global&quot;,
+        &quot;outbound&quot;: &quot;proxy&quot;
+      }
+    ],
+    &quot;rule_set&quot;: [],
+    &quot;auto_detect_interface&quot;: true
+  },
+  &quot;experimental&quot;: {
+    &quot;cache_file&quot;: {
+      &quot;enabled&quot;: true,
+      &quot;store_rdrc&quot;: true
+    },
+    &quot;clash_api&quot;: {
+      &quot;external_controller&quot;: &quot;0.0.0.0:80&quot;,
+      &quot;external_ui&quot;: &quot;ui&quot;,
+      &quot;secret&quot;: &quot;d45cd022-29ae-4629-8022-f71a0c3c208a&quot;
+    }
+  }
+}
+</code></pre>
+<p>其中，socks5节点具体内容如下：</p>
+<pre><code class="language-json">{
+    &quot;type&quot;: &quot;socks&quot;,
+    &quot;version&quot;: &quot;5&quot;,
+    &quot;tag&quot;: &quot;alice&quot;,
+    &quot;server&quot;: &quot;2a14:67c0:116::1&quot;,
+    &quot;server_port&quot;: 10008,
+    &quot;username&quot;: &quot;alice&quot;,
+    &quot;password&quot;: &quot;alicefofo123..OVO&quot;
+}
+</code></pre>
+<p>如果Alice没有对该节点做任何改动，直接使用即可。其中端口从以下任选其一：</p>
+<pre><code>台湾家宽 #1:10001
+台湾家宽 #2:10002
+台湾家宽 #3:10003
+台湾家宽 #4:10004
+台湾家宽 #5:10005
+台湾家宽 #6:10006
+台湾家宽 #7:10007
+台湾家宽 #8:10008
+</code></pre>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 服务</h2>
+<p>为了便于管理，如果你使用带systemd的系统，可以在<code>/etc/systemd/system/</code>中创建一个<code>sing-box-server.service</code>文件：</p>
+<pre><code class="language-ini">[Unit]
+Description=Sing-Box Server Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/sing-box run -c /etc/sing-box/config.json
+WorkingDirectory=/etc/sing-box/
+User=root
+Group=root
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_NET_RAW
+AmbientCapabilities=CAP_NET_ADMIN CAP_NET_BIND_SERVICE CAP_NET_RAW
+NoNewPrivileges=true
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<p>然后启用服务：</p>
+<pre><code class="language-shell">systemctl enable --now sing-box-server
+</code></pre>
+<p>检查一下是否启动成功：</p>
+<pre><code class="language-shell">systemctl status sing-box-server
+</code></pre>
+<p>看一下是否能够检测到IPv4地址：</p>
+<pre><code class="language-shell">❯ curl -6 ip.sb
+36.230.*.*
+</code></pre>
+<h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 后话</h2>
+<p>大善人Alice的免费机是极好的挂针机，毕竟它免费（包括机器和流量），而且也不需要定期登录保活。拿来用的话，由于线路并不好，电信和联通都会绕路，且移动丢包不少，因此体验并不好。因此只建议移动用户作为落地使用，其他人拿来玩玩就好。</p>
+<p>虽然国内大力在推进IPv6，但在国际上仍不是那么普及，因此目前纯IPv6小鸡还是处于一种很尴尬的境地。</p>
+</article>
+    </div>
+  </body>
+</html>

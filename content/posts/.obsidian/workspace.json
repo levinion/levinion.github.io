@@ -76,9 +76,23 @@
               "icon": "lucide-file",
               "title": "利用pacman hook自动部署rime-wanxiang"
             }
+          },
+          {
+            "id": "828e8c2a85c3185d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Linux/从ufw迁移到nft.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "从ufw迁移到nft"
+            }
           }
         ],
-        "currentTab": 4
+        "currentTab": 5
       }
     ],
     "direction": "vertical"
@@ -207,8 +221,10 @@
       "quickadd:QuickAdd": false
     }
   },
-  "active": "602dff53fee996c9",
+  "active": "828e8c2a85c3185d",
   "lastOpenFiles": [
+    "Linux/使用sing-box给Alice IPv6小鸡加上v4出口.md",
+    "Linux/从ufw迁移到nft.md",
     "Linux/Linux之安卓模拟器总集篇.md",
     "Linux/利用pacman hook自动部署rime-wanxiang.md",
     "drafts/逆向openrgb.md",
@@ -233,8 +249,6 @@
     "drafts/docker与容器化基础.md",
     "drafts/Docker-and-Kubernetes-学习笔记.md",
     "drafts/Dijkstra算法的一般形式.md",
-    "drafts/DKS与whkd实现改键.md",
-    "drafts/CS110L学习笔记.md",
     "templates/new_draft.md~",
     "templates/4913",
     "templates",
