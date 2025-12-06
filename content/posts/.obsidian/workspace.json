@@ -83,7 +83,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Linux/从ufw迁移到nft.md",
+                "file": "drafts/从ufw迁移到nft.md",
                 "mode": "source",
                 "source": false
               },
@@ -221,10 +221,10 @@
       "quickadd:QuickAdd": false
     }
   },
-  "active": "828e8c2a85c3185d",
+  "active": "1984143e1e9e9377",
   "lastOpenFiles": [
     "Linux/使用sing-box给Alice IPv6小鸡加上v4出口.md",
-    "Linux/从ufw迁移到nft.md",
+    "drafts/从ufw迁移到nft.md",
     "Linux/Linux之安卓模拟器总集篇.md",
     "Linux/利用pacman hook自动部署rime-wanxiang.md",
     "drafts/逆向openrgb.md",

@@ -134,6 +134,7 @@ nftables
     mode: "0640"
   vars:
     tcp_ports:
+      - 22
       - 80
       - 8443
     udp_ports: []
