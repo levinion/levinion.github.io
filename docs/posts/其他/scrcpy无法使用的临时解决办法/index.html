@@ -1,0 +1,163 @@
+<!doctype html>
+<html data-theme="dark">
+  <head>
+    
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/assets/css/pico.css" />
+<link rel="stylesheet" href="/assets/css/custom.css" />
+<link
+  rel="stylesheet"
+  href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css"
+/>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+
+
+    <style>
+      article {
+        background: rgb(28, 29, 33);
+        max-width: 70%;
+        text-align: left;
+        margin: 0 auto;
+        border-radius: 30px;
+      }
+
+      @media (max-width: 768px) {
+        article {
+          max-width: 90%;
+        }
+
+        h1 {
+          font-size: large;
+        }
+
+        .date {
+          font-size: medium;
+        }
+
+        p,
+        li {
+          font-size: 15px;
+        }
+      }
+
+      p,
+      li {
+        font-size: 16.5px;
+        line-height: 32px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 10px;
+      }
+
+      .meta p {
+        text-align: center;
+      }
+
+      .date {
+        text-align: center;
+      }
+
+      .toc {
+        position: fixed;
+        float: left;
+        max-width: 50px;
+        max-height: 50px;
+        margin-top: 200px;
+        text-align: center;
+      }
+
+      h2 {
+        font-size: x-large;
+        color: peru;
+      }
+
+      h3 {
+        font-size: large;
+        color: rgb(205, 158, 112);
+      }
+
+      h4 {
+        font-size: medium;
+        color: pink;
+      }
+
+      strong {
+        color: rgb(182, 230, 240);
+      }
+
+      del {
+        color: rgb(115, 130, 140);
+      }
+    </style>
+    <title>scrcpy无法使用的临时解决办法</title>
+  </head>
+
+  
+  
+  <body>
+    
+<nav>
+  <a href="/" class="logo">Maruka's Blog</a>
+  <div class="breadcrumb">
+    <ul>
+      <li>
+        <a href="/posts">文章</a>
+      </li>
+      <li>
+        <a href="/category">分类</a>
+      </li>
+      <li>
+        <a href="/about">关于</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+    <div>
+      <div class="meta">
+        <h1>scrcpy无法使用的临时解决办法</h1>
+        <p>2025-12-17 14:52:34</p>
+      </div>
+      <article><p>在升级内核到6.18后，scrcpy无法启动窗口。于是使用adb作为临时替代方案。</p>
+<h2 id="heading"><a class="anchor" href="#heading">#</a> 显示</h2>
+<p>scrcpy解决的第一件事是显示画面，而这可以通过<code>screencap</code>命令来完成：</p>
+<pre><code class="language-shell">adb -s localhost:5555 shell screencap -p | magick - sixel:-
+</code></pre>
+<p>这将画面传输到本地并转换为sixel格式在终端模拟器输出。</p>
+<p>如果想要视频效果：</p>
+<pre><code class="language-shell">while true; do
+    printf &quot;\033[H&quot;
+    adb -s localhost:5555 exec-out screencap -p | magick - sixel:-
+done
+</code></pre>
+<p>或是使用<code>ffplay</code>：</p>
+<pre><code class="language-shell">while true; do
+    adb -s localhost:5555 exec-out screencap -p
+done | ffplay -
+</code></pre>
+<h2 id="heading-1"><a class="anchor" href="#heading-1">#</a> 启动应用</h2>
+<p>要启动一个应用，可以使用<code>am start</code>，命令格式如下：</p>
+<pre><code class="language-shell">adb shell am start -n com.package.name/com.package.name.ActivityName
+</code></pre>
+<p>它接受两个参数，分别是包名和活动名，以<code>/</code>分隔。</p>
+<p>可以使用以下命令以列出第三方应用包名：</p>
+<pre><code class="language-shell">adb -s localhost:5555 shell pm list packages -3
+</code></pre>
+<p>然后在以下命令输出结果中查找活动名：</p>
+<pre><code class="language-shell">adb -s localhost:5555 shell &quot;dumpsys package com.bilibili.azurlane&quot;
+</code></pre>
+<p>该活动名的<code>Action</code>属性应为：<code>android.intent.action.MAIN</code></p>
+<p>于是可以通过以下命令拉起应用：</p>
+<pre><code class="language-shell">adb -s localhost:5555 shell am start -n com.bilibili.azurlane/com.manjuu.azurlane.MainActivity
+</code></pre>
+</article>
+    </div>
+  </body>
+</html>

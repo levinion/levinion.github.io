@@ -2,15 +2,11 @@
 title: 使用sing-box给Alice IPv6小鸡加上v4出口
 created: 2025-12-05 12:30:47
 ---
-昨天收了只Alice IPv6免费小鸡，但是由于没有v4, 导致许多网站访问不了。比如github，直到2025年仍不支持IPv6访问。虽然可以通过更改hosts解决，见 (https://www.nodeseek.com/post-531425-1)，但毕竟不是长久之策，我们还需要访问其他网站。
+昨天收了只Alice IPv6免费小鸡，但是由于没有v4, 导致许多网站访问不了。比如github，直到2025年仍不支持IPv6访问。
 
 好在Alice为免费小鸡提供了免费的双栈代理出口，我们可以通过这个出口获取到完整的流媒体解锁和IPv4服务。
 
-Github上已经有人做出了一键脚本，用来切换出口，它使用tun2socks实现，详见：
-
-```
-https://github.com/hkfires/onekey-tun2socks
-```
+Github上已经有人做出了一键脚本，用来切换出口，它使用tun2socks实现，详见： https://github.com/hkfires/onekey-tun2socks
 
 但我们也可以用sing-box来统一实现。
 
@@ -181,6 +177,29 @@ systemctl status sing-box-server
 
 ## 后话
 
-大善人Alice的免费机是极好的挂针机，毕竟它免费（包括机器和流量），而且也不需要定期登录保活。拿来用的话，由于线路并不好，电信和联通都会绕路，且移动丢包不少，因此体验并不好。因此只建议移动用户作为落地使用，其他人拿来玩玩就好。
+大善人Alice的免费机是极好的挂针机，毕竟它免费（包括机器和流量），而且也不需要定期登录保活。拿来用的话，由于线路并不好，电信和联通都会绕路，且移动丢包不少，因此直连体验并不好。只建议作为落地解锁使用。
 
-虽然国内大力在推进IPv6，但在国际上仍不是那么普及，因此目前纯IPv6小鸡还是处于一种很尴尬的境地。
+V6环境确实在好起来。如cloudflare就提供了双栈CDN，使得v6机器能够正常接受来自v4地址的流量访问，因此能够获得和普通v4机器相似的建站体验。并且由于v6相对v4廉价机器更多，相信未来更多的网站会建在v6机器上。
+
+另外，如果不使用提供的socks节点，也可以通过warp来获取v4出口。使用：
+
+```shell
+wget -N https://gitlab.com/fscarmen/warp/-/raw/main/menu.sh && bash menu.sh go
+```
+
+然后可以选择全局模式默认使用warp作为分流节点，或是使用sing-box来自行决定分流规则。
+
+如果只是想要访问github而不需要添加v4，将以下内容添加到`/etc/hosts`末尾: 
+
+```shell
+2a01:4f8:c010:d56::2 github.com
+2a01:4f8:c010:d56::3 api.github.com
+2a01:4f8:c010:d56::4 codeload.github.com
+2a01:4f8:c010:d56::6 ghcr.io
+2a01:4f8:c010:d56::7 pkg.github.com npm.pkg.github.com maven.pkg.github.com nuget.pkg.github.com rubygems.pkg.github.com
+2a01:4f8:c010:d56::8 uploads.github.com
+2606:50c0:8000::133 objects.githubusercontent.com www.objects.githubusercontent.com release-assets.githubusercontent.com gist.githubusercontent.com repository-images.githubusercontent.com camo.githubusercontent.com private-user-images.githubusercontent.com avatars0.githubusercontent.com avatars1.githubusercontent.com avatars2.githubusercontent.com avatars3.githubusercontent.com cloud.githubusercontent.com desktop.githubusercontent.com support.github.com
+2606:50c0:8000::154 support-assets.githubassets.com github.githubassets.com opengraph.githubassets.com github-registry-files.githubusercontent.com github-cloud.githubusercontent.com
+```
+
+详见： https://www.nodeseek.com/post-531425-1
