@@ -61,4 +61,12 @@ adb -s localhost:5555 shell "dumpsys package com.bilibili.azurlane"
 adb -s localhost:5555 shell am start -n com.bilibili.azurlane/com.manjuu.azurlane.MainActivity
 ```
 
+## 互动
 
+如果需要与模拟器互动，可能并不是那么方便，我们只能手动触发事件。
+
+如果要发送点击事件：
+
+```shell
+adb -s localhost:5555 shell input tap 700 500
+```

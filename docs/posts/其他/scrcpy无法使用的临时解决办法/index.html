@@ -157,6 +157,11 @@ done | ffplay -
 <p>于是可以通过以下命令拉起应用：</p>
 <pre><code class="language-shell">adb -s localhost:5555 shell am start -n com.bilibili.azurlane/com.manjuu.azurlane.MainActivity
 </code></pre>
+<h2 id="heading-2"><a class="anchor" href="#heading-2">#</a> 互动</h2>
+<p>如果需要与模拟器互动，可能并不是那么方便，我们只能手动触发事件。</p>
+<p>如果要发送点击事件：</p>
+<pre><code class="language-shell">adb -s localhost:5555 shell input tap 700 500
+</code></pre>
 </article>
     </div>
   </body>
