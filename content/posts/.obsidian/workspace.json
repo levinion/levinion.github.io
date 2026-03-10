@@ -90,9 +90,37 @@
               "icon": "lucide-file",
               "title": "scrcpy无法使用的临时解决办法"
             }
+          },
+          {
+            "id": "ac9f679d24cfd9c2",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "drafts/TAG是更好的工作区.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "TAG是更好的工作区"
+            }
+          },
+          {
+            "id": "2372c046beb64e1f",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CS/一个简单的磁轴键盘.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "一个简单的磁轴键盘"
+            }
           }
         ],
-        "currentTab": 5
+        "currentTab": 7
       }
     ],
     "direction": "vertical"
@@ -210,7 +238,7 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "bases:创建新数据库": false,
+      "bases:新建数据库": false,
       "switcher:打开快速切换": false,
       "graph:查看关系图谱": false,
       "canvas:新建白板": false,
@@ -221,34 +249,34 @@
       "quickadd:QuickAdd": false
     }
   },
-  "active": "828e8c2a85c3185d",
+  "active": "2372c046beb64e1f",
   "lastOpenFiles": [
+    "drafts/统一打开文件或文件夹行为.md",
+    "drafts/TAG是更好的工作区.md",
+    "drafts/我们喜欢结论甚于求证.md",
+    "drafts/逆向openrgb.md",
+    "drafts/从ufw迁移到nft.md",
+    "drafts/Linux下的各种剪贴板.md",
+    "drafts/bwrap与overlayfs.md",
+    "drafts/ffmpeg的视频基础操作.md",
+    "drafts/evdev与手柄事件.md",
+    "drafts/LSF记录.md",
+    "drafts/bimap.md",
+    "drafts/docker与容器化基础.md",
+    "drafts/Dijkstra算法的一般形式.md",
     "Linux/使用sing-box给Alice IPv6小鸡加上v4出口.md",
     "其他/scrcpy无法使用的临时解决办法.md",
-    "drafts/我们喜欢结论甚于求证.md",
-    "drafts/从ufw迁移到nft.md",
     "Linux/Linux之安卓模拟器总集篇.md",
     "Linux/利用pacman hook自动部署rime-wanxiang.md",
-    "drafts/逆向openrgb.md",
     "其他/komari部署.md",
-    "drafts/Linux下的各种剪贴板.md",
     "drafts/一个宽松表实现.md",
-    "drafts/bwrap与overlayfs.md",
     "drafts/为何漫改动画往往不尽如人意.md",
-    "drafts/ffmpeg的视频基础操作.md",
     "Linux/终端模拟器原理.md",
-    "drafts/evdev与手柄事件.md",
     "其他/Firefox启用视频硬件加速解码（Nvidia）.md",
     "Linux/lm_sensors与技嘉B650主板.md",
     "Linux/Wayland合成器相关概念（Wlroots）.md",
     "Linux/理解Wayland协议.md",
-    "drafts/LSF记录.md",
     "CS/understanding async.md",
-    "drafts/git-game-v2.md",
-    "CS/git-game通关记录.md",
-    "CS/understanding jpeg.md",
-    "CS/理解滑动窗口.md",
-    "drafts/docker与容器化基础.md",
     "templates/new_draft.md~",
     "templates/4913",
     "templates",
